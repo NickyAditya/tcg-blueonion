@@ -264,3 +264,139 @@ body {
   object-fit: cover;   /* agar gambar tidak meleset */
   border-radius: 8px;
 }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 100%;
+  position: relative;
+  text-align: center;
+}
+
+.modal img {
+      max-width: 300px;
+      margin-bottom: 1rem;
+}
+
+.close {
+  position: absolute;
+  top: 10px; right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.tilt-image {
+  width: 300px;
+  height: auto;
+  transition: transform 0.2s ease;
+  border-radius: 12px;
+}
+/* Badge umum */
+.badge {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* Efek berdasarkan kondisi */
+.badge.kondisi-mint { background-color: #c1f0c1; color: #2b6e2b; }
+.badge.kondisi-good { background-color: #f9f9a1; color: #a17900; }
+.badge.kondisi-damaged { background-color: #ffbaba; color: #8b0000; }
+
+/* Efek berdasarkan rarity */
+.badge.rarity-common { background-color: #e0e0e0; color: #333; }
+.badge.rarity-rare { background-color: #a5d8ff; color: #005377; }
+.badge.rarity-ultrarare {
+  background: linear-gradient(45deg, #ffdf00, #ffa500, #ff69b4);
+  color: #fff;
+  animation: shine 2s infinite linear;
+}
+
+/* Shine animation */
+@keyframes shine {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.4); }
+  100% { filter: brightness(1); }
+}
+
+/* Efek stok rendah */
+.stok-indikator.low-stock {
+  color: red;
+  font-weight: bold;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.rarity-shinyultrarare {
+  background: linear-gradient(135deg, #00ffe0, #ff00f7, #ffff00);
+  color: white;
+  font-weight: bold;
+  border: 2px solid white;
+  animation: shiny-glow 2s infinite;
+  box-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe0, 0 0 30px #ffff00;
+}
+
+@keyframes shiny-glow {
+  0% {
+    box-shadow: 0 0 10px #00ffe0, 0 0 20px #ff00f7;
+  }
+  50% {
+    box-shadow: 0 0 20px #ffff00, 0 0 30px #00ffe0;
+  }
+  100% {
+    box-shadow: 0 0 10px #ff00f7, 0 0 20px #00ffe0;
+  }
+}
+
+.rarity-extremelyrare {
+  background: linear-gradient(to right, #8b0000, #ff0000, #ff4500);
+  color: #fff;
+  font-weight: bold;
+  padding: 5px 10px;
+  border: 2px solid #ff0000;
+  border-radius: 5px;
+  box-shadow:
+    0 0 10px #ff0000,
+    0 0 20px #ff4500,
+    0 0 30px #ff0000,
+    0 0 40px #ff4500;
+  animation: pulse-fire 1s infinite alternate;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 5px #ff0000, 0 0 10px #ff4500;
+}
+
+@keyframes pulse-fire {
+  0% {
+    box-shadow:
+      0 0 10px #ff0000,
+      0 0 20px #ff4500,
+      0 0 30px #ff0000,
+      0 0 40px #ff4500;
+    transform: scale(1);
+  }
+  100% {
+    box-shadow:
+      0 0 20px #ff4500,
+      0 0 30px #ff0000,
+      0 0 40px #ff4500,
+      0 0 50px #ff0000;
+    transform: scale(1.05);
+  }
+}
+

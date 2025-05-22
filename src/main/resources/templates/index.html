@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,96 +9,295 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
   <header class="navbar">
     <div class="container">
       <h1 class="logo">RO-TCG</h1>
       <nav>
         <ul class="nav-links">
-          <li><a href="#">Home</a></li>
-          <li><a href="#shop">Shop</a></li>
-          <li><a href="#popular">Popular</a></li>
-          <li><a href="#contact">Contact</a></li>
+          <li><a href="#">Beranda</a></li>
+          <li><a href="#shop">Toko</a></li>
+          <li><a href="#popular">Populer</a></li>
+          <li><a href="#contact">Kontak</a></li>
         </ul>
       </nav>
       <a href="/sign" class="cta-button">Login</a>
     </div>
   </header>
 
+  <!-- Bilah Pencarian -->
+  <div class="search-bar">
+    <input type="text" placeholder="Cari kartu favorit Anda...">
+    <button>Cari</button>
+  </div>
+
+<!-- ========== BANNER SLIDER (STATIC UNTUK SAAT INI) ========== -->
+<div class="carousel" id="carousel">
+  <div class="carousel-track" id="track">
+    <!-- Cloned last slide -->
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/FFC75F/fff?text=Slide+4" /></div>
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/FF6B6B/fff?text=Slide+1" /></div>
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/6BCB77/fff?text=Slide+2" /></div>
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/4D96FF/fff?text=Slide+3" /></div>
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/FFC75F/fff?text=Slide+4" /></div>
+    <!-- Cloned first slide -->
+    <div class="carousel-slide"><img src="https://via.placeholder.com/600x300/FF6B6B/fff?text=Slide+1" /></div>
+  </div>
+  <div class="indicators" id="indicators"></div>
+</div>
+
+  <!-- Konten Utama -->
   <section class="hero">
     <div class="container hero-content">
-      <h2>Buy, Sell & Collect Your Favorite Trading Cards</h2>
-      <p>Join the largest marketplace for trading card games. Find rare cards, build your decks, and connect with the community.</p>
-      <button class="cta-button large">Start Exploring</button>
+      <h2>Beli, Jual & Koleksi Kartu Trading Favorit Anda</h2>
+      <p>Bergabunglah dengan marketplace terbesar untuk permainan kartu trading. Temukan kartu langka, bangun dek Anda, dan terhubung dengan komunitas.</p>
+      <button class="cta-button large">Mulai Jelajahi</button>
     </div>
   </section>
 
-<section class="features" id="shop">
-  <div class="container">
-    <h3>Top Categories</h3>
-    <div class="feature-grid">
-      
-      <a href="/cards/pokemon" class="card">
-        <img src="/textures/Pokemon-back.jpg" alt="Pokemon TCG" loading="lazy"
-          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
-        <h4>Pokémon</h4>
-      </a>
-
-      <a href="/cards/yugioh" class="card">
-        <img src="/textures/Yu-Gi-Oh-back.png" alt="Yu-Gi-Oh! TCG" loading="lazy"
-          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
-        <h4>Yu-Gi-Oh!</h4>
-      </a>
-
-      <a href="/cards/mtg" class="card">
-        <img src="/textures/MTG-back.webp" alt="Magic the Gathering" loading="lazy"
-          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
-        <h4>Magic: The Gathering</h4>
-      </a>
-
-    </div>
-  </div>
-</section>
-
-
-  <section class="popular" id="popular">
+  <section class="features" id="shop">
     <div class="container">
-      <h3>Popular Picks</h3>
+      <h3>Kategori Teratas</h3>
       <div class="feature-grid">
-        <div class="card">
-          <img src="\textures\charizad(holo).jpg" alt="Charizard Card" loading="lazy">
-          <h4>Charizard (Holo)</h4>
-        </div>
-        <div class="card">
-          <img src="\textures\yugioh_blue_eyes_white_dragont.jpg" alt="Blue-Eyes White Dragon" loading="lazy">
-          <h4>Blue-Eyes White Dragon</h4>
-        </div>
-        <div class="card">
-          <img src="\textures\Black Lotus.525.webp" alt="Black Lotus" loading="lazy">
-          <h4>Black Lotus</h4>
-        </div>
+        <a href="/cards/pokemon" class="card">
+          <img src="/textures/Pokemon-back.jpg" alt="Pokemon TCG" loading="lazy"
+            onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Gambar+Tidak+Tersedia';">
+          <h4>Pokémon</h4>
+        </a>
+        <a href="/cards/yugioh" class="card">
+          <img src="/textures/Yu-Gi-Oh-back.png" alt="Yu-Gi-Oh! TCG" loading="lazy"
+            onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Gambar+Tidak+Tersedia';">
+          <h4>Yu-Gi-Oh!</h4>
+        </a>
+        <a href="/cards/mtg" class="card">
+          <img src="/textures/MTG-back.webp" alt="Magic the Gathering" loading="lazy"
+            onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Gambar+Tidak+Tersedia';">
+          <h4>Magic: The Gathering</h4>
+        </a>
       </div>
     </div>
   </section>
 
+  <!-- ========== POPULARITY CHART ========== -->
+  <section class="popularity-chart" id="popular">
+    <h3>Peringkat Kartu Terpopuler</h3>
+    <select>
+      <option value="daily">Harian</option>
+      <option value="weekly">Mingguan</option>
+      <option value="monthly">Bulanan</option>
+      <option value="allTime">Sejarah</option>
+    </select>
+    <div class="chart">
+      <!-- Placeholder for chart -->
+      <img src="https://via.placeholder.com/600x300/4D96FF/fff?text=Chart+Placeholder" alt="Chart Placeholder" />
+    </div>
+  </section>
+
+  <!-- Kontak -->
   <section class="contact" id="contact">
     <div class="container">
-      <h3>Contact Us</h3>
+      <h3>Hubungi Kami</h3>
       <form class="contact-form">
-        <input type="text" name="name" placeholder="Your Name" required />
-        <input type="email" name="email" placeholder="Your Email" required />
-        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-        <button type="submit" class="cta-button">Send Message</button>
+        <input type="text" name="name" placeholder="Nama Anda" required />
+        <input type="email" name="email" placeholder="Email Anda" required />
+        <textarea name="message" rows="5" placeholder="Pesan Anda" required></textarea>
+        <button type="submit" class="cta-button">Kirim Pesan</button>
       </form>
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="container">
-      <p>&copy; 2025 Red Onion. All rights reserved.</p>
-    </div>
-  </footer>
-</body>
+<script>
+  const track = document.getElementById("track");
+  const carousel = document.getElementById("carousel");
+  const indicators = document.getElementById("indicators");
 
+  const slideCount = 4;
+  const slideWidth = 600;
+  let currentIndex = 1;
+  let isDragging = false, startX = 0, dx = 0;
+
+  // Create dots
+  for (let i = 0; i < slideCount; i++) {
+    const dot = document.createElement("span");
+    dot.classList.add("dot");
+    if (i === 0) dot.classList.add("active");
+    indicators.appendChild(dot);
+  }
+  const dots = document.querySelectorAll(".dot");
+
+  function updateDots(index) {
+    dots.forEach(dot => dot.classList.remove("active"));
+    dots[index % slideCount].classList.add("active");
+  }
+
+  function moveTo(index, animate = true) {
+    if (animate) track.style.transition = "transform 0.5s ease";
+    else track.style.transition = "none";
+    track.style.transform = `translateX(-${index * slideWidth}px)`;
+    currentIndex = index;
+    updateDots(index - 1);
+  }
+
+  // Looping logic: reset position after fake slides
+  track.addEventListener("transitionend", () => {
+    if (currentIndex === 0) {
+      moveTo(slideCount, false);
+    } else if (currentIndex === slideCount + 1) {
+      moveTo(1, false);
+    }
+  });
+
+  moveTo(currentIndex);
+
+  // Auto slide
+  let interval = setInterval(() => {
+    moveTo(currentIndex + 1);
+  }, 10000);
+
+  // Pause on hover
+  carousel.addEventListener("mouseenter", () => clearInterval(interval));
+  carousel.addEventListener("mouseleave", () => {
+    interval = setInterval(() => {
+      moveTo(currentIndex + 1);
+    }, 10000);
+  });
+
+  // Drag
+  function startDrag(e) {
+    isDragging = true;
+    startX = e.pageX || e.touches[0].pageX;
+    dx = 0;
+    track.style.transition = "none";
+  }
+
+  function onDrag(e) {
+    if (!isDragging) return;
+    const x = e.pageX || e.touches[0].pageX;
+    dx = x - startX;
+    track.style.transform = `translateX(${dx - currentIndex * slideWidth}px)`;
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+
+    if (dx < -50) {
+      moveTo(currentIndex + 1);
+    } else if (dx > 50) {
+      moveTo(currentIndex - 1);
+    } else {
+      moveTo(currentIndex);
+    }
+
+    window.removeEventListener("mousemove", onDrag);
+    window.removeEventListener("mouseup", endDrag);
+    window.removeEventListener("touchmove", onDrag);
+    window.removeEventListener("touchend", endDrag);
+  }
+
+  track.addEventListener("mousedown", e => {
+    startDrag(e);
+    window.addEventListener("mousemove", onDrag);
+    window.addEventListener("mouseup", endDrag);
+  });
+
+  track.addEventListener("touchstart", e => {
+    startDrag(e);
+    window.addEventListener("touchmove", onDrag, { passive: false });
+    window.addEventListener("touchend", endDrag);
+  });
+</script>
+
+<footer class="footer">
+  <div class="footer-sections">
+    
+    <!-- Articles & Decks -->
+    <div class="footer-section">
+      <h4>Articles & Decks</h4>
+      <ul>
+        <li>TCGplayer Content</li>
+        <li>Magic: The Gathering</li>
+        <li>Yu-Gi-Oh!</li>
+        <li>Pokémon</li>
+        <li>Disney Lorcana</li>
+        <li>Flesh and Blood</li>
+        <li>More Articles & Decks</li>
+      </ul>
+    </div>
+
+    <!-- Help & Contact -->
+    <div class="footer-section">
+      <h4>Help & Contact</h4>
+      <ul>
+        <li>Contact Us</li>
+        <li>Help Center</li>
+        <li>Refund and Return Policy</li>
+        <li>Security Center</li>
+      </ul>
+    </div>
+
+    <!-- About -->
+    <div class="footer-section">
+      <h4>About</h4>
+      <ul>
+        <li>About Us</li>
+        <li>Job Openings</li>
+        <li>Press Room</li>
+        <li>Become an Affiliate</li>
+      </ul>
+    </div>
+
+    <!-- Social Icons -->
+    <div class="footer-section social">
+      <div class="social-icons">
+        <!-- Facebook -->
+        <a href="#" aria-label="Facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+            <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
+          </svg>
+        </a>
+
+        <!-- X (Twitter) -->
+        <a href="#" aria-label="Twitter / X">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+            <path fill="currentColor" d="M512 32L320 288l192 192h-96L256 352l-96 128H64l192-256L64 32h96l96 128 96-128h96z"/>
+          </svg>
+        </a>
+
+        <!-- YouTube -->
+        <a href="#" aria-label="YouTube">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24">
+            <path fill="currentColor" d="M549.7 124.1c-6.3-23.8-25-42.5-48.7-48.9C456.2 64 288 64 288 64s-168.2 0-213 11.2c-23.8 6.3-42.5 25-48.8 48.8C16 168.9 16 256 16 256s0 87.1 10.2 131.9c6.3 23.8 25 42.5 48.8 48.8C119.8 448 288 448 288 448s168.2 0 213-11.2c23.8-6.3 42.5-25 48.7-48.8C560 343.1 560 256 560 256s0-87.1-10.3-131.9zM232 336V176l142.8 80L232 336z"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="#" aria-label="Instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24">
+            <path fill="currentColor" d="M224 202.7c-36.9 0-66.7 29.8-66.7 66.7s29.8 66.7 66.7 66.7 66.7-29.8 66.7-66.7-29.8-66.7-66.7-66.7zm124.7-41c0 14.1-11.4 25.5-25.5 25.5s-25.5-11.4-25.5-25.5S309.1 136 323.2 136s25.5 11.4 25.5 25.5zM398.8 80c-23.3-23.3-54.3-36.2-87.4-36.2H136.6c-33.1 0-64.1 12.9-87.4 36.2S13 134.3 13 167.4v175.2c0 33.1 12.9 64.1 36.2 87.4s54.3 36.2 87.4 36.2h175.2c33.1 0 64.1-12.9 87.4-36.2s36.2-54.3 36.2-87.4V167.4c0-33.1-12.9-64.1-36.2-87.4zM224 338c-62.9 0-114-51.1-114-114s51.1-114 114-114 114 51.1 114 114-51.1 114-114 114zm146.4-162.9c0 14.5-11.7 26.2-26.2 26.2s-26.2-11.7-26.2-26.2 11.7-26.2 26.2-26.2 26.2 11.7 26.2 26.2z"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Bottom -->
+  <div class="footer-bottom">
+    <p>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.<br>All Rights Reserved.</p>
+    <p class="copyright">
+      All card images and content related to Pokémon ©1995–2025 Nintendo, Creatures Inc., GAME FREAK inc.;
+      Yu-Gi-Oh! ©1996–2025 Kazuki Takahashi, Studio Dice, Shueisha, TV Tokyo, Konami;
+      and Magic: The Gathering ©1993–2025 Wizards of the Coast LLC.
+      All trademarks are property of their respective owners.
+    </p>
+    <p class="links">
+      <a href="#">Privacy Policy</a> |
+      <a href="#">Terms of Service</a> |
+      <a href="#">Accessibility</a> |
+      <a href="#">Do Not Sell or Share My Personal Information</a>
+    </p>
+  </div>
+</footer>
+
+</body>
 </html>

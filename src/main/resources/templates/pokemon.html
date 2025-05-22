@@ -6,6 +6,8 @@
   <title>Pokémon Marketplace</title>
   <link rel="stylesheet" href="/kartu.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+
 </head>
 <body>
   <header class="navbar">
@@ -30,21 +32,102 @@
   </section>
 
   <section class="product-list">
-  <div class="container">
-    <div class="feature-grid">
+    <div class="container">
+      <div class="feature-grid">
+        <th:block th:each="card : ${cards}">
+          <div class="card" th:if="${card.id_kategori == 1}">
+            <img th:src="@{'/textures/' + ${card.gambar}}" th:alt="${card.nama}" width="250" height="350">
+            <h4 th:text="${card.nama}">Nama Kartu</h4>
+            <p th:text="'Rp' + ${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}">Harga</p>
+            <button class="cta-button"
+              th:attr="data-nama=${card.nama}, 
+                       data-deskripsi=${card.deskripsi}, 
+                       data-kondisi=${card.kondisi},
+                       data-rarity=${card.rarity},
+                       data-stok=${card.stok},
+                       data-harga=${card.harga},
+                       data-gambar='/textures/' + ${card.gambar}"
+              onclick="showModal(this)">Lihat Detail</button>
+          </div>
+        </th:block>
+      </div>
+    </div>
+  </section>
 
-      <th:block th:each="card : ${cards}">
-        <div class="card" th:if="${card.id_kategori == 1}">
-          <img th:src="@{'/textures/' + ${card.gambar}}" th:alt="${card.nama}" width="250" height="350">
-          <h4 th:text="${card.nama}">Nama Kartu</h4>
-          <p th:text="'Rp' + ${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}">Harga</p>
-          <button class="cta-button">Lihat Detail</button>
-        </div>
-      </th:block>
-
+  <!-- Modal -->
+  <div id="cardModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImage" src="" alt="Card Image" data-tilt class="tilt-image" />
+      <h2 id="modalNama"></h2>
+      <p><strong>Harga:</strong> <span id="modalHarga"></span></p>
+      <p><strong>Deskripsi:</strong> <span id="modalDeskripsi"></span></p>
+      <p><strong>Kondisi:</strong> <span id="modalKondisi"></span></p>
+      <p><strong>Rarity:</strong> <span id="modalRarity"></span></p>
+      <p><strong>Stok:</strong> <span id="modalStok"></span></p>
     </div>
   </div>
-</section>
+
+  <script>
+  function showModal(button) {
+    const nama = button.getAttribute('data-nama');
+    const deskripsi = button.getAttribute('data-deskripsi');
+    const kondisi = button.getAttribute('data-kondisi');
+    const rarity = button.getAttribute('data-rarity');
+    const stok = parseInt(button.getAttribute('data-stok'));
+    const harga = Number(button.getAttribute('data-harga'));
+    const gambar = button.getAttribute('data-gambar');
+
+    document.getElementById('modalNama').innerText = nama;
+    document.getElementById('modalDeskripsi').innerText = deskripsi;
+    document.getElementById('modalKondisi').innerText = kondisi;
+    document.getElementById('modalRarity').innerText = rarity;
+    document.getElementById('modalStok').innerText = stok + ' Tersisa';
+    document.getElementById('modalHarga').innerText = 'Rp ' + harga.toLocaleString();
+    document.getElementById('modalImage').src = gambar;
+
+    // Reset class
+    const kondisiSpan = document.getElementById('modalKondisi');
+    const raritySpan = document.getElementById('modalRarity');
+    const stokSpan = document.getElementById('modalStok');
+    kondisiSpan.className = 'badge';
+    raritySpan.className = 'badge';
+    stokSpan.className = 'stok-indikator';
+
+    // Tambah class berdasarkan kondisi
+    if (kondisi.toLowerCase() === 'mint') kondisiSpan.classList.add('kondisi-mint');
+    else if (kondisi.toLowerCase() === 'good') kondisiSpan.classList.add('kondisi-good');
+    else kondisiSpan.classList.add('kondisi-damaged');
+
+    // Tambah class berdasarkan rarity
+    const lowerRarity = rarity.toLowerCase();
+    if (lowerRarity === 'common') raritySpan.classList.add('rarity-common');
+    else if (lowerRarity === 'rare') raritySpan.classList.add('rarity-rare');
+    else if (lowerRarity === 'ultra rare') raritySpan.classList.add('rarity-ultrarare');
+    else if (lowerRarity === 'shiny ultra rare') raritySpan.classList.add('rarity-shinyultrarare');
+    else if (lowerRarity === 'extremely rare') raritySpan.classList.add('rarity-extremelyrare');
+
+
+    // Efek stok rendah
+    if (stok === 1) {
+      stokSpan.classList.add('low-stock');
+    }
+
+    document.getElementById('cardModal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('cardModal').style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById('cardModal');
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
 
 
   <footer class="footer">
