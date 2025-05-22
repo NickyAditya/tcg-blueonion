@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCG Marketplace</title>
+  <link rel="stylesheet" href="/landing.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">RO-TCG</h1>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#popular">Popular</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a href="/sign" class="cta-button">Login</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-content">
+      <h2>Buy, Sell & Collect Your Favorite Trading Cards</h2>
+      <p>Join the largest marketplace for trading card games. Find rare cards, build your decks, and connect with the community.</p>
+      <button class="cta-button large">Start Exploring</button>
+    </div>
+  </section>
+
+<section class="features" id="shop">
+  <div class="container">
+    <h3>Top Categories</h3>
+    <div class="feature-grid">
+      
+      <a href="/cards/pokemon" class="card">
+        <img src="/textures/Pokemon-back.jpg" alt="Pokemon TCG" loading="lazy"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
+        <h4>Pokémon</h4>
+      </a>
+
+      <a href="/cards/yugioh" class="card">
+        <img src="/textures/Yu-Gi-Oh-back.png" alt="Yu-Gi-Oh! TCG" loading="lazy"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
+        <h4>Yu-Gi-Oh!</h4>
+      </a>
+
+      <a href="/cards/mtg" class="card">
+        <img src="/textures/MTG-back.webp" alt="Magic the Gathering" loading="lazy"
+          onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Found';">
+        <h4>Magic: The Gathering</h4>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+  <section class="popular" id="popular">
+    <div class="container">
+      <h3>Popular Picks</h3>
+      <div class="feature-grid">
+        <div class="card">
+          <img src="\textures\charizad(holo).jpg" alt="Charizard Card" loading="lazy">
+          <h4>Charizard (Holo)</h4>
+        </div>
+        <div class="card">
+          <img src="\textures\yugioh_blue_eyes_white_dragont.jpg" alt="Blue-Eyes White Dragon" loading="lazy">
+          <h4>Blue-Eyes White Dragon</h4>
+        </div>
+        <div class="card">
+          <img src="\textures\Black Lotus.525.webp" alt="Black Lotus" loading="lazy">
+          <h4>Black Lotus</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="container">
+      <h3>Contact Us</h3>
+      <form class="contact-form">
+        <input type="text" name="name" placeholder="Your Name" required />
+        <input type="email" name="email" placeholder="Your Email" required />
+        <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit" class="cta-button">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Red Onion. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+
+</html>

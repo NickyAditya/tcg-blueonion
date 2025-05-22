@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MTG Marketplace</title>
+  <link rel="stylesheet" href="/kartu.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container">
+      <h1 class="logo">RO-TCG</h1>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/#shop">Shop</a></li>
+          <li><a href="/#popular">Popular</a></li>
+          <li><a href="/#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-content">
+      <h2>Magic: The Gathering Card Collection</h2>
+      <p>Explore all MTG cards available in our marketplace.</p>
+    </div>
+  </section>
+
+  <section class="product-list">
+  <div class="container">
+    <div class="feature-grid">
+
+      <th:block th:each="card : ${cards}">
+        <div class="card" th:if="${card.id_kategori == 3}">
+          <img th:src="@{'/textures/' + ${card.gambar}}" th:alt="${card.nama}" width="250" height="350">
+          <h4 th:text="${card.nama}">Nama Kartu</h4>
+          <p th:text="'Rp' + ${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}">Harga</p>
+          <button class="cta-button">Lihat Detail</button>
+        </div>
+      </th:block>
+
+    </div>
+  </div>
+</section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Red Onion. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

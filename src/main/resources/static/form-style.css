@@ -1,0 +1,115 @@
+body {
+  background-color: #fff;
+  color: #333;
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.navbar {
+  background-color: #ff485f;
+  padding: 1rem 0;
+  box-shadow: 0 2px 6px rgba(0, 255, 170, 0.1);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: white;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.nav-links li a:hover {
+  text-decoration: underline;
+}
+
+.form-section {
+  padding: 3rem 0;
+}
+
+.form-section h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.form-card {
+  background-color: #ffd1de;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.1);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid #2d3748;
+  background-color: white;
+  color: #000;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #00ffaa;
+  box-shadow: 0 0 0 2px rgba(0, 255, 170, 0.2);
+}
+
+.cta-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: #00ffaa;
+  color: #000;
+  font-weight: bold;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #00cc88;
+}
