@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `nama` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `role` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `role` enum('ADMIN','USER') COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id_user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
