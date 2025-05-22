@@ -107,7 +107,7 @@ body {
   bottom: 0;
   height: 3px;
   width: 25px;
-  background: #2A4759;
+  background: #3674B5;
 }
 
 .forms .form-content .input-boxes {
@@ -144,13 +144,13 @@ body {
 .form-content .input-box i {
   position: absolute;
   left: 10px;
-  color: #2A4759;
+  color: #3674B5;
   font-size: 17px;
 }
 
 .form-content .input-box input:focus,
 .form-content .input-box input:valid {
-  border-color: #2A4759;
+  border-color: #3674B5;
 }
 
 .forms .form-content .text {
@@ -161,7 +161,7 @@ body {
 
 .forms .form-content .text a {
   text-decoration: none;
-  color: #2A4759;
+  color: #3674B5;
 }
 
 .forms .form-content .text a:hover {
@@ -175,7 +175,7 @@ body {
 
 .forms .form-content .button input {
   color: #fff;
-  background: #2A4759;
+  background: #3674B5;
   border-radius: 6px;
   padding: 0 15px;
   height: 100%;
@@ -189,7 +189,7 @@ body {
 }
 
 .forms .form-content label {
-  color: #2A4759;
+  color: #3674B5;
   cursor: pointer;
 }
 

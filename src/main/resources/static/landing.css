@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Poppins', sans-serif;
-  background-color: #fff0f6;
+  background-color: #A1E3F9;
   color: #333;
 }
 
@@ -15,7 +15,7 @@ body {
 
 /* Navbar */
 .navbar {
-  background-color: #ff485f;
+  background-color: #3674B5;
   padding: 1rem 0;
   color: #fff;
 }
@@ -49,11 +49,11 @@ body {
 }
 
 .nav-links a:hover {
-  color: #ff48bb;
+  color: #578FCA;
 }
 
 .cta-button {
-  background-color: #ff48bb;
+  background-color: #578FCA;
   border: none;
   color: #fff;
   padding: 0.5rem 1rem;
@@ -72,12 +72,12 @@ body {
 .cta-button:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 20px rgba(255, 72, 187, 0.2);
-  background: #ff485f;
+  background: #3674B5;
   cursor: pointer;
 }
 
 .hero {
-  background: linear-gradient(135deg, #ff485f, #ff48bb);
+  background: linear-gradient(135deg, #3674B5, #578FCA);
   color: #fff;
   padding: 6rem 0;
   text-align: center;
@@ -102,7 +102,7 @@ body {
 .features h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff485f;
+  color: #3674B5;
 }
 
 .feature-grid {
@@ -128,7 +128,7 @@ body {
 
 .card h4 {
   margin-top: 1rem;
-  color: #ff48bb;
+  color: #578FCA;
   text-decoration: none;
 }
 
@@ -139,17 +139,17 @@ body {
 }
 
 .card h4:hover {
-  color: #ff48bb;
+  color: #578FCA;
 }
 /* <<<<<Footer>>>> */
 /* Color Palette */
 :root {
-  --primary: #ff485f;
-  --primary-dark: #ff48bb;
-  --background: #fff0f6;
+  --primary: #3674B5;
+  --primary-dark: #578FCA;
+  --background: #A1E3F9;
   --white: #fff;
   --text: #333;
-  --accent: #ffd1de;
+  --accent: #A1E3F9;
   --muted: #bbb;
 }
 
@@ -263,7 +263,7 @@ body {
 .popular h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff48bb;
+  color: #578FCA;
 }
 
 .popular .card {
@@ -315,7 +315,7 @@ body {
 .contact h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff485f;
+  color: #3674B5;
 }
 
 .contact-form {
@@ -329,7 +329,7 @@ body {
 .contact-form input,
 .contact-form textarea {
   padding: 1rem;
-  border: 1px solid #ff48bb;
+  border: 1px solid #3674B5;
   border-radius: 5px;
   font-family: 'Poppins', sans-serif;
   font-size: 1rem;
@@ -340,14 +340,14 @@ body {
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  border-color: #ff48bb;
+  border-color: #578FCA;
   box-shadow: 0 0 0 3px rgba(255, 72, 187, 0.15);
   transition: all 0.2s ease;
 }
 
 .contact-form button {
   align-self: flex-start;
-  background: #ff48bb;
+  background: #578FCA;
   color: #fff;
   border: none;
   padding: 0.5rem 1.5rem;
@@ -358,7 +358,7 @@ body {
 }
 
 .contact-form button:hover {
-  background: #ff485f;
+  background: #3674B5;
 }
 
 .search-bar {
@@ -379,14 +379,14 @@ body {
 }
 
 .search-bar input:focus {
-  border-color: #ff48bb;
+  border-color: #3674B5;
   outline: none;
 }
 
 .search-bar button {
   padding: 10px;
   border: 1px solid rgba(0,0,0,0.2);
-  background-color: #ff485f;
+  background-color: #3674B5;
   color: #fff;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
@@ -394,7 +394,7 @@ body {
 }
 
 .search-bar button:hover {
-  background: #ff48bb;
+  background: #578FCA;
 }
 
 .carousel {
@@ -445,7 +445,7 @@ body {
 }
 
 .dot.active {
-  background-color: #ff485f;
+  background-color: #578FCA;
 }
 
 .popularity-chart {
@@ -465,6 +465,6 @@ body {
 }
 
 .popularity-chart select:focus {
-  border-color: #ff48bb;
+  border-color: #578FCA;
   outline: none;
 }
