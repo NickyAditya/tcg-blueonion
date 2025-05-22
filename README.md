@@ -27,7 +27,7 @@ RO-TCG adalah aplikasi web marketplace untuk menampilkan dan menjual kartu kolek
 1. **Clone repo ini:**
 
 ```bash
-
+https://github.com/NickyAditya/tcg-blueonion.git
 cd ro-tcg
 
 ````
