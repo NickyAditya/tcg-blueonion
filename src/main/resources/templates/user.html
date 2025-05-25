@@ -3,85 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="/admin.css">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="/user.css">
 </head>
-<body>
-  <header>
-    <div>      <a href="/index.html" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+<body>  <header>    <div>      <a href="/index.html" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
-        <input type="search" placeholder="Search users..." class="search-input">
+        <input type="search" placeholder="Search cards..." class="search-input">
         <button class="search-button">🔍</button>
-      </div>
-      <nav class="main-nav">
+      </div>      <nav class="main-nav">
         <a href="/index.html">Beranda</a>
         <a href="javascript:void(0)">Toko</a>
         <a href="javascript:void(0)">Populer</a>
         <a href="javascript:void(0)">Kontak</a>
       </nav>
-    </div>
-    <div class="admin-controls">
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-      <span class="admin-name">👑 Admin: SuperUser</span>
-      <span id="serverTime" class="server-time">Loading time...</span>
-      <a href="javascript:void(0)" class="logout-btn">🔒 Log out</a>
+    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <a href="/userInventory.html">📦 Inventory</a>
+      <a href="/user.html" style="margin: 0 10px;">👤 Vortexaint</a>
+      <a href="javascript:void(0)">🔒 Log out</a>
     </div>
   </header>
 
   <div class="container">
-    <div class="admin-header">
-      <h1>Admin Dashboard</h1>
-      <p class="last-login">Last login: May 25, 2025 14:30 WIB</p>
-    </div>
-
-    <div class="user-management">
-      <h2 class="section-title">User Management</h2>
-      <div class="user-table">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Created</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>              <td>000001</td>
-              <td>Vortexaint</td>
-              <td>vortex@example.com</td>
-              <td>2025-04-01 13:45 WIB</td>              <td>
-                <button class="inventory-btn" onclick="window.location.href='userInventory.html'">📦 Inventory</button>
-                <button class="edit-btn">✏️ Edit</button>
-                <button class="delete-btn">🗑️ Delete</button>
-              </td>
-            </tr>
-            <tr>              <td>000002</td>
-              <td>CardMaster</td>
-              <td>master@example.com</td>
-              <td>2025-04-15 09:30 WIB</td>
-              <td>
-                <button class="inventory-btn" onclick="window.location.href='userInventory.html'">📦 Inventory</button>
-                <button class="edit-btn">✏️ Edit</button>
-                <button class="delete-btn">🗑️ Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="profile">
+      <img src="https://via.placeholder.com/150" alt="Profile Picture" />
+      <div class="profile-info">
+        <h2>Vortexaint</h2>
+        <p><strong>Joined:</strong> 1 month, 3 weeks ago</p>
+        <p><strong>Favorite tags:</strong> [REDACTED]</p>        <div class="profile-buttons">
+          <button onclick="window.location.href='javascript:void(0)'">⚙️ Settings</button>
+          <button onclick="window.location.href='userInventory.html'">📦 Inventory</button>
+          <button onclick="window.location.href='javascript:void(0)'">👁️ Watchlist</button>
+        </div>
       </div>
     </div>
 
-    <div class="popular-cards">
-      <h2 class="section-title">Popular Cards Analytics</h2>
-      <div class="chart-container">
-        <canvas id="popularCardsChart"></canvas>
-      </div>
+    <h3 class="section-title">Recent Cards</h3>
+    <div class="favorites">
+      <img src="https://via.placeholder.com/150x220?text=1" alt="Card 1" />
+      <img src="https://via.placeholder.com/150x220?text=2" alt="Card 2" />
+      <img src="https://via.placeholder.com/150x220?text=3" alt="Card 3" />
+      <img src="https://via.placeholder.com/150x220?text=4" alt="Card 4" />
+      <img src="https://via.placeholder.com/150x220?text=5" alt="Card 5" />
+      <img src="https://via.placeholder.com/150x220?text=5" alt="Card 6" />
     </div>
+
+    <h3 class="section-title">💬 Recent Comments</h3>
+    <p style="color: #ccc;">Vortexaint - 1 month, 1 week ago</p>
   </div>
 
   <footer class="footer">
     <div class="footer-sections">
+      
       <!-- Articles & Decks -->
       <div class="footer-section">
         <h4>Articles & Decks</h4>
@@ -166,24 +138,21 @@
         <a href="#">Terms of Service</a> |
         <a href="#">Accessibility</a> |
         <a href="#">Do Not Sell or Share My Personal Information</a>
-      </p>
-    </div>
+      </p>    </div>
   </footer>
 
-  <!-- Chart.js for analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <script>
-    // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     
+    // Check for saved theme preference or use system preference
     const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
     if (currentTheme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
       themeToggle.textContent = '☀️';
     }
 
+    // Theme toggle handler
     themeToggle.addEventListener('click', () => {
       const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -191,45 +160,6 @@
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-    });
-
-    // Server Time
-    function updateServerTime() {
-      const options = {
-        timeZone: 'Asia/Jakarta',
-        hour12: false,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      };
-      const time = new Date().toLocaleTimeString('id-ID', options);
-      document.getElementById('serverTime').textContent = `🕒 ${time} WIB`;
-    }
-    updateServerTime();
-    setInterval(updateServerTime, 1000);
-
-    // Popular Cards Chart
-    const ctx = document.getElementById('popularCardsChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['Blue-Eyes', 'Black Lotus', 'Charizard', 'Dark Magician', 'Pikachu'],
-        datasets: [{
-          label: 'Search Count',
-          data: [1200, 980, 850, 750, 600],
-          backgroundColor: '#3674B5',
-          borderColor: '#3674B5',
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        }
-      }
     });
   </script>
 </body>

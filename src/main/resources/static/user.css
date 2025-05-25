@@ -1,0 +1,316 @@
+body {
+    background-color: var(--background);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+header {
+    background-color: var(--nav-bg);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text);
+    border-bottom: 1px solid var(--muted);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.search-container {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 15px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+}
+
+.search-input {
+    border: none;
+    background: none;
+    padding: 5px;
+    width: 200px;
+    outline: none;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.search-input::placeholder {
+    color: var(--muted);
+}
+
+.search-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s ease;
+}
+
+.search-button:hover {
+    transform: scale(1.1);
+}
+
+.main-nav {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.main-nav a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 5px 15px;
+    position: relative;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+header a {
+    color: var(--text);
+    text-decoration: none;
+    margin: 0 10px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+nav a:hover, header a:hover {
+    color: var(--primary);
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+}
+.profile img {
+    width: 150px;
+    border-radius: 8px;
+}
+.profile-info {
+    flex: 1;
+    color: var(--text);
+}
+.profile-buttons button {
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 10px 15px;
+    margin-right: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.profile-buttons button:hover {
+    background-color: var(--primary-dark);
+}
+.section-title {
+    margin-top: 40px;
+    font-size: 24px;
+    color: var(--primary);
+}
+.favorites {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    padding: 10px 0;
+}
+.favorites img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 150/220;
+    object-fit: cover;
+    border-radius: 5px;
+    transition: transform 0.2s ease;
+}
+.favorites img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 768px) {
+    .favorites {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+/* <<<<<Footer>>>> */
+/* Color Palette */
+:root {
+  /* Light theme (default) */
+  --primary: #3674B5;
+  --primary-dark: #FFFFFF;
+  --background: #EAF6FC;
+  --white: #fff;
+  --text: #333;
+  --accent: #A1E3F9;
+  --muted: #555;  /* Changed from #bbb to #555 for better readability */
+  --card-bg: #fff;
+  --nav-bg: #A1E3F9;
+  --footer-bg: #A1E3F9;
+  --footer-text: #333;
+  --footer-border: #3674B5; /* Added specific color for footer border in light mode */
+}
+
+[data-theme="dark"] {
+  --primary: #4B8AC9;
+  --primary-dark: #1A1A1A;
+  --background: #1A1A1A;
+  --white: #2A2A2A;
+  --text: #E0E0E0;
+  --accent: #4B8AC9;
+  --muted: #888;
+  --card-bg: #2A2A2A;
+  --nav-bg: #2A2A2A;
+  --footer-bg: #2A2A2A;
+  --footer-text: #E0E0E0;
+  --footer-border: #4B8AC9; /* Added specific color for footer border in dark mode */
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  color: var(--text);
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Footer Styling */
+.footer {
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 40px 20px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border-top: 1px solid var(--muted);
+}
+
+.footer-sections {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 40px;
+  margin: 0 auto 40px;
+  max-width: 1200px;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+.footer-section {
+  min-width: 150px;
+  text-align: left;
+}
+
+.footer-section h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: var(--primary);
+  font-weight: bold;
+  text-align: left;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 6px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+
+.social-icons svg {
+  width: 24px;
+  height: 24px;
+  color: var(--text);
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.social-icons a:hover svg {
+  color: var(--primary);
+  transform: scale(1.1);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  font-size: 12px;
+  border-top: 1px solid var(--footer-border); /* Using new footer-border variable for consistent styling */
+  padding-top: 20px;
+  text-align: center;
+  color: #333;
+}
+
+.footer-bottom .links a {
+  color: var(--text);
+  text-decoration: none;
+  margin: 0 5px;
+  transition: color 0.3s ease;
+}
+
+.footer-bottom .links a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.footer-bottom .copyright {
+  color: #333; /* Changed from var(--muted) to solid color for better readability */
+  margin: 10px 0;
+}
+
+[data-theme="dark"] .footer-bottom,
+[data-theme="dark"] .footer-bottom .copyright {
+  color: #E0E0E0; /* Light color for dark theme */
+}
+
+/* Responsive Behavior */
+@media (max-width: 768px) {
+  .footer-sections {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .footer-section {
+    margin-bottom: 0;
+  }
+
+  .footer-bottom .links a {
+    display: inline-block;
+    margin: 5px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-sections {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+/* <<<<<Footer>>>> */

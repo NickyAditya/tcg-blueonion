@@ -1,0 +1,181 @@
+/* Inherit base styles, header and footer from user.css */
+@import url('/user.css');
+
+/* Inventory-specific styles */
+.back-nav {
+  padding: 10px 40px 0;
+  background: var(--background);
+}
+
+/* Override container width for inventory page */
+.container {
+  max-width: 1440px;  /* Wider container for inventory layout */
+}
+
+/* Inventory layout */
+.inventory-container {
+  margin-top: 20px;
+  display: flex;
+  gap: 30px;  /* Increased from 20px for better spacing */
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 15px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+  min-height: 960px; /* Fixed height to accommodate 4 rows of cards */
+}
+
+.card {
+  width: 150px;
+  height: 220px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Details section */
+.details {
+  flex-grow: 1;
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;  /* Increased from 400px */
+}
+
+.details img {
+  width: 100%;
+  height: 350px;  /* Added fixed height for larger image */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.details .title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 15px 0;
+  color: var(--text);
+}
+
+.details p {
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* Market section */
+.market {
+  margin-top: 20px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+/* Inventory controls */
+.inventory-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: var(--card-bg);
+  border-radius: 8px;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text);
+  font-size: 14px;
+  min-width: 150px;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-btn, .page-num {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-num.active {
+  background: var(--primary);
+  color: var(--white);
+  border-color: var(--primary);
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .inventory-container {
+    flex-direction: column;
+  }
+  
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto;
+    height: auto;
+  }
+  
+  .details {
+    max-width: none;
+  }
+  
+  .inventory-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .pagination {
+    width: 100%;
+    justify-content: center;
+  }
+}
