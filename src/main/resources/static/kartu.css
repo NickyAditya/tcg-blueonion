@@ -9,13 +9,12 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  /* Ensure container takes full width for flex */
   width: 100%;
   box-sizing: border-box;
 }
 
 .navbar {
-  background-color: #ff485f;
+  background-color: #0077cc; /* dari #ff485f ke biru */
   padding: 1rem 0;
   color: white;
 }
@@ -48,14 +47,13 @@ body {
 }
 
 .cta-button {
-  background-color: #ff48bb;
+  background-color: #00cccc; /* dari #ff48bb ke cyan */
   border: none;
   color: white;
   padding: 0.5rem 1rem;
   font-weight: bold;
   border-radius: 5px;
   cursor: pointer;
-  /* Ensure button is on the far right */
   margin-left: 2rem;
 }
 
@@ -65,7 +63,7 @@ body {
 }
 
 .hero {
-  background: linear-gradient(135deg, #ff485f, #ff48bb);
+  background: linear-gradient(135deg, #0077cc, #00cccc); /* dari merah ke biru & pink ke cyan */
   color: white;
   padding: 6rem 0;
   text-align: center;
@@ -83,14 +81,14 @@ body {
 
 .features {
   padding: 4rem 0;
-  background-color: #ffd1de;
+  background-color: #ccf0f0; /* dari #ffd1de ke versi soft cyan */
   text-align: center;
 }
 
 .features h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff485f;
+  color: #0077cc; /* dari #ff485f ke biru */
 }
 
 .feature-grid {
@@ -113,38 +111,39 @@ body {
 
 .card h4 {
   margin-top: 1rem;
-  color: #ff48bb;
+  color: #00cccc; /* dari #ff48bb ke cyan */
 }
 
 .footer {
-  background-color: #ff485f;
+  background-color: #0077cc; /* dari #ff485f ke biru */
   color: white;
   text-align: center;
   padding: 2rem 0;
   margin-top: 2rem;
 }
+
 .popular {
   padding: 4rem 0;
-  background-color: #fff0f6;
+  background-color: #e0f7f7; /* dari #fff0f6 ke very light cyan */
   text-align: center;
 }
 
 .popular h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff48bb;
+  color: #00cccc; /* dari #ff48bb ke cyan */
 }
 
 .contact {
   padding: 4rem 0;
-  background-color: #ffe5ef;
+  background-color: #ccf9fa; /* dari #ffe5ef ke soft cyan */
   text-align: center;
 }
 
 .contact h3 {
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #ff485f;
+  color: #0077cc; /* dari #ff485f ke biru */
 }
 
 .contact-form {
@@ -167,13 +166,14 @@ body {
 .contact-form button {
   align-self: flex-start;
 }
+
 .cta-button {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .cta-button:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(255, 72, 187, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 204, 204, 0.4); /* dari rgba(255,72,187,0.4) ke cyan */
   cursor: pointer;
 }
 
@@ -187,13 +187,15 @@ body {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
+
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  border-color: #ff48bb;
-  box-shadow: 0 0 0 3px rgba(255, 72, 187, 0.2);
+  border-color: #00cccc; /* dari #ff48bb ke cyan */
+  box-shadow: 0 0 0 3px rgba(0, 204, 204, 0.2); /* dari rgba(255,72,187,0.2) ke cyan */
   transition: all 0.2s ease;
 }
+
 .popular .card {
   position: relative;
   overflow: hidden;
@@ -201,7 +203,6 @@ body {
   z-index: 1;
 }
 
-/* Efek hologram/shine saat hover */
 .popular .card::before {
   content: "";
   position: absolute;
@@ -234,6 +235,7 @@ body {
     transform: translateX(100%) rotate(25deg);
   }
 }
+
 .card h4 {
   text-decoration: none;
 }
@@ -242,14 +244,15 @@ body {
   text-decoration: none;
   color: inherit;
 }
+
 .card h4:hover {
-  color: #ff48bb;
+  color: #00cccc; /* dari #ff48bb ke cyan */
 }
 
- /* Atur ukuran dan layout kotak kartu supaya rapih dan seragam */
+/* Ukuran dan layout tetap sama */
 .card {
-  width: 250px;        /* Lebar tetap */
-  height: 450px;       /* Tinggi tetap */
+  width: 250px;
+  height: 450px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -260,10 +263,12 @@ body {
 
 .card img {
   width: 100%;
-  height: 350px;       /* tinggi gambar seragam */
-  object-fit: cover;   /* agar gambar tidak meleset */
+  height: 350px;
+  object-fit: cover;
   border-radius: 8px;
 }
+
+/* Modal & lainnya tetap */
 .modal {
   display: none;
   position: fixed;
@@ -286,8 +291,8 @@ body {
 }
 
 .modal img {
-      max-width: 300px;
-      margin-bottom: 1rem;
+  max-width: 300px;
+  margin-bottom: 1rem;
 }
 
 .close {
@@ -296,12 +301,14 @@ body {
   font-size: 1.5rem;
   cursor: pointer;
 }
+
 .tilt-image {
   width: 300px;
   height: auto;
   transition: transform 0.2s ease;
   border-radius: 12px;
 }
+
 /* Badge umum */
 .badge {
   padding: 4px 8px;
@@ -342,6 +349,7 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.3; }
 }
+
 .rarity-shinyultrarare {
   background: linear-gradient(135deg, #00ffe0, #ff00f7, #ffff00);
   color: white;
@@ -390,13 +398,12 @@ body {
       0 0 40px #ff4500;
     transform: scale(1);
   }
-  100% {
-    box-shadow:
-      0 0 20px #ff4500,
-      0 0 30px #ff0000,
-      0 0 40px #ff4500,
-      0 0 50px #ff0000;
-    transform: scale(1.05);
+    100% {
+      box-shadow:
+        0 0 20px #ff4500,
+        0 0 40px #ff0000,
+        0 0 60px #ff4500,
+        0 0 80px #ff0000;
+      transform: scale(1.05);
+    }
   }
-}
-
