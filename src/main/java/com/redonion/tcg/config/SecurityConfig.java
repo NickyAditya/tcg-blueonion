@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 "/pokemon", "/yugioh", "/mtg")
                         .permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**", "/userInventory").authenticated()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/sign")

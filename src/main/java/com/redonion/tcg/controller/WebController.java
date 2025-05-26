@@ -39,4 +39,8 @@ public class WebController {
     public String user() {
         return "user";
     }
+    @GetMapping("/userInventory")
+    public String userInventory() {
+        return "userInventory";
+    }
 }
