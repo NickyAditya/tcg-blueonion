@@ -35,4 +35,8 @@ public class WebController {
     public String mtg() {
         return "mtg";
     }
+    @GetMapping("/user")
+    public String user() {
+        return "user";
+    }
 }

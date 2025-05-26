@@ -1,6 +1,8 @@
 package com.redonion.tcg.config;
 
-import com.redonion.tcg.service.CustomUserDetailsService;
+import java.io.IOException;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import com.redonion.tcg.service.CustomUserDetailsService;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.Set;
 
 @Configuration
 public class SecurityConfig {
@@ -77,8 +78,8 @@ public class SecurityConfig {
                 System.out.println("DEBUG: Redirecting to /admin");
                 response.sendRedirect("/admin");
             } else {
-                System.out.println("DEBUG: Redirecting to /");
-                response.sendRedirect("/");
+                System.out.println("DEBUG: Redirecting to /user");
+                response.sendRedirect("/user");
             }
         }
     }
