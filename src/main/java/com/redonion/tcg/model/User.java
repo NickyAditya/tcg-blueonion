@@ -1,6 +1,7 @@
 package com.redonion.tcg.model;
 
 import jakarta.persistence.*;
+// import java.io.Serializable;
 
 @Entity
 @Table(name = "users")

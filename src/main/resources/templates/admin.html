@@ -36,37 +36,22 @@
 
     <div class="user-management">
       <h2 class="section-title">User Management</h2>
+      <button class="add-user-btn" style="margin-bottom:15px; background-color: var(--accent); color: var(--white); border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
+        ➕ Tambah User
+      </button>
       <div class="user-table">
-        <table>
-          <thead>
+        <table>          <thead>
             <tr>
               <th>ID</th>
               <th>Username</th>
               <th>Email</th>
-              <th>Created</th>
+              <th>Password</th>
+              <th>Role</th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>              <td>000001</td>
-              <td>Vortexaint</td>
-              <td>vortex@example.com</td>
-              <td>2025-04-01 13:45 WIB</td>              <td>
-                <button class="inventory-btn" onclick="window.location.href='userInventory.html'">📦 Inventory</button>
-                <button class="edit-btn">✏️ Edit</button>
-                <button class="delete-btn">🗑️ Delete</button>
-              </td>
-            </tr>
-            <tr>              <td>000002</td>
-              <td>CardMaster</td>
-              <td>master@example.com</td>
-              <td>2025-04-15 09:30 WIB</td>
-              <td>
-                <button class="inventory-btn" onclick="window.location.href='userInventory.html'">📦 Inventory</button>
-                <button class="edit-btn">✏️ Edit</button>
-                <button class="delete-btn">🗑️ Delete</button>
-              </td>
-            </tr>
+          <tbody id="userTableBody">
+            <!-- Data will be populated dynamically -->
           </tbody>
         </table>
       </div>
@@ -231,6 +216,232 @@
         }
       }
     });
+  </script>
+
+  <!-- Modal for Add/Edit User -->
+  <div id="userModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2 id="modalTitle">Add New User</h2>
+      <form id="userForm">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="password" id="password">
+          <small>(Leave empty to keep existing password when editing)</small>
+        </div>
+        <div class="form-group">
+          <label for="role">Role:</label>
+          <select id="role" required>
+            <option value="USER">USER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="modal-buttons">
+          <button type="submit" class="save-btn">Save</button>
+          <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      position: relative;
+      background-color: var(--card-bg);
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid var(--muted);
+      border-radius: 4px;
+      background-color: var(--input-bg);
+      color: var(--text);
+    }
+
+    .form-group small {
+      color: var(--muted);
+      font-size: 0.8em;
+    }
+
+    .modal-buttons {
+      margin-top: 20px;
+      text-align: right;
+    }
+
+    .save-btn,
+    .cancel-btn {
+      padding: 8px 16px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .save-btn {
+      background-color: var(--accent);
+      color: var(--white);
+    }
+
+    .cancel-btn {
+      background-color: var(--muted);
+      color: var(--text);
+    }
+  </style>
+
+  <script>
+    // User Management
+    document.addEventListener('DOMContentLoaded', function() {
+      loadUsers();
+      
+      // Add User button click handler
+      document.querySelector('.add-user-btn').addEventListener('click', function() {
+        openModal();
+      });
+
+      // Form submit handler
+      document.getElementById('userForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const userId = document.getElementById('userId').value;
+        const userData = {
+          nama: document.getElementById('username').value,
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value,
+          role: document.getElementById('role').value
+        };
+
+        if (userId) {
+          updateUser(userId, userData);
+        } else {
+          createUser(userData);
+        }
+      });
+    });
+
+    function loadUsers() {
+      fetch('/api/users')
+        .then(response => response.json())
+        .then(users => {
+          const tbody = document.getElementById('userTableBody');
+          tbody.innerHTML = '';
+          users.forEach(user => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+              <td>${user.id_user}</td>
+              <td>${user.nama}</td>
+              <td>${user.email}</td>
+              <td>${user.password ? '********' : ''}</td>
+              <td>${user.role}</td>
+              <td>
+                <button class="inventory-btn" onclick="window.location.href='/userInventory.html?id=${user.id_user}'">📦 Inventory</button>
+                <button class="edit-btn" onclick="editUser(${user.id_user})">✏️ Edit</button>
+                <button class="delete-btn" onclick="deleteUser(${user.id_user})">🗑️ Delete</button>
+              </td>
+            `;
+            tbody.appendChild(tr);
+          });
+        })
+        .catch(error => console.error('Error loading users:', error));
+    }
+
+    function openModal(user = null) {
+      document.getElementById('modalTitle').textContent = user ? 'Edit User' : 'Add New User';
+      document.getElementById('userId').value = user ? user.id_user : '';
+      document.getElementById('username').value = user ? user.nama : '';
+      document.getElementById('email').value = user ? user.email : '';
+      document.getElementById('password').value = '';
+      document.getElementById('role').value = user ? user.role : 'USER';
+      document.getElementById('userModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('userModal').style.display = 'none';
+      document.getElementById('userForm').reset();
+    }
+
+    function editUser(userId) {
+      fetch(`/api/users/${userId}`)
+        .then(response => response.json())
+        .then(user => openModal(user))
+        .catch(error => console.error('Error fetching user:', error));
+    }
+
+    function createUser(userData) {
+      fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => response.json())
+      .then(() => {
+        loadUsers();
+        closeModal();
+      })
+      .catch(error => console.error('Error creating user:', error));
+    }
+
+    function updateUser(userId, userData) {
+      fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData)
+      })
+      .then(response => response.json())
+      .then(() => {
+        loadUsers();
+        closeModal();
+      })
+      .catch(error => console.error('Error updating user:', error));
+    }
+
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        fetch(`/api/users/${userId}`, {
+          method: 'DELETE'
+        })
+        .then(() => loadUsers())
+        .catch(error => console.error('Error deleting user:', error));
+      }
+    }
   </script>
 </body>
 </html>
