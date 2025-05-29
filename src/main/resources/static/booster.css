@@ -1,0 +1,185 @@
+:root {
+  --primary: #3674B5;
+  --primary-dark: #FFFFFF;
+  --background: #EAF6FC;
+  --white: #fff;
+  --text: #333;
+  --accent: #A1E3F9;
+  --muted: #555;
+  --card-bg: #fff;
+  --nav-bg: #A1E3F9;
+  --footer-bg: #A1E3F9;
+  --footer-text: #333;
+  --footer-border: #3674B5;
+}
+
+[data-theme="dark"] {
+  --primary: #4B8AC9;
+  --primary-dark: #1A1A1A;
+  --background: #1A1A1A;
+  --white: #2A2A2A;
+  --text: #E0E0E0;
+  --accent: #4B8AC9;
+  --muted: #888;
+  --card-bg: #2A2A2A;
+  --nav-bg: #2A2A2A;
+  --footer-bg: #2A2A2A;
+  --footer-text: #E0E0E0;
+  --footer-border: #4B8AC9;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text);
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header, footer {
+  background: var(--nav-bg);
+  color: var(--text);
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.main-nav a, header a {
+  color: var(--text);
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+.selector {
+  margin: 20px 0;
+}
+
+.cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.card {
+  width: 150px;
+  height: 220px;
+  object-fit: cover;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+/* Footer styles */
+.footer {
+  border-top: 2px solid var(--footer-border);
+  background-color: var(--footer-bg);
+  color: var(--footer-text);
+  padding: 2em;
+  margin-top: 40px;
+  font-size: 0.9em;
+}
+.footer a {
+  color: inherit;
+  text-decoration: none;
+}
+.footer .footer-bottom {
+  text-align: center;
+  margin-top: 2em;
+}
+.card-wrapper {
+  width: 150px;
+  height: 220px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-front {
+  transform: rotateY(180deg);
+}
+
+.card-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.selector {
+  margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.selector select {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid var(--accent);
+  background-color: var(--white);
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.selector select:hover {
+  border-color: var(--primary);
+}
+
+.selector button {
+  padding: 12px 20px;
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.selector button:hover {
+  background-color: var(--accent);
+  transform: scale(1.05);
+}
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main.container {
+  flex: 1; /* Ini yang mendorong footer ke bawah */
+}

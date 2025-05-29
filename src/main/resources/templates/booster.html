@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Open Booster Pack</title>
+  <link rel="stylesheet" href="/booster.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div>
+      <a href="/index.html"><img src="https://via.placeholder.com/32" alt="logo" /></a>
+      <div class="search-container">
+        <input type="search" placeholder="Search cards..." class="search-input">
+        <button class="search-button">🔍</button>
+      </div>
+      <nav class="main-nav">
+        <a href="/index.html">Beranda</a>
+        <a href="#">Toko</a>
+        <a href="#">Populer</a>
+        <a href="#">Kontak</a>
+        <a href="/booster">Open Pack</a>
+      </nav>
+    </div>
+    <div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <a href="/userInventory">📦 Inventory</a>
+      <a href="/user">👤 Vortexaint</a>
+      <a href="/sign">🔒 Log out</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container">
+    <h1>Buka Booster Pack</h1>
+
+    <div class="selector">
+      <label for="card-type">Pilih Jenis Kartu:</label>
+      <select id="card-type">
+        <option value="pokemon">Pokémon</option>
+        <option value="yugioh">Yu-Gi-Oh!</option>
+        <option value="mtg">Magic: The Gathering</option>
+      </select>
+      <button onclick="openPack()">🎴 Buka Pack</button>
+    </div>
+
+    <div class="cards" id="card-container">
+      <!-- Cards will appear here -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <!-- ... paste your previous footer here exactly as is ... -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.<br>All Rights Reserved.</p>
+      <p class="copyright">
+        All card images and content related to Pokémon ©1995–2025 Nintendo, Creatures Inc., GAME FREAK inc.;
+        Yu-Gi-Oh! ©1996–2025 Kazuki Takahashi, Studio Dice, Shueisha, TV Tokyo, Konami;
+        and Magic: The Gathering ©1993–2025 Wizards of the Coast LLC.
+        All trademarks are property of their respective owners.
+      </p>
+    </div>
+  </footer>
+
+<script>
+  const themeToggle = document.getElementById('themeToggle');
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+
+  if (currentTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    themeToggle.textContent = '☀️';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const newTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+  });
+
+  function openPack() {
+    const type = document.getElementById('card-type').value;
+    const container = document.getElementById('card-container');
+    container.innerHTML = ''; // Kosongkan kontainer sebelumnya
+
+    const backs = {
+      pokemon: '/textures/Pokemon-back.jpg',
+      yugioh: '/textures/YuGiOh-back.jpg',
+      mtg: '/textures/MTG-back.jpg'
+    };
+
+    const fronts = {
+      pokemon: [
+        '/textures/pikachu.png',
+        '/textures/charizard.png',
+        '/textures/snorlax.png',
+        '/textures/mew.png',
+        '/textures/bulbasaur.png'
+      ],
+      yugioh: [
+        '/textures/blue-eyes.jpg',
+        '/textures/dark-magician.jpg',
+        '/textures/red-eyes.jpg',
+        '/textures/exodia.jpg',
+        '/textures/kuriboh.jpg'
+      ],
+      mtg: [
+        '/textures/black-lotus.jpg',
+        '/textures/jace.jpg',
+        '/textures/lightning-bolt.jpg',
+        '/textures/shivan-dragon.jpg',
+        '/textures/elvish-mystic.jpg'
+      ]
+    };
+
+    for (let i = 0; i < 5; i++) {
+  const card = document.createElement('div');
+  card.className = 'card-wrapper';
+  card.style.animationDelay = `${i * 0.2}s`; // delay animasi per kartu
+
+  card.innerHTML = `
+    <div class="card-inner">
+      <div class="card-face card-front">
+        <img src="${fronts[type][i]}" alt="front" />
+      </div>
+      <div class="card-face card-back">
+        <img src="${backs[type]}" alt="back" />
+      </div>
+    </div>
+  `;
+
+  card.addEventListener('click', () => {
+    card.querySelector('.card-inner').classList.toggle('flipped');
+  });
+
+  container.appendChild(card);
+}
+
+  }
+</script>
+
+
+</body>
+</html>
