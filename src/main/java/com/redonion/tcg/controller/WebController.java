@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class WebController {
 
-    @GetMapping("/")
+    @GetMapping({"/", "/index"})
     public String index() {
         return "index";
     }
@@ -42,6 +42,10 @@ public class WebController {
     @GetMapping("/userInventory")
     public String userInventory() {
         return "userInventory";
+    }
+    @GetMapping("/userSettings")
+    public String userSettings() {
+        return "userSettings";
     }
     @GetMapping("/booster")
     public String booster() {

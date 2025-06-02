@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Inventory Management</title>
+  <link rel="stylesheet" href="user.css">
+  <link rel="stylesheet" href="userInventory.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Add notification container -->
+  <div class="notification-container" id="notificationContainer"></div>
+
+  <header>    <div>
+      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+      <div class="search-container">
+        <input type="search" placeholder="Search users..." class="search-input">
+        <button class="search-button">🔍</button>
+      </div>
+      <nav class="main-nav">
+        <a href="/index">Beranda</a>
+        <a href="javascript:void(0)">Toko</a>
+        <a href="javascript:void(0)">Populer</a>
+        <a href="javascript:void(0)">Kontak</a>
+      </nav>
+    </div>    <div class="admin-controls">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <span class="admin-name">👑 Admin: SuperUser</span>
+      <span id="serverTime" class="server-time">Loading time...</span>
+      <a href="javascript:void(0)" class="logout-btn">🔒 Log out</a>
+    </div>
+  </header>
+
+  <div class="back-nav">
+    <a href="javascript:history.back()" class="back-button">← Back to Previous Page</a>
+  </div>
+
+  <div class="container">
+    <h2 class="section-title">Admin Inventory Management</h2>
+
+    <div class="inventory-controls">
+      <select id="cardSetFilter" class="filter-select">
+        <option value="all">All Card Sets</option>
+        <option value="pokemon">Pokémon</option>
+        <option value="yugioh">Yu-Gi-Oh!</option>
+        <option value="mtg">Magic: The Gathering</option>
+        <option value="lorcana">Disney Lorcana</option>
+        <option value="fab">Flesh and Blood</option>
+      </select>
+
+      <!-- Admin Controls -->
+      <div class="admin-controls">
+        <button id="addCard" class="admin-button">+ Add New Card</button>
+        <button id="removeCard" class="admin-button danger">- Remove Card</button>
+      </div>
+
+      <div class="pagination">
+        <span>Page 1 of 15</span>
+        <div class="pagination-controls">
+          <button class="page-btn" disabled>←</button>
+          <span class="page-numbers">
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+            <span>...</span>
+            <button class="page-num">15</button>
+          </span>
+          <button class="page-btn">→</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="inventory-container">
+      <!-- Left: Card grid -->
+      <div class="card-grid">
+        <!-- Placeholder Cards - 24 cards (6x4) -->
+        <div class="card" data-set="pokemon"><img src="https://via.placeholder.com/80x110?text=Pokemon1" alt="Pokemon Card"></div>
+        <div class="card" data-set="yugioh"><img src="https://via.placeholder.com/80x110?text=YuGiOh1" alt="Yu-Gi-Oh Card"></div>
+        <div class="card" data-set="mtg"><img src="https://via.placeholder.com/80x110?text=MTG1" alt="Magic Card"></div>
+        <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana1" alt="Lorcana Card"></div>
+        <div class="card" data-set="fab"><img src="https://via.placeholder.com/80x110?text=FaB1" alt="Flesh and Blood Card"></div>
+        <div class="card" data-set="pokemon"><img src="https://via.placeholder.com/80x110?text=Pokemon2" alt="Pokemon Card"></div>
+        <div class="card" data-set="yugioh"><img src="https://via.placeholder.com/80x110?text=YuGiOh2" alt="Yu-Gi-Oh Card"></div>
+        <div class="card" data-set="mtg"><img src="https://via.placeholder.com/80x110?text=MTG2" alt="Magic Card"></div>
+        <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana2" alt="Lorcana Card"></div>
+        <div class="card" data-set="fab"><img src="https://via.placeholder.com/80x110?text=FaB2" alt="Flesh and Blood Card"></div>
+      </div>
+
+      <!-- Right: Details -->
+      <div class="details admin-details">
+        <img src="https://via.placeholder.com/300x150?text=Select+Card" alt="Select a card">
+        <div class="title">Select a Card</div>
+        <div class="admin-card-form">
+          <div class="form-group">
+            <label for="cardName">Card Name:</label>
+            <input type="text" id="cardName" class="admin-input">
+          </div>
+          <div class="form-group">
+            <label for="cardSet">Card Set:</label>
+            <select id="cardSet" class="admin-input">
+              <option value="pokemon">Pokémon</option>
+              <option value="yugioh">Yu-Gi-Oh!</option>
+              <option value="mtg">Magic: The Gathering</option>
+              <option value="lorcana">Disney Lorcana</option>
+              <option value="fab">Flesh and Blood</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cardDescription">Description:</label>
+            <textarea id="cardDescription" class="admin-input"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="cardQuantity">Quantity:</label>
+            <input type="number" id="cardQuantity" class="admin-input" min="0">
+          </div>
+          <div class="form-actions">
+            <button id="saveCard" class="admin-button">Save Changes</button>
+            <button id="deleteCard" class="admin-button danger">Delete Card</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Add your admin-specific JavaScript here
+    document.addEventListener('DOMContentLoaded', function() {
+      // Server time update
+      const serverTime = document.getElementById('serverTime');
+      function updateServerTime() {
+        const now = new Date();
+        const options = {
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+          timeZoneName: 'short'
+        };
+        serverTime.textContent = now.toLocaleTimeString('en-US', options);
+      }
+      updateServerTime();
+      setInterval(updateServerTime, 1000);
+
+      const addCardBtn = document.getElementById('addCard');
+      const removeCardBtn = document.getElementById('removeCard');
+      const saveCardBtn = document.getElementById('saveCard');
+      const deleteCardBtn = document.getElementById('deleteCard');
+      const cards = document.querySelectorAll('.card');
+
+      // Add Card button click handler
+      addCardBtn.addEventListener('click', function() {
+        clearForm();
+        document.querySelector('.admin-card-form').style.display = 'block';
+      });
+
+      // Remove Card button click handler
+      removeCardBtn.addEventListener('click', function() {
+        removeCardBtn.classList.toggle('active');
+        document.body.classList.toggle('remove-mode');
+      });
+
+      // Card click handler
+      cards.forEach(card => {
+        card.addEventListener('click', function() {
+          if (document.body.classList.contains('remove-mode')) {
+            // Remove the card
+            card.remove();
+            showNotification('Card removed successfully');
+          } else {
+            // Show card details
+            loadCardDetails(card);
+          }
+        });
+      });
+
+      // Save card changes
+      saveCardBtn.addEventListener('click', function() {
+        const name = document.getElementById('cardName').value;
+        const set = document.getElementById('cardSet').value;
+        const description = document.getElementById('cardDescription').value;
+        const quantity = document.getElementById('cardQuantity').value;
+
+        if (name && set && description && quantity) {
+          showNotification('Card changes saved successfully');
+          clearForm();
+        } else {
+          showNotification('Please fill in all fields', 'error');
+        }
+      });
+
+      // Delete card
+      deleteCardBtn.addEventListener('click', function() {
+        if (confirm('Are you sure you want to delete this card?')) {
+          showNotification('Card deleted successfully');
+          clearForm();
+        }
+      });
+
+      // Helper functions
+      function clearForm() {
+        document.getElementById('cardName').value = '';
+        document.getElementById('cardSet').value = 'pokemon';
+        document.getElementById('cardDescription').value = '';
+        document.getElementById('cardQuantity').value = '';
+      }
+
+      function loadCardDetails(card) {
+        // In a real application, this would load actual card details
+        document.querySelector('.admin-card-form').style.display = 'block';
+        document.getElementById('cardName').value = 'Sample Card';
+        document.getElementById('cardSet').value = card.dataset.set;
+        document.getElementById('cardDescription').value = 'Sample card description';
+        document.getElementById('cardQuantity').value = '1';
+      }
+
+      function showNotification(message, type = 'success') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.textContent = message;
+        
+        const container = document.getElementById('notificationContainer');
+        container.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.remove();
+        }, 3000);
+      }
+    });
+  </script>
+</body>
+</html>

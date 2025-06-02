@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error Page</title>
+  <link rel="stylesheet" href="error.css">
+</head>
+<body>
+  <header>
+    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+      <div class="search-container">
+        <input type="search" placeholder="Search cards..." class="search-input">
+        <button class="search-button">🔍</button>
+      </div>
+      <nav class="main-nav">
+        <a href="/index">Beranda</a>
+        <a href="javascript:void(0)">Toko</a>
+        <a href="javascript:void(0)">Populer</a>
+        <a href="javascript:void(0)">Kontak</a>
+      </nav>
+    </div>    <div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <a href="/userInventory">📦 Inventory</a>
+      <a href="/user" style="margin: 0 10px;">👤 Vortexaint</a>
+      <a href="/sign">🔒 Log out</a>
+    </div>
+  </header>
+
+  <div class="container error-page">
+    <div class="error-content">
+      <div class="error-card">
+        <img id="errorCardImage" src="" alt="Error Card" class="error-card-image">
+        <div class="card-stats">
+          <div class="stat">
+            <span class="label">Error</span>
+            <span id="errorCode" class="value"></span>
+          </div>
+          <div class="stat">
+            <span class="label">Type</span>
+            <span id="errorType" class="value"></span>
+          </div>
+          <div class="stat">
+            <span class="label">Card Status</span>
+            <span id="cardStatus" class="value"></span>
+          </div>
+        </div>
+      </div>
+      <div class="error-message">
+        <h1 id="errorTitle"></h1>
+        <p id="errorDescription"></p>
+        <div class="action-buttons">          <a href="/index" class="button">Return to Homepage</a>
+          <a href="javascript:history.back()" class="button secondary">Go Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-sections">
+      <!-- Articles & Decks -->
+      <div class="footer-section">
+        <h4>Articles & Decks</h4>
+        <ul>
+          <li>TCGplayer Content</li>
+          <li>Magic: The Gathering</li>
+          <li>Yu-Gi-Oh!</li>
+          <li>Pokémon</li>
+          <li>Disney Lorcana</li>
+          <li>Flesh and Blood</li>
+          <li>More Articles & Decks</li>
+        </ul>
+      </div>
+
+      <!-- Help & Contact -->
+      <div class="footer-section">
+        <h4>Help & Contact</h4>
+        <ul>
+          <li>Contact Us</li>
+          <li>Help Center</li>
+          <li>Refund and Return Policy</li>
+          <li>Security Center</li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div class="footer-section">
+        <h4>About</h4>
+        <ul>
+          <li>About Us</li>
+          <li>Job Openings</li>
+          <li>Press Room</li>
+          <li>Become an Affiliate</li>
+        </ul>
+      </div>
+
+      <!-- Social Icons -->
+      <div class="footer-section social">
+        <div class="social-icons">
+          <!-- Facebook -->
+          <a href="#" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+              <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
+            </svg>
+          </a>
+
+          <!-- X (Twitter) -->
+          <a href="#" aria-label="Twitter / X">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+              <path fill="currentColor" d="M512 32L320 288l192 192h-96L256 352l-96 128H64l192-256L64 32h96l96 128 96-128h96z"/>
+            </svg>
+          </a>
+
+          <!-- YouTube -->
+          <a href="#" aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24">
+              <path fill="currentColor" d="M549.7 124.1c-6.3-23.8-25-42.5-48.7-48.9C456.2 64 288 64 288 64s-168.2 0-213 11.2c-23.8 6.3-42.5 25-48.8 48.8C16 168.9 16 256 16 256s0 87.1 10.2 131.9c6.3 23.8 25 42.5 48.8 48.8C119.8 448 288 448 288 448s168.2 0 213-11.2c23.8-6.3 42.5-25 48.7-48.8C560 343.1 560 256 560 256s0-87.1-10.3-131.9zM232 336V176l142.8 80L232 336z"/>
+            </svg>
+          </a>
+
+          <!-- Instagram -->
+          <a href="#" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24">
+              <path fill="currentColor" d="M224 202.7c-36.9 0-66.7 29.8-66.7 66.7s29.8 66.7 66.7 66.7 66.7-29.8 66.7-66.7-29.8-66.7-66.7-66.7zm124.7-41c0 14.1-11.4 25.5-25.5 25.5s-25.5-11.4-25.5-25.5S309.1 136 323.2 136s25.5 11.4 25.5 25.5zM398.8 80c-23.3-23.3-54.3-36.2-87.4-36.2H136.6c-33.1 0-64.1 12.9-87.4 36.2S13 134.3 13 167.4v175.2c0 33.1 12.9 64.1 36.2 87.4s54.3 36.2 87.4 36.2h175.2c33.1 0 64.1-12.9 87.4-36.2s36.2-54.3 36.2-87.4V167.4c0-33.1-12.9-64.1-36.2-87.4z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.<br>All Rights Reserved.</p>
+      <p class="copyright">
+        All card images and content related to Pokémon ©1995–2025 Nintendo, Creatures Inc., GAME FREAK inc.;
+        Yu-Gi-Oh! ©1996–2025 Kazuki Takahashi, Studio Dice, Shueisha, TV Tokyo, Konami;
+        and Magic: The Gathering ©1993–2025 Wizards of the Coast LLC.
+        All trademarks are property of their respective owners.
+      </p>
+      <p class="links">
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms of Service</a> |
+        <a href="#">Accessibility</a> |
+        <a href="#">Do Not Sell or Share My Personal Information</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      body.setAttribute('data-theme', savedTheme);
+      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      
+      body.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    });
+
+    // Error page configuration
+    const errorConfigs = {
+      '403': {
+        title: 'Access Forbidden',
+        type: 'Forbidden',
+        status: 'Protected',
+        description: 'Looks like this card is in a protected vault. You don\'t have permission to access this content.',
+        image: 'https://via.placeholder.com/300x400?text=403+Card'
+      },
+      '404': {
+        title: 'Page Not Found',
+        type: 'Missing',
+        status: 'Lost in Trade',
+        description: 'Oops! This card seems to have gone missing from our collection.',
+        image: 'https://via.placeholder.com/300x400?text=404+Card'
+      },
+      '500': {
+        title: 'Internal Server Error',
+        type: 'Server Error',
+        status: 'Damaged',
+        description: 'Our server deck seems to be having some issues. Please try again later.',
+        image: 'https://via.placeholder.com/300x400?text=500+Card'
+      },
+      '503': {
+        title: 'Service Unavailable',
+        type: 'Maintenance',
+        status: 'Under Review',
+        description: 'We\'re currently performing maintenance on our card collection. Please check back soon.',
+        image: 'https://via.placeholder.com/300x400?text=503+Card'
+      }
+    };
+
+    // Get error code from URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const errorCode = params.get('code') || '404'; // Default to 404 if no code provided
+
+    // Set page title
+    document.title = `${errorCode} - ${errorConfigs[errorCode].title}`;
+
+    // Update error content
+    const config = errorConfigs[errorCode];
+    document.getElementById('errorCode').textContent = errorCode;
+    document.getElementById('errorType').textContent = config.type;
+    document.getElementById('cardStatus').textContent = config.status;
+    document.getElementById('errorTitle').textContent = config.title;
+    document.getElementById('errorDescription').textContent = config.description;
+    document.getElementById('errorCardImage').src = config.image;
+    document.getElementById('errorCardImage').alt = `${errorCode} Error Card`;
+  </script>
+</body>
+</html>

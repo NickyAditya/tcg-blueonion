@@ -1,0 +1,169 @@
+/* Inherit base styles, header and footer from user.css */
+@import url('user.css');
+
+/* Common Error Page Styles */
+.error-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  min-height: 70vh;
+  padding: 40px 20px;
+}
+
+.error-card {
+  position: relative;
+  width: 300px;
+  background: var(--card-bg);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+}
+
+.error-card:hover {
+  transform: rotate3d(0.5, -0.5, 0, 15deg);
+}
+
+.error-card-image {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: 8px;
+}
+
+.card-stats .stat:first-child {
+  grid-column: 1 / -1;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat .label {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.stat .value {
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.error-message {
+  max-width: 400px;
+}
+
+.error-message h1 {
+  color: var(--primary);
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.error-message p {
+  color: var(--text);
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--primary);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.button.secondary {
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--muted);
+}
+
+/* Error-specific styles */
+.error-403 .error-card {
+  border: 2px solid #FF9800;
+}
+
+.error-500 .error-card {
+  border: 2px solid #F44336;
+}
+
+.error-503 .error-card {
+  border: 2px solid #9C27B0;
+}
+
+/* Error card themes */
+.error-403 .card-stats {
+  background: rgba(255, 152, 0, 0.1);
+}
+
+.error-500 .card-stats {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.error-503 .card-stats {
+  background: rgba(156, 39, 176, 0.1);
+}
+
+/* Dark mode specific styles */
+[data-theme="dark"] .error-card {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+[data-theme="dark"] .button.secondary {
+  border-color: var(--primary);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .error-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+
+  .error-card {
+    width: 280px;
+  }
+
+  .error-message h1 {
+    font-size: 28px;
+  }
+
+  .error-message p {
+    font-size: 16px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

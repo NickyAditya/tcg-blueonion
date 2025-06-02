@@ -4,27 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="/admin.css">
+  <link rel="stylesheet" href="admin.css">
 </head>
 <body>
   <header>
-    <div>      <a href="/index.html" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <input type="search" placeholder="Search users..." class="search-input">
         <button class="search-button">🔍</button>
-      </div>
-      <nav class="main-nav">
-        <a href="/index.html">Beranda</a>
+      </div>      <nav class="main-nav">
+        <a href="/index">Beranda</a>
         <a href="javascript:void(0)">Toko</a>
         <a href="javascript:void(0)">Populer</a>
         <a href="javascript:void(0)">Kontak</a>
       </nav>
     </div>
-    <div class="admin-controls">
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    <div class="admin-controls">      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
       <span class="admin-name">👑 Admin: SuperUser</span>
       <span id="serverTime" class="server-time">Loading time...</span>
-      <a href="/sign.html" class="logout-btn">🔒 Log out</a>
+      <a href="/sign" class="logout-btn">🔒 Log out</a>
     </div>
   </header>
 
@@ -32,15 +30,14 @@
     <div class="admin-header">
       <h1>Admin Dashboard</h1>
       <p class="last-login">Last login: May 25, 2025 14:30 WIB</p>
-    </div>
-
-    <div class="user-management">
+    </div>    <div class="user-management">
       <h2 class="section-title">User Management</h2>
       <button class="add-user-btn" style="margin-bottom:15px; background-color: var(--accent); color: var(--white); border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">
         ➕ Tambah User
       </button>
       <div class="user-table">
-        <table>          <thead>
+        <table>
+          <thead>
             <tr>
               <th>ID</th>
               <th>Username</th>
@@ -48,8 +45,7 @@
               <th>Password</th>
               <th>Role</th>
               <th>Actions</th>
-            </tr>
-          </thead>
+            </tr>          </thead>
           <tbody id="userTableBody">
             <!-- Data will be populated dynamically -->
           </tbody>
@@ -213,8 +209,7 @@
           y: {
             beginAtZero: true
           }
-        }
-      }
+        }      }
     });
   </script>
 
@@ -368,7 +363,7 @@
               <td>${user.password ? '********' : ''}</td>
               <td>${user.role}</td>
               <td>
-                <button class="inventory-btn" onclick="window.location.href='/userInventory.html?id=${user.id_user}'">📦 Inventory</button>
+                <button class="inventory-btn" onclick="window.location.href='/userInventory?id=${user.id_user}'">📦 Inventory</button>
                 <button class="edit-btn" onclick="editUser(${user.id_user})">✏️ Edit</button>
                 <button class="delete-btn" onclick="deleteUser(${user.id_user})">🗑️ Delete</button>
               </td>

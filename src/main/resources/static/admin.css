@@ -1,5 +1,5 @@
 /* Inherit base styles from user.css */
-@import url('/user.css');
+@import url('user.css');
 
 /* Admin-specific styles */
 /* Header and controls */
@@ -94,6 +94,132 @@ td {
   background-color: var(--primary-dark);
 }
 
+/* Admin Inventory Management */
+.admin-button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.admin-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.admin-button.danger {
+  background-color: #dc3545;
+}
+
+.admin-button.danger:hover {
+  background-color: #c82333;
+}
+
+.admin-button.active {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.admin-card-form {
+  margin-top: 20px;
+  display: none;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--input-bg);
+  color: var(--text);
+}
+
+.admin-input:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+
+textarea.admin-input {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* Remove mode styles */
+.remove-mode .card {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.remove-mode .card::before {
+  content: "×";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: #dc3545;
+  background: rgba(255, 255, 255, 0.9);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.remove-mode .card:hover::before {
+  opacity: 1;
+}
+
+/* Notification styles */
+.notification-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.notification {
+  background: #4CAF50;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+.notification.error {
+  background: #dc3545;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* Analytics chart */
 .chart-container {
   background-color: var(--card-bg);
@@ -102,22 +228,6 @@ td {
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 400px;
-}
-
-.add-user-btn {
-  background-color: var(--accent);
-  color: var(--white);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 15px;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.add-user-btn:hover {
-  background-color: var(--primary-dark);
 }
 
 /* Dark mode overrides */
