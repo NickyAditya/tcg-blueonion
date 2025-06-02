@@ -71,6 +71,22 @@ td {
 }
 
 /* Action buttons */
+.add-user-btn {
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.add-user-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
 .inventory-btn, .edit-btn, .delete-btn {
   background-color: var(--primary);
   color: var(--white);
