@@ -42,11 +42,12 @@ public class SecurityConfig {    @Autowired
                         "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
                         "/texture/**", "/images/**", "/logo*", "/*.ico",
                         "/webjars/**", "/fonts/**", "/uploads/**")
-                    .permitAll()                        .requestMatchers(
+                    .permitAll()
+                    .requestMatchers(
                             "/", "/index", "/sign", "/login", "/register", "/error",
-                            "/pokemon", "/yugioh", "/mtg", "/register")
+                            "/pokemon", "/yugioh", "/mtg", "/register", "/logout")
                         .permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/settings/**").authenticated()
                     .requestMatchers("/user/**", "/userInventory", "/booster", "/settings", "/userSettings").authenticated()
                     .anyRequest().authenticated()

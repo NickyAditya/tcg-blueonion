@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,10 +19,12 @@
         <a href="javascript:void(0)">Populer</a>
         <a href="javascript:void(0)">Kontak</a>
       </nav>
-    </div>
-    <div class="admin-controls">      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <span class="admin-name">👑 Admin: SuperUser</span>
+    </div>    <div class="admin-controls">      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <span class="admin-name" th:text="${'👑 Admin: ' + adminName}">👑 Admin: </span>
       <span id="serverTime" class="server-time">Loading time...</span>
-      <a href="/sign" class="logout-btn">🔒 Log out</a>
+      <form th:action="@{/logout}" method="post" style="display: inline;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-btn" style="border: none; background: none; cursor: pointer; color: var(--text);">🔒 Log out</button>
+      </form>
     </div>
   </header>
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
+<head>  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Inventory</title>  <link rel="stylesheet" href="user.css">
   <link rel="stylesheet" href="userInventory.css">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
   <!-- Add notification container -->
@@ -21,13 +22,15 @@
         <a href="javascript:void(0)">Populer</a>
         <a href="javascript:void(0)">Kontak</a>
       </nav>
-    </div>    <div>
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
       <a href="/user" style="margin: 0 10px;">👤 Vortexaint</a>
-      <a href="/sign">🔒 Log out</a>
+      <form action="/logout" method="post" style="display: inline;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-link" style="border: none; background: none; cursor: pointer; padding: 0; color: var(--text);">🔒 Log out</button>
+      </form>
     </div>
   </header>  <div class="back-nav">
     <a href="javascript:history.back()" class="back-button">← Back to Previous Page</a>

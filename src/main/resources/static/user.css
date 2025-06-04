@@ -74,16 +74,20 @@ header {
     white-space: nowrap;
 }
 
-header a {
+header a, header button {
     color: var(--text);
-    text-decoration: none;
+    text-decoration: none !important;
     margin: 0 10px;
     position: relative;
     transition: all 0.3s ease;
 }
 
-nav a:hover, header a:hover {
+nav a:hover, 
+header a:hover,
+header button:hover,
+header form:hover button {
     color: var(--primary);
+    text-decoration: none !important;
 }
 
 .container {
@@ -285,11 +289,21 @@ nav a:hover, header a:hover {
     outline: inherit;
     padding: 0;
     text-decoration: none;
+    transition: all 0.3s ease;
 }
 
 .logout-link:hover {
     text-decoration: underline;
     opacity: 0.8;
+    color: var(--primary) !important;
+}
+
+form[action="/logout"] {
+    text-decoration: none;
+}
+
+form[action="/logout"]:hover {
+    text-decoration: none;
 }
 
 @media (max-width: 768px) {
