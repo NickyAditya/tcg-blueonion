@@ -225,6 +225,31 @@ textarea.admin-input {
   background: #dc3545;
 }
 
+/* Toast notifications */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.toast {
+  padding: 12px 20px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  color: white;
+  animation: slideIn 0.3s ease-out;
+  max-width: 300px;
+}
+
+.toast-success {
+  background-color: #28a745;
+}
+
+.toast-error {
+  background-color: #dc3545;
+}
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -236,6 +261,26 @@ textarea.admin-input {
   }
 }
 
+/* Notification badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.8em;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+.badge:empty {
+  display: none;
+}
+
 /* Analytics chart */
 .chart-container {
   background-color: var(--card-bg);
@@ -244,6 +289,68 @@ textarea.admin-input {
   margin: 20px 0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   height: 400px;
+}
+
+/* Email Change Requests */
+.email-requests {
+  background-color: var(--card-bg);
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.request-table {
+  overflow-x: auto;
+}
+
+.request-status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-approved {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-denied {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.request-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.approve-btn, .deny-btn {
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.approve-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.deny-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.approve-btn:hover, .deny-btn:hover {
+  opacity: 0.9;
 }
 
 /* Dark mode overrides */

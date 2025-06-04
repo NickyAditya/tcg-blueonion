@@ -1,18 +1,29 @@
 package com.redonion.tcg.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 // import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)    private Integer id_user;
 
     private String nama;
     private String email;
     private String password;
+    private String avatar;
+    private String about;    private String favorite_tags;
+    
+    @jakarta.persistence.Column(name = "created_at")
+    @jakarta.persistence.Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
+    private java.util.Date createdAt = new java.util.Date();
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -57,9 +68,37 @@ public class User {
 
     public UserRole getRole() {
         return role;
+    }    public void setRole(UserRole role) {
+        this.role = role;
+    }
+    
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setRole(UserRole role) {
-        this.role = role;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
+
+    public String getFavorite_tags() {
+        return favorite_tags;
+    }    public void setFavorite_tags(String favorite_tags) {
+        this.favorite_tags = favorite_tags;
+    }
+
+    public java.util.Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(java.util.Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

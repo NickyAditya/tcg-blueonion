@@ -6,64 +6,69 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import com.redonion.tcg.service.CustomUserDetailsService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
-public class SecurityConfig {
-
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+@EnableMethodSecurity
+public class SecurityConfig {    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
+    }    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("DEBUG: SecurityFilterChain initialized");
-        http
-                .csrf(csrf -> csrf.disable())
-                .userDetailsService(userDetailsService)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/static/**", "/css/**", "/*.css", "/*.js", "/*.png",
-                                "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
-                                "/texture/**", "/images/**", "/logo*", "/*.ico",
-                                "/webjars/**", "/fonts/**")
+        
+        http.csrf(csrf -> 
+                csrf.ignoringRequestMatchers("/api/**")
+            )
+            .userDetailsService(userDetailsService)
+            .authorizeHttpRequests(auth -> 
+                auth.requestMatchers(
+                        "/static/**", "/css/**", "/*.css", "/*.js", "/*.png",
+                        "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
+                        "/texture/**", "/images/**", "/logo*", "/*.ico",
+                        "/webjars/**", "/fonts/**", "/uploads/**")
+                    .permitAll()                        .requestMatchers(
+                            "/", "/index", "/sign", "/login", "/register", "/error",
+                            "/pokemon", "/yugioh", "/mtg", "/register")
                         .permitAll()
-                        .requestMatchers(
-                                "/", "/index", "/sign", "/login", "/register", "/error",
-                                "/pokemon", "/yugioh", "/mtg")
-                        .permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**", "/userInventory","/booster").authenticated()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/sign")
-                        .loginProcessingUrl("/login")
-                        .successHandler(new CustomLoginSuccessHandler())
-                        .failureUrl("/sign?error=true")
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll())
-                .exceptionHandling(ex -> ex
-                        .accessDeniedPage("/error"));
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/api/settings/**").authenticated()
+                    .requestMatchers("/user/**", "/userInventory", "/booster", "/settings", "/userSettings").authenticated()
+                    .anyRequest().authenticated()
+            )
+            .formLogin(form -> 
+                form.loginPage("/sign")
+                    .loginProcessingUrl("/login")
+                    .successHandler(new CustomLoginSuccessHandler())
+                    .failureUrl("/sign?error=true")
+                    .permitAll()
+            )
+            .logout(logout -> 
+                logout.logoutUrl("/logout")
+                    .logoutSuccessUrl("/sign?logout=true")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
+                    .permitAll()
+            )
+            .exceptionHandling(ex ->
+                ex.accessDeniedPage("/error")
+            );
 
         return http.build();
     }

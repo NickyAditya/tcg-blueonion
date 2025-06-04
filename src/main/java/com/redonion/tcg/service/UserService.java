@@ -1,12 +1,13 @@
 package com.redonion.tcg.service;
 
-import com.redonion.tcg.model.User;
-import com.redonion.tcg.repository.UserRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.redonion.tcg.model.User;
+import com.redonion.tcg.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -46,9 +47,24 @@ public class UserService {
         existingUser.setRole(user.getRole());
 
         return userRepository.save(existingUser);
+    }    public void delete(Integer id) {
+        userRepository.deleteById(id);
     }
 
-    public void delete(Integer id) {
-        userRepository.deleteById(id);
+    public User findByUsername(String username) {
+        return userRepository.findByNama(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public boolean updatePassword(User user, String oldPassword, String newPassword) {
+        // Verify old password
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+
+        // Update to new password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
     }
 }

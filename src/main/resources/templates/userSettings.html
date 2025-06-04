@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Settings</title>
   <link rel="stylesheet" href="user.css">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
   <!-- Add notification container -->
@@ -31,29 +33,53 @@
         <a href="javascript:void(0)">Kontak</a>
       </nav>
     </div>
-    <div>
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
-      <a href="/user" style="margin: 0 10px;">👤 Vortexaint</a>
-      <a href="/sign">🔒 Log out</a>
+      <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + username}">👤 User</a>
+      <form action="/logout" method="post" style="display: inline;">
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+        <button type="submit" class="logout-link" style="border: none; background: none; cursor: pointer; padding: 0; color: var(--text);">🔒 Log out</button>
+      </form>
     </div>
   </header>
 
   <div class="content-wrapper">
     <div class="container settings-container">
       <h2 class="section-title"><i class="fa fa-cog"></i> User Settings</h2>
-      <div class="settings-form">
-
-        <label>Username</label>        <input type="text" value="Vortexaint" readonly>
-
+      <div class="settings-form">        <label>Username</label>        
+        <input type="text" th:value="${username}" readonly>        
         <label>Email</label>
-        <input type="email" value="off19132@gmail.com" readonly><label>Avatar</label>
+        <div class="email-container">
+            <input type="email" th:value="${userEmail}" readonly>
+            <button class="btn btn-secondary" onclick="showEmailChangeModal()" th:disabled="${emailChangeRequest}">
+                <span th:if="${!emailChangeRequest}">Request Change</span>
+                <span th:if="${emailChangeRequest}">Change Pending</span>
+            </button>
+        </div>
+
+        <!-- Email Change Request Modal -->
+        <div id="emailChangeModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Request Email Change</h3>
+                <p>Current email: <span id="currentEmail" th:text="${userEmail}"></span></p>
+                <div class="form-group">
+                    <label>New Email:</label>
+                    <input type="email" id="newEmail" required>
+                </div>
+                <p class="note">Note: Your request will be reviewed by an administrator.</p>
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="closeEmailModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="submitEmailChange()">Submit Request</button>
+                </div>
+            </div>
+        </div>
+        
+        <label>Avatar</label>
         <div class="avatar-preview-container">
             <div class="avatar-preview">
-                <img src="avatar.jpg" alt="Current avatar" id="avatarPreview">
+                <img th:src="${user.avatar != null ? user.avatar : '/images/default-avatar.png'}" alt="Current avatar" id="avatarPreview">
             </div>
             <div class="avatar-controls">
                 <input type="file" id="avatarInput" accept="image/*">
@@ -61,7 +87,8 @@
             </div>
         </div>
 
-        <label>About</label>        <input type="text" placeholder="Tell us about yourself">
+        <label>About</label>        
+        <input type="text" th:value="${user.about}" placeholder="Tell us about yourself">
 
         <label>Favorite Tags</label>
         <input type="text" value="Pokemon" placeholder="Add your favorite card tags">
@@ -73,12 +100,305 @@
         <label>New Password</label>
         <input type="password" placeholder="new password" class="settings-input">
 
-        <label>Confirm</label>        <input type="password" placeholder="confirm new password" class="settings-input">
-        <div class="button-group">
-            <button class="btn btn-cancel">Cancel</button>
-            <button class="btn btn-primary">Save Changes</button>
-            <button class="btn btn-danger">Delete Account</button>
+        <label>Confirm</label>        <input type="password" placeholder="confirm new password" class="settings-input">        <div class="button-group">
+            <button class="btn btn-cancel" onclick="resetForm()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
+            <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
         </div>
+
+        <script>
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+
+            // Add to notification history
+            const historyList = document.getElementById('notificationHistoryList');
+            const historyItem = document.createElement('li');
+            historyItem.className = type;
+            historyItem.textContent = message;
+            historyList.appendChild(historyItem);
+
+            // Update badge
+            const badge = document.getElementById('notificationBadge');
+            badge.textContent = parseInt(badge.textContent || '0') + 1;
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserSettings();
+            setupAvatarHandlers();
+            checkEmailRequestStatus();
+        });        function loadUserSettings() {
+            fetch('/api/settings/current')
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = '/sign?error=unauthorized';
+                            return;
+                        }
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(user => {
+                    if (!user) return;
+                    document.querySelector('input[type="text"][value="Vortexaint"]').value = user.nama;
+                    document.querySelector('input[type="email"]').value = user.email;
+                    document.querySelector('input[placeholder="Tell us about yourself"]').value = user.about || '';
+                    document.querySelector('input[value="Pokemon"]').value = user.favorite_tags || '';
+                    
+                    if (user.avatar) {
+                        document.getElementById('avatarPreview').src = user.avatar;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading user settings:', error);
+                    showNotification('Failed to load user settings. Please try logging in again.', 'error');
+                });
+        }
+
+        function setupAvatarHandlers() {
+            const avatarInput = document.getElementById('avatarInput');
+            const removeAvatarCheckbox = document.getElementById('removeAvatar');
+            const preview = document.getElementById('avatarPreview');
+
+            avatarInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        removeAvatarCheckbox.checked = false;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            removeAvatarCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    preview.src = '';
+                    avatarInput.value = '';
+                }
+            });
+        }
+
+        function saveChanges() {
+            const formData = new FormData();
+            
+            const about = document.querySelector('input[placeholder="Tell us about yourself"]').value;
+            const favoriteTags = document.querySelector('input[value="Pokemon"]').value;
+            const avatarInput = document.getElementById('avatarInput');
+            const removeAvatar = document.getElementById('removeAvatar').checked;
+
+            formData.append('about', about);
+            formData.append('favoriteTags', favoriteTags);
+            
+            if (avatarInput.files.length > 0) {
+                formData.append('avatar', avatarInput.files[0]);
+            }            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+            const fetchOptions = {
+                method: 'POST',
+                headers: {
+                    [header]: token
+                }
+            };
+
+            if (removeAvatar) {
+                fetch('/api/settings/remove-avatar', fetchOptions);
+            } else {
+                fetchOptions.body = formData;
+                fetch('/api/settings/update', fetchOptions)
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to update settings');
+                    showNotification('Settings updated successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Failed to update settings', 'error');
+                });
+            }
+
+            // Handle password change if new password is provided
+            const oldPassword = document.querySelector('input[placeholder="old password"]').value;
+            const newPassword = document.querySelector('input[placeholder="new password"]').value;
+            const confirmPassword = document.querySelector('input[placeholder="confirm new password"]').value;            if (newPassword) {
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match!', 'error');
+                    return;
+                }
+
+                if (!oldPassword) {
+                    showNotification('Please enter your current password', 'error');
+                    return;
+                }
+
+                const passwordData = new FormData();
+                passwordData.append('oldPassword', oldPassword);
+                passwordData.append('newPassword', newPassword);
+
+                fetch('/api/settings/password', {
+                    method: 'POST',
+                    headers: {
+                        [header]: token
+                    },
+                    body: passwordData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            window.location.href = '/sign?error=unauthorized';
+                            return;
+                        }
+                        throw new Error('Failed to update password');
+                    }
+                    showNotification('Password updated successfully!');
+                    // Clear password fields
+                    document.querySelector('input[placeholder="old password"]').value = '';
+                    document.querySelector('input[placeholder="new password"]').value = '';
+                    document.querySelector('input[placeholder="confirm new password"]').value = '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Failed to update password. Please check your current password and try again.', 'error');
+                });
+                passwordData.append('oldPassword', oldPassword);
+                passwordData.append('newPassword', newPassword);
+
+                fetch('/api/settings/password', {
+                    method: 'POST',
+                    body: passwordData
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to update password');
+                    showNotification('Password updated successfully!');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Failed to update password', 'error');
+                });
+            }
+        }        function resetForm() {
+            if (confirm('Are you sure you want to cancel your changes?')) {
+                // Reset all form fields to original values
+                loadUserSettings();
+                
+                // Clear all password fields
+                document.querySelectorAll('input[type="password"]').forEach(input => input.value = '');
+                
+                // Reset avatar-related elements
+                document.getElementById('removeAvatar').checked = false;
+                document.getElementById('avatarInput').value = '';
+                
+                // Show confirmation message
+                showNotification('Changes have been cancelled', 'info');
+                
+                // Redirect back to user profile
+                setTimeout(() => {
+                    window.location.href = '/user';
+                }, 1500);
+            }
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                const userId = document.querySelector('input[type="hidden"]').value;
+                fetch(`/api/users/${userId}`, {
+                    method: 'DELETE'
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to delete account');
+                    window.location.href = '/sign';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('Failed to delete account', 'error');
+                });
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            container.appendChild(notification);
+
+            // Add to notification history
+            const historyList = document.getElementById('notificationHistoryList');
+            const historyItem = document.createElement('li');
+            historyItem.className = type;
+            historyItem.textContent = message;
+            historyList.appendChild(historyItem);
+
+            // Update badge
+            const badge = document.getElementById('notificationBadge');
+            badge.textContent = parseInt(badge.textContent || '0') + 1;
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function showEmailChangeModal() {
+            const currentEmail = document.querySelector('input[type="email"]').value;
+            document.getElementById('currentEmail').textContent = currentEmail;
+            document.getElementById('emailChangeModal').style.display = 'block';
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailChangeModal').style.display = 'none';
+            document.getElementById('newEmail').value = '';
+        }
+
+        function submitEmailChange() {
+            const newEmail = document.getElementById('newEmail').value;
+            
+            if (!newEmail) {
+                showNotification('Please enter a new email address', 'error');
+                return;
+            }
+
+            fetch('/api/email-change/request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ newEmail: newEmail })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to submit request');
+                return response.json();
+            })
+            .then(() => {
+                showNotification('Email change request submitted successfully. Awaiting admin approval.', 'success');
+                closeEmailModal();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Failed to submit email change request', 'error');
+            });
+        }
+
+        function checkEmailRequestStatus() {
+            fetch('/api/email-change/user/status')
+                .then(response => response.json())
+                .then(request => {
+                    if (request) {
+                        showNotification(`You have a pending email change request to ${request.requestedEmail}`, 'info');
+                    }
+                })
+                .catch(error => console.error('Error checking email request status:', error));
+        }
+        </script>
       </div>
     </div>
   </div>

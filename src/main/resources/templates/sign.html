@@ -42,8 +42,8 @@
                   Invalid username or password.
               </div>
               <div th:if="${success}" style="color: green;" th:text="${success}"></div>
-              <div th:if="${error}" style="color: red;" th:text="${error}"></div>
-              <form action="/login" method="post">
+              <div th:if="${error}" style="color: red;" th:text="${error}"></div>              <form action="/login" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
                 <div class="input-boxes">
                   <div class="input-box">
                     <i class="fas fa-envelope"></i>
@@ -64,9 +64,9 @@
                 </div>
               </form>
             </div>
-            <div class="signup-form">
-              <div class="title">Signup</div>
+            <div class="signup-form">              <div class="title">Signup</div>
               <form action="/register" method="post">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
                 <div class="input-boxes">
                   <div class="input-box">
                     <i class="fas fa-user"></i>

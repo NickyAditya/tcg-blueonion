@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="admin.css">
+  <script src="admin.js" defer></script>
 </head>
 <body>
   <header>    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
@@ -26,6 +27,9 @@
   </header>
 
   <div class="container">
+    <!-- Add toast container right after container div -->
+    <div id="toastContainer" class="toast-container"></div>
+
     <div class="admin-header">
       <h1>Admin Dashboard</h1>
       <p class="last-login">Last login: May 25, 2025 14:30 WIB</p>
@@ -53,6 +57,30 @@
       <h2 class="section-title">Popular Cards Analytics</h2>
       <div class="chart-container">
         <canvas id="popularCardsChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Email Change Requests Section -->
+    <div class="email-requests">
+      <h2 class="section-title">
+        Email Change Requests
+        <span id="pendingRequestCount" class="badge"></span>
+      </h2>
+      <div class="request-table">
+        <table>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Current Email</th>
+              <th>Requested Email</th>
+              <th>Request Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="emailRequestsTableBody">
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

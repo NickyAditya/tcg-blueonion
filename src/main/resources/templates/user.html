@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Profile</title>
+  <title th:text="${user.nama} + ' - Profile'">User Profile</title>
   <link rel="stylesheet" href="user.css">
 </head>
 <body>  <header>    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
@@ -16,12 +16,11 @@
         <a href="javascript:void(0)">Populer</a>
         <a href="javascript:void(0)">Kontak</a>
       </nav>
-    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
-      <a href="/user" style="margin: 0 10px;">👤 Vortexaint</a>
+      <a href="/user" style="margin: 0 10px;">👤 <span th:text="${user.nama}">Username</span></a>
       <a href="/sign">🔒 Log out</a>
     </div>
   </header>
@@ -34,15 +33,13 @@
       <button class="clear-notifications" id="clearNotifications">Clear all</button>
     </div>
     <ul class="notification-history-list" id="notificationHistoryList"></ul>
-  </div>
-
-  <div class="container">
+  </div>    <div class="container">
     <div class="profile">
-      <img src="https://via.placeholder.com/150" alt="Profile Picture" />
-      <div class="profile-info">
-        <h2>Vortexaint</h2>
-        <p><strong>Joined:</strong> 1 month, 3 weeks ago</p>
-        <p><strong>Favorite tags:</strong> [REDACTED]</p>        <div class="profile-buttons">
+      <img th:src="${user.avatar != null ? user.avatar : '/textures/Pokemon-back.jpg'}" alt="Profile Picture" />
+      <div class="profile-info">        <h2 th:text="${user.nama}">Username</h2>
+        <p><strong>Joined:</strong> <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy')}"></span></p>
+        <p><strong>Favorite tags:</strong> <span th:text="${user.favorite_tags != null ? user.favorite_tags : 'None set'}"></span></p>
+        <p><strong>About:</strong> <span th:text="${user.about != null ? user.about : 'No description yet'}"></span></p><div class="profile-buttons">
           <button onclick="window.location.href='/userSettings'">⚙️ Settings</button>
           <button onclick="window.location.href='/userInventory'">📦 Inventory</button>
           <button onclick="window.location.href='javascript:void(0)'">👁️ Watchlist</button>
@@ -343,5 +340,30 @@
       notifications.info('Welcome back!', 'Check out your latest card activities.');
     }, 1000);
   </script>
-</body>
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get user data from Thymeleaf
+        const user = /*[[${user}]]*/ {};
+        const createdAt = new Date(user.createdAt);
+        
+        // Update profile info if available
+        if (user.about) {
+            document.getElementById('userAbout').textContent = user.about;
+        }
+        
+        // Update avatar if available
+        const avatarImg = document.querySelector('.profile img');
+        if (user.avatar) {
+            avatarImg.src = user.avatar;
+        }
+        
+        // Format favorite tags if available
+        const favoriteTags = user.favorite_tags;
+        if (favoriteTags) {
+            const tags = favoriteTags.split(',').map(tag => tag.trim());
+            document.getElementById('favoriteTags').textContent = tags.join(', ');
+        }
+    });
+  </script>
+  </body>
 </html>

@@ -29,23 +29,13 @@ public class WebController {
     @GetMapping("/yugioh")
     public String yugioh() {
         return "yugioh";
-    }
-
-    @GetMapping("/mtg")
+    }    @GetMapping("/mtg")
     public String mtg() {
         return "mtg";
     }
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-    @GetMapping("/userInventory")
+      @GetMapping("/userInventory")
     public String userInventory() {
         return "userInventory";
-    }
-    @GetMapping("/userSettings")
-    public String userSettings() {
-        return "userSettings";
     }
     @GetMapping("/booster")
     public String booster() {

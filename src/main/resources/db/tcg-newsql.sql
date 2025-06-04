@@ -70,13 +70,34 @@ CREATE TABLE IF NOT EXISTS `users` (
   `nama` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `role` enum('ADMIN','USER') COLLATE utf8mb4_general_ci NOT NULL,
+  `role` enum('ADMIN','USER') COLLATE utf8mb4_general_ci NOT NULL,  `avatar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Path to user avatar image',
+  `about` text COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'User bio/description',
+  `favorite_tags` varchar(500) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'Comma-separated list of favorite tags',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Account creation time',
   PRIMARY KEY (`id_user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Dumping data for table redonion_tcg.users: ~1 rows (approximately)
 INSERT INTO `users` (`id_user`, `nama`, `email`, `password`, `role`) VALUES
 	(1, 'admin', 'admin@gmail.com', '$2a$12$2XiXMIjfH3U8r9Hu9mbrgu6UaPxdx/mXhFE0e4/DUCwuw3ithrL0y', 'ADMIN');
+
+-- Dumping structure for table redonion_tcg.email_change_requests
+DROP TABLE IF EXISTS `email_change_requests`;
+CREATE TABLE IF NOT EXISTS `email_change_requests` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `current_email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `requested_email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `request_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` enum('PENDING','APPROVED','DENIED') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'PENDING',
+  `processed_date` timestamp NULL DEFAULT NULL,
+  `processed_by` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_email_requests_user` (`user_id`),
+  KEY `FK_email_requests_admin` (`processed_by`),
+  CONSTRAINT `FK_email_requests_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `FK_email_requests_admin` FOREIGN KEY (`processed_by`) REFERENCES `users` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
