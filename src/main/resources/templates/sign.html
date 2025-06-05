@@ -100,7 +100,7 @@
                   </div>
                   <div id="password-requirements" class="requirements" style="display: none;">
                     <small>Password must:</small>
-                    <ul style="font-size: 0.8em; color: #666; margin: 5px 0; padding-left: 20px;">
+                    <ul style="font-size: 0.8em; color: #ff0000; margin: 5px 0; padding-left: 20px;">
                       <li id="length-check">Be at least 8 characters long</li>
                       <li id="uppercase-check">Contain at least one uppercase letter</li>
                       <li id="lowercase-check">Contain at least one lowercase letter</li>
@@ -131,9 +131,7 @@
           icon.classList.add('fa-eye-slash');
         }
       });
-    });
-
-    function validatePassword(input) {
+    });    function validatePassword(input) {
       const requirements = document.getElementById('password-requirements');
       const password = input.value;
       
@@ -149,13 +147,13 @@
 
       // Update requirements list
       document.getElementById('length-check').style.color = 
-        password.length >= 8 ? '#4CAF50' : '#666';
+        password.length >= 8 ? '#4CAF50' : '#ff0000';
       
       document.getElementById('uppercase-check').style.color = 
-        /[A-Z]/.test(password) ? '#4CAF50' : '#666';
+        /[A-Z]/.test(password) ? '#4CAF50' : '#ff0000';
       
       document.getElementById('lowercase-check').style.color = 
-        /[a-z]/.test(password) ? '#4CAF50' : '#666';
+        /[a-z]/.test(password) ? '#4CAF50' : '#ff0000';
     }
   </script>
 </body>
