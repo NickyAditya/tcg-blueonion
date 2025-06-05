@@ -6,8 +6,7 @@
     <link rel="stylesheet" th:href="@{/sign.css}">
     <!-- Fontawesome CDN Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <style>
       .toggle-password {
         position: absolute;
         right: 35px;
@@ -19,6 +18,19 @@
       }
       .input-box {
         position: relative;
+      }
+      .requirements {
+        margin: -5px 0 10px;
+        padding: 5px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        border: 1px solid #eee;
+      }
+      .requirements ul {
+        margin: 5px 0;
+      }
+      .requirements li {
+        transition: color 0.3s ease;
       }
     </style>
   </head>
@@ -73,13 +85,26 @@
                   <div class="input-box">
                     <i class="fas fa-envelope"></i>
                     <input type="email" name="email" placeholder="Enter your email" required>
-                  </div>
-                  <div class="input-box">
+                  </div>                  <div class="input-box">
                     <i class="fas fa-lock"></i>
-                    <input type="password" name="password" placeholder="Enter your password" required id="signup-password">
+                    <input type="password" name="password" 
+                           placeholder="Enter your password" 
+                           required 
+                           id="signup-password"
+                           pattern="^(?=.*[a-z])(?=.*[A-Z]).{8,}$"
+                           title="Password must be at least 8 characters long and contain uppercase and lowercase letters"
+                           oninput="validatePassword(this)">
                     <span class="toggle-password" toggle="#signup-password">
                       <i class="fas fa-eye-slash"></i>
                     </span>
+                  </div>
+                  <div id="password-requirements" class="requirements" style="display: none;">
+                    <small>Password must:</small>
+                    <ul style="font-size: 0.8em; color: #666; margin: 5px 0; padding-left: 20px;">
+                      <li id="length-check">Be at least 8 characters long</li>
+                      <li id="uppercase-check">Contain at least one uppercase letter</li>
+                      <li id="lowercase-check">Contain at least one lowercase letter</li>
+                    </ul>
                   </div>
                   <div class="button input-box">
                     <input type="submit" value="Submit">
@@ -91,8 +116,7 @@
           </div>
       </div>
     </div>
-  </div>
-  <script>
+  </div>  <script>
     document.querySelectorAll('.toggle-password').forEach(function(element) {
       element.addEventListener('click', function() {
         const input = document.querySelector(this.getAttribute('toggle'));
@@ -108,6 +132,31 @@
         }
       });
     });
+
+    function validatePassword(input) {
+      const requirements = document.getElementById('password-requirements');
+      const password = input.value;
+      
+      // Show requirements when password field is focused
+      input.addEventListener('focus', function() {
+        requirements.style.display = 'block';
+      });
+      
+      // Hide requirements when password field loses focus
+      input.addEventListener('blur', function() {
+        requirements.style.display = 'none';
+      });
+
+      // Update requirements list
+      document.getElementById('length-check').style.color = 
+        password.length >= 8 ? '#4CAF50' : '#666';
+      
+      document.getElementById('uppercase-check').style.color = 
+        /[A-Z]/.test(password) ? '#4CAF50' : '#666';
+      
+      document.getElementById('lowercase-check').style.color = 
+        /[a-z]/.test(password) ? '#4CAF50' : '#666';
+    }
   </script>
 </body>
 </html>

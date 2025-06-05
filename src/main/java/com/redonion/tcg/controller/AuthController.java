@@ -26,11 +26,27 @@ public class AuthController {
             @RequestParam String email,
             @RequestParam String password,
             RedirectAttributes redirectAttributes) {
-        try { // Validate input
+        try {
+            // Validate input
             if (username == null || username.trim().isEmpty() ||
                     password == null || password.trim().isEmpty() ||
                     email == null || email.trim().isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "All fields are required");
+                return "redirect:/sign";
+            }
+
+            // Validate email format
+            if (!email.contains("@")) {
+                redirectAttributes.addFlashAttribute("error", "Please enter a valid email address");
+                return "redirect:/sign";
+            }
+
+            // Validate password complexity
+            if (password.length() < 8 ||
+                    !password.matches(".*[A-Z].*") ||
+                    !password.matches(".*[a-z].*")) {
+                redirectAttributes.addFlashAttribute("error",
+                        "Password must be at least 8 characters long and contain uppercase and lowercase letters");
                 return "redirect:/sign";
             }
 
@@ -39,6 +55,13 @@ public class AuthController {
                 redirectAttributes.addFlashAttribute("error", "Username already exists");
                 return "redirect:/sign";
             }
+
+            // Check if email already exists
+            if (userRepository.existsByEmail(email)) {
+                redirectAttributes.addFlashAttribute("error", "Email is already registered");
+                return "redirect:/sign";
+            }
+
             User user = new User();
             user.setNama(username); // Set username for login
             user.setEmail(email); // Set the provided email
