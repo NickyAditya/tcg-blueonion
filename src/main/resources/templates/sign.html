@@ -43,10 +43,9 @@
               </div>
               <div th:if="${success}" style="color: green;" th:text="${success}"></div>
               <div th:if="${error}" style="color: red;" th:text="${error}"></div>              <form action="/login" method="post">
-                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <div class="input-boxes">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}" />                <div class="input-boxes">
                   <div class="input-box">
-                    <i class="fas fa-envelope"></i>
+                    <i class="fas fa-user"></i>
                     <input type="text" name="username" placeholder="Enter your username" required>
                   </div>
                   <div class="input-box">
@@ -67,14 +66,13 @@
             <div class="signup-form">              <div class="title">Signup</div>
               <form action="/register" method="post">
                 <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-                <div class="input-boxes">
-                  <div class="input-box">
+                <div class="input-boxes">                  <div class="input-box">
                     <i class="fas fa-user"></i>
-                    <input type="text" name="name" placeholder="Enter your name" required>
+                    <input type="text" name="username" placeholder="Enter your username" required>
                   </div>
                   <div class="input-box">
                     <i class="fas fa-envelope"></i>
-                    <input type="text" name="username" placeholder="Enter your email" required>
+                    <input type="email" name="email" placeholder="Enter your email" required>
                   </div>
                   <div class="input-box">
                     <i class="fas fa-lock"></i>

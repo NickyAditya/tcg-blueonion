@@ -22,14 +22,14 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(
-            @RequestParam String name,
             @RequestParam String username,
+            @RequestParam String email,
             @RequestParam String password,
-            RedirectAttributes redirectAttributes) {        try {
-            // Validate input
-            if (username == null || username.trim().isEmpty() || 
-                password == null || password.trim().isEmpty() ||
-                name == null || name.trim().isEmpty()) {
+            RedirectAttributes redirectAttributes) {
+        try { // Validate input
+            if (username == null || username.trim().isEmpty() ||
+                    password == null || password.trim().isEmpty() ||
+                    email == null || email.trim().isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "All fields are required");
                 return "redirect:/sign";
             }
@@ -39,12 +39,12 @@ public class AuthController {
                 redirectAttributes.addFlashAttribute("error", "Username already exists");
                 return "redirect:/sign";
             }
-
             User user = new User();
-            user.setNama(username);
-            user.setEmail(name + "@example.com");
+            user.setNama(username); // Set username for login
+            user.setEmail(email); // Set the provided email
             user.setPassword(passwordEncoder.encode(password));
-            user.setRole(UserRole.USER);            userRepository.save(user);
+            user.setRole(UserRole.USER);
+            userRepository.save(user);
             redirectAttributes.addFlashAttribute("success", "Registration successful! Please login.");
             return "redirect:/sign";
         } catch (Exception e) {
