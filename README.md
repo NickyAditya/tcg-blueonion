@@ -65,3 +65,47 @@ http://localhost:8080/
 ---
 
 ### 🔗 Made with ❤️ by Red Onion Dev
+
+getting ready for js update
+
+Project Context & Requirements:
+
+Project Type: Spring Boot Backend with JavaScript Frontend
+Current Status:
+Spring Boot backend remains unchanged
+Plan to add JavaScript API clients
+Core functionality stays in Java/Spring Boot
+User Preferences:
+
+Maintain Current Structure:
+Keep Spring Boot as main backend
+No immediate migration needed
+Frontend improvements can be gradual
+Future Considerations:
+
+Potential JavaScript Integration:
+API client structure in JavaScript
+Modern frontend tooling (webpack, babel)
+Frontend package management with npm
+Technical Stack:
+
+Backend:
+
+Spring Boot 3.4.5
+Java 24
+JPA/MySQL
+Spring Security
+Thymeleaf templates
+Frontend (Current):
+
+Static CSS files
+Basic JavaScript
+Thymeleaf templates
+Project Structure to Maintain:
+
+Key Points:
+
+No immediate restructuring needed
+Keep existing functionality intact
+Future JavaScript enhancements should be non-disruptive
+Maintain current build process and deployment
