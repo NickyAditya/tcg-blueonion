@@ -353,6 +353,41 @@ textarea.admin-input {
   opacity: 0.9;
 }
 
+/* Pagination styles */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.page-button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.page-button:hover {
+    background-color: #f0f0f0;
+}
+
+.page-button.current-page {
+    background-color: #007bff;
+    color: white;
+    border-color: #0056b3;
+    cursor: default;
+}
+
+.page-button:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    color: #999;
+}
+
 /* Dark mode overrides */
 [data-theme="dark"] .admin-header {
   background-color: var(--card-bg);
@@ -438,4 +473,50 @@ textarea.admin-input {
     flex-wrap: wrap;
     justify-content: flex-end;
   }
+}
+
+/* Email request status filters */
+.request-filter {
+    margin-bottom: 1rem;
+    padding: 12px;
+    background-color: var(--card-bg);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.request-filter label {
+    margin-right: 8px;
+    color: var(--text);
+}
+
+.request-filter select {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background-color: var(--input-bg);
+    color: var(--text);
+}
+
+/* Custom status tag styles */
+.status-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.status-approved {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-denied {
+    background-color: #f8d7da;
+    color: #721c24;
 }

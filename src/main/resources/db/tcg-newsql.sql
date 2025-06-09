@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `cards` (
   `nama` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `harga` decimal(38,2) DEFAULT NULL,
   `deskripsi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `rarity` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `kondisi` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `rarity` ENUM('Common', 'Rare', 'Ultra Rare', 'Shiny Ultra Rare', 'Extremely Rare') DEFAULT NULL,
+  `kondisi` ENUM('Mint', 'Good', 'Damaged') DEFAULT NULL,
   `stok` int DEFAULT NULL COMMENT 'Jumlah stok',
   `gambar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `id_kategori` int NOT NULL,
@@ -43,9 +43,9 @@ CREATE TABLE IF NOT EXISTS `cards` (
 
 -- Dumping data for table redonion_tcg.cards: ~5 rows (approximately)
 INSERT INTO `cards` (`id_kartu`, `gambar_url`, `nama`, `harga`, `deskripsi`, `rarity`, `kondisi`, `stok`, `gambar`, `id_kategori`, `id_user`) VALUES
-	(2, NULL, 'Rotom kipas', 1.00, 'Rotom Kipas adalah salah satu bentuk dari Pokémon Rotom. Ketika Rotom memasuki kipas angin, ia berubah menjadi Rotom Kipas, dengan tipe Listrik/Terbang dan memiliki kemampuan Air Slash', 'Common', '', 1, 'rotomkipas.png', 1, 1),
+	(2, NULL, 'Rotom kipas', 1.00, 'Rotom Kipas adalah salah satu bentuk dari Pokémon Rotom. Ketika Rotom memasuki kipas angin, ia berubah menjadi Rotom Kipas, dengan tipe Listrik/Terbang dan memiliki kemampuan Air Slash', 'Common', 'Good', 1, 'rotomkipas.png', 1, 1),
 	(3, NULL, 'espathra ex', 5000.00, 'Espathra ex adalah kartu Pokémon ex yang terdapat dalam permainan kartu TCG Pokémon.', 'Shiny Ultra Rare', 'Mint', 1, 'espathra ex.jpeg', 1, 1),
-	(5, NULL, 'charizard (holo)', 4608632.00, 'Kartu ini sangat lagnka hanya ada 1 di indonesia.', 'extremely rare', 'Mint', 1, 'charizad.jpg', 1, 1),
+	(5, NULL, 'charizard (holo)', 4608632.00, 'Kartu ini sangat lagnka hanya ada 1 di indonesia.', 'Extremely Rare', 'Mint', 1, 'charizad.jpg', 1, 1),
 	(6, NULL, 'alpha black lotus', 49305000000.00, 'versi dari kartu "Black Lotus" dalam permainan Magic: The Gathering yang diluncurkan sebagai bagian dari set "Limited Edition Alpha" pada tahun 1993', 'Rare', 'Mint', 1, 'blacklotus.jpg', 3, 1),
 	(7, NULL, 'blue eyes white dragon', 32890400.00, 'Kartu Blue-Eyes White Dragon adalah salah satu kartu paling ikonik dalam permainan Yu-Gi-Oh!, pertama kali diperkenalkan pada tahun 1999. Nilainya sangat bervariasi tergantung pada edisi, kondisi, dan kelangkaannya', 'rare', 'gem mint', 1, 'Blue-Eyes_White_Dragon.webp', 2, 1);
 

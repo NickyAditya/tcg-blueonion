@@ -3,6 +3,9 @@
 // Global variables for request management
 let emailChangeRequests = [];
 let notificationSound;
+let currentPage = 1;
+const itemsPerPage = 5;
+let currentFilter = 'all';
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,11 +26,12 @@ async function initializeNotifications() {
 // Load email change requests from server
 async function loadEmailChangeRequests() {
     try {
-        const response = await fetch('/api/email-change-requests/pending');
+        const response = await fetch('/api/email-change/all'); // Changed to fetch all requests
         const requests = await response.json();
         
-        // Check for new requests and notify
+        // Check for new pending requests and notify
         const newRequests = requests.filter(req => 
+            req.status === 'PENDING' && 
             !emailChangeRequests.find(existing => existing.id === req.id)
         );
         
@@ -47,7 +51,38 @@ function renderEmailRequests() {
     const tbody = document.getElementById('emailRequestsTableBody');
     tbody.innerHTML = '';
 
-    emailChangeRequests.forEach(request => {
+    const totalPages = Math.ceil(emailChangeRequests.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(startIndex + itemsPerPage, emailChangeRequests.length);    // Filter requests based on selected status
+    let filteredRequests = emailChangeRequests;
+    if (currentFilter !== 'all') {
+        filteredRequests = emailChangeRequests.filter(r => r.status === currentFilter);
+    }
+
+    // Sort requests to show PENDING first, then recent APPROVED/DENIED
+    const sortedRequests = [...filteredRequests].sort((a, b) => {
+        // If showing all requests, prioritize PENDING
+        if (currentFilter === 'all') {
+            const statusPriority = {
+                'PENDING': 0,
+                'APPROVED': 1,
+                'DENIED': 1
+            };
+            
+            const aStatus = statusPriority[a.status] ?? 2;
+            const bStatus = statusPriority[b.status] ?? 2;
+            
+            if (aStatus !== bStatus) {
+                return aStatus - bStatus;
+            }
+        }
+        
+        // Sort by date, newest first
+        return new Date(b.requestDate) - new Date(a.requestDate);
+    });
+
+    // Render the current page's requests
+    sortedRequests.slice(startIndex, endIndex).forEach(request => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${request.username}</td>
@@ -65,26 +100,37 @@ function renderEmailRequests() {
         tbody.appendChild(tr);
     });
 
+    renderPagination(totalPages);
     updateRequestCount();
 }
 
 // Handle approve/deny actions
 async function handleEmailRequest(requestId, status) {
     try {
-        const response = await fetch(`/api/email-change-requests/${requestId}/process`, {
+        const endpoint = status === 'APPROVED' ? 'approve' : 'deny';
+        const response = await fetch(`/api/email-change/${requestId}/${endpoint}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ status })
+                'Content-Type': 'application/json'
+            }
         });
 
         if (response.ok) {
-            // Refresh the requests list
-            loadEmailChangeRequests();
+            // Find the request in our list and update its status
+            const request = emailChangeRequests.find(r => r.id === requestId);
+            if (request) {
+                request.status = status;
+                request.processedDate = new Date();
+            }
+
+            // Re-render with the updated status
+            renderEmailRequests();
             
             // Show success message
             showToast(`Request ${status.toLowerCase()} successfully`);
+            
+            // Refresh the full list after a short delay to ensure user sees the status change
+            setTimeout(loadEmailChangeRequests, 2000);
         } else {
             throw new Error('Failed to process request');
         }
@@ -113,11 +159,78 @@ function notifyNewRequests(newRequests) {
     updateRequestCount();
 }
 
-// Update the pending request count in UI
+// Render pagination controls
+function renderPagination(totalPages) {
+    const paginationContainer = document.getElementById('paginationContainer');
+    if (!paginationContainer) return;
+
+    paginationContainer.innerHTML = '';
+    
+    if (totalPages <= 1) return;
+
+    function addPageButton(pageNum, text = pageNum, isCurrent = false) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.className = `page-button ${isCurrent ? 'current-page' : ''}`;
+        if (!isCurrent) {
+            button.onclick = () => {
+                currentPage = pageNum;
+                renderEmailRequests();
+            };
+        }
+        paginationContainer.appendChild(button);
+    }
+
+    // First page
+    addPageButton(1);
+
+    if (totalPages <= 7) {
+        // Show all pages if 7 or fewer
+        for (let i = 2; i < totalPages; i++) {
+            addPageButton(i, i, i === currentPage);
+        }
+    } else {
+        if (currentPage <= 4) {
+            // Near start
+            for (let i = 2; i <= 5; i++) {
+                addPageButton(i, i, i === currentPage);
+            }
+            addPageButton(null, '...');
+        } else if (currentPage >= totalPages - 3) {
+            // Near end
+            addPageButton(null, '...');
+            for (let i = totalPages - 4; i < totalPages; i++) {
+                addPageButton(i, i, i === currentPage);
+            }
+        } else {
+            // Middle
+            addPageButton(null, '...');
+            for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+                addPageButton(i, i, i === currentPage);
+            }
+            addPageButton(null, '...');
+        }
+    }
+
+    // Last page
+    if (totalPages > 1) {
+        addPageButton(totalPages);
+    }
+}
+
+// Update request count
 function updateRequestCount() {
     const pendingCount = emailChangeRequests.filter(r => r.status === 'PENDING').length;
     // You can update a badge or counter in the UI here
     document.title = pendingCount ? `(${pendingCount}) Admin Dashboard` : 'Admin Dashboard';
+}
+
+// Filter requests by status
+function filterRequests() {
+    const select = document.getElementById('statusFilter');
+    currentFilter = select.value;
+    currentPage = 1; // Reset to first page when filter changes
+    renderEmailRequests();
 }
 
 // Show toast messages

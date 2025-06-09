@@ -51,20 +51,20 @@ public class EmailChangeRequestService {
 
         if (request.getStatus() != EmailChangeRequest.RequestStatus.PENDING) {
             throw new RuntimeException("Request has already been processed");
-        }
-
-        request.setProcessedBy(admin);
+        }        request.setProcessedBy(admin);
         request.setProcessedDate(new Date());
+        
+        // Set to APPROVED or DENIED
         request.setStatus(approved ? 
             EmailChangeRequest.RequestStatus.APPROVED : 
             EmailChangeRequest.RequestStatus.DENIED);
-
+        
         if (approved) {
             User user = request.getUser();
             user.setEmail(request.getRequestedEmail());
             userRepository.save(user);
         }
-
+        
         emailChangeRequestRepository.save(request);
     }
 
@@ -73,5 +73,9 @@ public class EmailChangeRequestService {
             .findByUserAndStatus(user, EmailChangeRequest.RequestStatus.PENDING);
         
         return pendingRequests.isEmpty() ? null : pendingRequests.get(0);
+    }
+
+    public List<EmailChangeRequest> getAllRequests() {
+        return emailChangeRequestRepository.findAll();
     }
 }

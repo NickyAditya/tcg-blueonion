@@ -48,6 +48,12 @@ public class EmailChangeRequestController {
         return ResponseEntity.ok(requests);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<EmailChangeRequest>> getAllRequests() {
+        List<EmailChangeRequest> requests = emailChangeRequestService.getAllRequests();
+        return ResponseEntity.ok(requests);
+    }
+
     @PostMapping("/{id}/approve")
     public ResponseEntity<?> approveRequest(@PathVariable Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

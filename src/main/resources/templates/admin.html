@@ -63,11 +63,19 @@
     </div>
 
     <!-- Email Change Requests Section -->
-    <div class="email-requests">
-      <h2 class="section-title">
+    <div class="email-requests">      <h2 class="section-title">
         Email Change Requests
         <span id="pendingRequestCount" class="badge"></span>
       </h2>
+      <div class="request-filter">
+        <label for="statusFilter">Filter by status:</label>
+        <select id="statusFilter" onchange="filterRequests()">
+          <option value="all">All</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="DENIED">Denied</option>
+        </select>
+      </div>
       <div class="request-table">
         <table>
           <thead>
@@ -83,6 +91,7 @@
           <tbody id="emailRequestsTableBody">
           </tbody>
         </table>
+        <div id="paginationContainer" class="pagination-container"></div>
       </div>
     </div>
   </div>
