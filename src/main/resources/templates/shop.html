@@ -6,6 +6,29 @@
     <title>Trading Card Game Store</title>
     <link rel="stylesheet" href="user.css">
     <link rel="stylesheet" href="shop.css">
+    <style>
+.card {
+  transition: transform 0.3s cubic-bezier(.25,.8,.25,1), box-shadow 0.2s;
+  cursor: grab;
+  /* Optional: for touch devices */
+  touch-action: pan-x;
+}
+.card.dragging {
+  box-shadow: 0 8px 32px rgba(30,58,92,0.18);
+  z-index: 10;
+  opacity: 0.85;
+}
+.modal-card-3d-wrapper {
+  perspective: 900px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.modal-card-3d {
+  transition: transform 0.2s cubic-bezier(.25,.8,.25,1), box-shadow 0.2s;
+  will-change: transform;
+}
+    </style>
 </head>
 <body>
     <!-- Add notification container -->
@@ -62,6 +85,7 @@
                                     data-harga=${card.harga},
                                     data-gambar='/textures/' + ${card.gambar}"
                             onclick="showModal(this)">View Details</button>
+                    <button class="cta-button" style="margin-left:8px;background:#3674B5;color:#fff;" type="button" th:onclick="'showBuyModal(' + ${card.id} + ')'">Beli</button>
                 </div>
             </th:block>
         </div>
@@ -90,6 +114,39 @@
             <p>Kartu sudah masuk ke inventory Anda.</p>
             <button class="cta-button" id="close-success">OK</button>
         </div>
+    </div>
+
+    <!-- Modal Detail Kartu -->
+    <div id="detail-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:2000; align-items:center; justify-content:center;">
+      <div style="background:#fff; border-radius:16px; max-width:420px; width:98vw; padding:1.5rem 1.5rem 2rem 1.5rem; margin:auto; position:relative; box-shadow:0 8px 32px rgba(30,58,92,0.18);">
+        <button onclick="closeDetailModal()" style="position:absolute;top:10px;right:10px;font-size:1.5rem;background:none;border:none;cursor:pointer;">&times;</button>
+        <div class="modal-card-3d-wrapper">
+          <img id="modal-gambar" src="" alt="Gambar Kartu" class="modal-card-3d" style="width:100%;max-width:340px;height:auto;display:block;margin:0 auto 1rem auto;border-radius:10px;box-shadow:0 2px 8px rgba(30,58,92,0.08);background:#f4f4f4;">
+        </div>
+        <h3 id="modal-nama" style="font-size:1.3rem;margin-bottom:0.5rem;text-align:center;"></h3>
+        <p id="modal-deskripsi" style="font-size:1rem;margin-bottom:0.5rem;text-align:center;"></p>
+        <p style="margin:0.2rem 0;"><b>Kondisi:</b> <span id="modal-kondisi"></span></p>
+        <p style="margin:0.2rem 0;"><b>Rarity:</b> <span id="modal-rarity"></span></p>
+        <p style="margin:0.2rem 0;"><b>Stok:</b> <span id="modal-stok"></span></p>
+        <p style="margin:0.2rem 0 0.5rem 0;"><b>Harga:</b> <span id="modal-harga" style="color:#3674B5;font-weight:bold;"></span></p>
+      </div>
+    </div>
+
+    <!-- Modal Pembelian -->
+    <div id="buyModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:2100;">
+      <div style="background:#fff;padding:2rem;border-radius:16px;max-width:350px;margin:auto;box-shadow:0 8px 32px rgba(30,58,92,0.18);position:relative;">
+        <button onclick="closeBuyModal()" style="position:absolute;top:10px;right:10px;font-size:1.5rem;background:none;border:none;cursor:pointer;">&times;</button>
+        <h2 style="text-align:center;margin-bottom:1rem;">Pembayaran</h2>
+        <form id="buyForm" method="post">
+          <input type="hidden" name="quantity" value="1" />
+          <label for="paymentMethod">Pilih Metode Pembayaran:</label>
+          <select name="paymentMethod" id="paymentMethod" required style="width:100%;margin-bottom:1rem;">
+            <option value="transfer">Transfer Bank</option>
+            <option value="cash">Cash</option>
+          </select>
+          <button type="submit" class="cta-button" style="width:100%;margin-bottom:0.5rem;">Bayar</button>
+        </form>
+      </div>
     </div>
 
     <section class="features" id="user-inventory">
@@ -222,6 +279,51 @@
 
         // Initialize notification system
         const notificationSystem = new NotificationSystem();
+
+        // Modal detail kartu
+        function showModal(btn) {
+          // Ambil data dari atribut data-*
+          document.getElementById('modal-gambar').src = btn.getAttribute('data-gambar');
+          document.getElementById('modal-nama').textContent = btn.getAttribute('data-nama');
+          document.getElementById('modal-deskripsi').textContent = btn.getAttribute('data-deskripsi');
+          document.getElementById('modal-kondisi').textContent = btn.getAttribute('data-kondisi');
+          document.getElementById('modal-rarity').textContent = btn.getAttribute('data-rarity');
+          document.getElementById('modal-stok').textContent = btn.getAttribute('data-stok');
+          document.getElementById('modal-harga').textContent = 'Rp ' + btn.getAttribute('data-harga');
+          document.getElementById('detail-modal').style.display = 'flex';
+        }
+        function closeDetailModal() {
+          document.getElementById('detail-modal').style.display = 'none';
+        }
+
+        // Efek 3D pada kartu di modal detail
+const modalCard3d = document.querySelector('.modal-card-3d');
+const modalCard3dWrapper = document.querySelector('.modal-card-3d-wrapper');
+if (modalCard3d && modalCard3dWrapper) {
+  modalCard3dWrapper.addEventListener('mousemove', function(e) {
+    const rect = modalCard3d.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * 10;
+    const rotateY = ((x - centerX) / centerX) * 10;
+    modalCard3d.style.transform = `rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+    modalCard3d.style.boxShadow = `${-rotateY*2}px ${rotateX*2}px 24px 0 rgba(30,58,92,0.18)`;
+  });
+  modalCard3dWrapper.addEventListener('mouseleave', function() {
+    modalCard3d.style.transform = '';
+    modalCard3d.style.boxShadow = '';
+  });
+}
+
+function showBuyModal(cardId) {
+  document.getElementById('buyModal').style.display = 'flex';
+  document.getElementById('buyForm').action = '/shop/buy/' + cardId;
+}
+function closeBuyModal() {
+  document.getElementById('buyModal').style.display = 'none';
+}
     </script>
 
     <script src="../src/main.js"></script>

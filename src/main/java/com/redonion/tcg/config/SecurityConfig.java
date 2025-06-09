@@ -41,7 +41,7 @@ public class SecurityConfig {    @Autowired
                         "/static/**", "/css/**", "/*.css", "/*.js", "/*.png",
                         "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
                         "/texture/**", "/images/**", "/logo*", "/*.ico",
-                        "/webjars/**", "/fonts/**", "/uploads/**")
+                        "/webjars/**", "/fonts/**", "/uploads/**","/error")
                     .permitAll()
                     .requestMatchers(
                             "/", "/index", "/sign", "/login", "/register", "/error",

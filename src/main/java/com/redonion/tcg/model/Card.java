@@ -113,4 +113,8 @@ public class Card {
     public void setGambar_url(String gambar_url) {
         this.gambar_url = gambar_url;
     }
+
+    public Long getId() {
+        return id_kartu;
+    }
 }
