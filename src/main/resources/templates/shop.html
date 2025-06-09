@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Card Game Store</title>
-    <link rel="stylesheet" href="user.css">
+    <title>Trading Card Game Store</title>    <link rel="stylesheet" href="user.css">
+    <link rel="stylesheet" href="notifications.css">
     <link rel="stylesheet" href="shop.css">
     <style>
 .card {
@@ -31,39 +31,47 @@
     </style>
 </head>
 <body>
-    <!-- Add notification container -->
+    <!-- Add notification container -->    <!-- Notification containers -->
     <div class="notification-container" id="notificationContainer"></div>
     <div class="notification-history" id="notificationHistory">
         <div class="notification-history-header">
             <h3>Notifications</h3>
-            <button id="clearNotifications">Clear All</button>
+            <button class="clear-notifications" id="clearNotifications">Clear all</button>
         </div>
-        <ul id="notificationHistoryList"></ul>
+        <ul class="notification-history-list" id="notificationHistoryList"></ul>
     </div>
 
     <header>
-        <div class="header-content">
-            <div class="header-left">
-                <a href="/index" aria-label="Go to homepage"><img src="logo.png" alt="TCG Store" style="vertical-align: middle; width: 32px;" /></a>
-                <div class="search-container">
-                    <input type="search" placeholder="Search cards..." class="search-input">
-                    <button class="search-button">🔍</button>
-                </div>
-                <nav class="main-nav">
-                    <a href="/index">Beranda</a>
-                    <a href="/shop">Toko</a>
-                    <a href="#popular">Populer</a>
-                    <a href="#contact">Kontak</a>
-                </nav>
+        <div>
+            <a href="/index" aria-label="Go to homepage"><img src="logo.png" alt="TCG Store" style="vertical-align: middle; width: 32px;" /></a>
+            <div class="search-container">
+                <input type="search" placeholder="Search cards..." class="search-input">
+                <button class="search-button">🔍</button>
             </div>
-            <div class="header-right">
-                <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
-                <button id="notificationLog" class="notification-log" aria-label="Notification history">
-                    🔔<span class="notification-badge" id="notificationBadge">0</span>
-                </button>
-                <a href="/userInventory" class="inventory-link">📦 Inventory</a>
-                <a href="/sign" class="login-link">👤 Login</a>
-            </div>
+            <nav class="main-nav">
+                <a href="/index">Beranda</a>
+                <a href="/shop">Toko</a>
+                <a href="#popular">Populer</a>
+                <a href="#contact">Kontak</a>
+            </nav>
+        </div>
+        <div>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+            <button id="notificationLog" class="notification-log" aria-label="Notification history">
+                🔔<span class="notification-badge" id="notificationBadge">0</span>
+            </button>
+            <th:block sec:authorize="isAuthenticated()">
+                <a href="/userInventory">📦 Inventory</a>
+                <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
+                <form action="/logout" method="post" style="display: inline;">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                    <button type="submit" class="logout-link" style="border: none; background: none; cursor: pointer; padding: 0; color: var(--text);">🔒 Log out</button>
+                </form>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+                <a href="/userInventory">📦 Inventory</a>
+                <a href="/sign">👤 Login</a>
+            </th:block>
         </div>
     </header>
 
@@ -163,78 +171,128 @@
                 <!-- Inventory user -->
             </div>
         </div>
-    </section>
+    </section>    <!-- Checkout notification -->
+  <div class="notification-success" id="checkout-notification" style="display: none;">
+    Purchase successful! 🎉 Your cards will be delivered to your account.
+  </div>
 
-    <footer class="footer">
-        <div class="footer-sections">
-            <div class="footer-section">
-                <h4>Explore</h4>
-                <ul>
-                    <li>Our Story</li>
-                    <li>Trading Guide</li>
-                    <li>News & Updates</li>
-                    <li>Community Guidelines</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Support</h4>
-                <ul>
-                    <li>Help Center</li>
-                    <li>Contact Us</li>
-                    <li>FAQ</li>
-                    <li>Card Authentication</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Legal</h4>
-                <ul>
-                    <li>Terms & Conditions</li>
-                    <li>Privacy Policy</li>
-                    <li>Cookie Policy</li>
-                    <li>Press Room</li>
-                    <li>Become an Affiliate</li>
-                </ul>
-            </div>
+  <!-- Footer section -->
+  <footer class="footer">
+    <div class="footer-sections">
+      <!-- Articles & Decks -->
+      <div class="footer-section">
+        <h4>Articles & Decks</h4>
+        <ul>
+          <li>TCGplayer Content</li>
+          <li>Magic: The Gathering</li>
+          <li>Yu-Gi-Oh!</li>
+          <li>Pokémon</li>
+          <li>Disney Lorcana</li>
+          <li>Flesh and Blood</li>
+          <li>More Articles & Decks</li>
+        </ul>
+      </div>
 
-            <!-- Social Icons -->
-            <div class="footer-section social">
-                <div class="social-icons">
-                    <!-- Facebook -->
-                    <a href="#" aria-label="Facebook">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
-                            <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.8 90.69 226.4 209.3 245V327.7h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.3 482.4 504 379.8 504 256z"/>
-                        </svg>
-                    </a>
-                    <!-- Twitter/X -->
-                    <a href="#" aria-label="Twitter">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
-                            <path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/>
-                        </svg>
-                    </a>
-                    <!-- Instagram -->
-                    <a href="#" aria-label="Instagram">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24">
-                            <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/>
-                        </svg>
-                    </a>
-                </div>
-            </div>
+      <!-- Help & Contact -->
+      <div class="footer-section">
+        <h4>Help & Contact</h4>
+        <ul>
+          <li>Contact Us</li>
+          <li>Help Center</li>
+          <li>Refund and Return Policy</li>
+          <li>Security Center</li>
+        </ul>
+      </div>
+
+      <!-- About -->
+      <div class="footer-section">
+        <h4>About</h4>
+        <ul>
+          <li>About Us</li>
+          <li>Job Openings</li>
+          <li>Press Room</li>
+          <li>Become an Affiliate</li>
+        </ul>
+      </div>
+
+      <!-- Social Icons -->
+      <div class="footer-section social">
+        <div class="social-icons">
+          <!-- Facebook -->
+          <a href="#" aria-label="Facebook">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+              <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z" />
+            </svg>
+          </a>
+          <!-- Twitter -->
+          <a href="#" aria-label="Twitter">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+              <path fill="currentColor" d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z" />
+            </svg>
+          </a>
+          <!-- Instagram -->
+          <a href="#" aria-label="Instagram">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24">
+              <path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z" />
+            </svg>
+          </a>
+          <!-- Youtube -->
+          <a href="#" aria-label="YouTube">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24">
+              <path fill="currentColor" d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z" />
+            </svg>
+          </a>
         </div>
-        <div class="footer-bottom">
-            <div class="links">
-                <a href="#">Terms of Service</a>
-                <a href="#">Privacy Policy</a>
-                <a href="#">Contact Support</a>
-            </div>
-            <div class="copyright">© 2025 Red Onion – Peel the Layers, Trade the Legends.</div>
-        </div>
-    </footer>
-    <!-- Add this right after the footer -->
-    <div class="sticky-copyright" id="sticky-copyright">
-        <div class="sticky-main">
-            <span>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.</span>
-        </div>
+      </div>
     </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.<br>All Rights Reserved.</p>
+      <p class="copyright">
+        All card images and content related to Pokémon ©1995–2025 Nintendo, Creatures Inc., GAME FREAK inc.;
+        Yu-Gi-Oh! ©1996–2025 Kazuki Takahashi, Studio Dice, Shueisha, TV Tokyo, Konami;
+        and Magic: The Gathering ©1993–2025 Wizards of the Coast LLC.
+        All trademarks are property of their respective owners.
+      </p>
+      <p class="links">
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms of Service</a> |
+        <a href="#">Accessibility</a> |
+        <a href="#">Do Not Sell or Share My Personal Information</a>
+      </p>    
+    </div>
+  </footer>
+
+  <!-- Sticky Copyright Notice -->
+  <div class="sticky-copyright" id="sticky-copyright">
+    <div class="sticky-main">
+      <span>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.</span>
+    </div>
+  </div>
+
+  <!-- Add sticky copyright scroll logic -->
+  <script>
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const footer = document.querySelector('.footer');
+          const stickyCopyright = document.getElementById('sticky-copyright');
+          const footerRect = footer.getBoundingClientRect();
+          
+          if (footerRect.top > window.innerHeight) {
+            stickyCopyright.classList.add('visible');
+          } else {
+            stickyCopyright.classList.remove('visible');
+          }
+          
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  </script>
 
     <script>
         // Theme toggle functionality
@@ -324,72 +382,86 @@ if (modalCard3d && modalCard3dWrapper) {
   });
 }
 
-function showBuyModal(btn) {
-  document.getElementById('buyModal-gambar').src = btn.getAttribute('data-gambar');
-  document.getElementById('buyModal-nama').textContent = btn.getAttribute('data-nama');
-  document.getElementById('buyModal-harga').textContent = 'Rp' + btn.getAttribute('data-harga');
-  document.getElementById('buyModal').style.display = 'flex';
-  document.getElementById('buyForm').action = '/shop/buy/' + btn.getAttribute('data-id');
-}
-function closeBuyModal() {
-  document.getElementById('buyModal').style.display = 'none';
-}
+    // Purchase form handling
+    document.getElementById('buyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const cardId = this.getAttribute('data-id');
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      
+      try {
+        const response = await fetch('/api/purchase', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            cardId: cardId,
+            paymentMethod: paymentMethod,
+            quantity: 1 // For now hardcoded to 1
+          })
+        });
 
-// Cart logic
-let cart = [];
-function addToCart(btn) {
-  const id = btn.getAttribute('data-id');
-  const nama = btn.getAttribute('data-nama');
-  const harga = btn.getAttribute('data-harga');
-  const gambar = btn.getAttribute('data-gambar');
-  // Cek jika sudah ada di cart, tambahkan qty
-  const existing = cart.find(item => item.id === id);
-  if (existing) {
-    existing.qty += 1;
-  } else {
-    cart.push({ id, nama, harga, gambar, qty: 1 });
-  }
-  renderCart();
-}
-function renderCart() {
-  const cartItems = document.getElementById('cart-items');
-  cartItems.innerHTML = '';
-  cart.forEach((item, idx) => {
-    const li = document.createElement('li');
-    li.style.display = 'flex';
-    li.style.alignItems = 'center';
-    li.style.marginBottom = '0.5rem';
-    li.innerHTML = `
-      <img src="${item.gambar}" alt="${item.nama}" style="width:40px;height:56px;border-radius:4px;margin-right:10px;">
-      <span style="flex:1;">${item.nama} x${item.qty}</span>
-      <button onclick="decrementCart(${idx})" style="background:#eee;border:none;border-radius:4px;padding:2px 8px;margin-right:4px;font-size:1.1rem;cursor:pointer;">-</button>
-      <button onclick="incrementCart(${idx})" style="background:#eee;border:none;border-radius:4px;padding:2px 8px;margin-right:8px;font-size:1.1rem;cursor:pointer;">+</button>
-      <span style="color:#3674B5;font-weight:bold;">Rp${item.harga}</span>
-      <button onclick="removeCart(${idx})" style="background:#e74c3c;color:#fff;border:none;border-radius:4px;padding:2px 8px;margin-left:8px;font-size:1.1rem;cursor:pointer;">🗑</button>
-    `;
-    cartItems.appendChild(li);
-  });
-  document.getElementById('cart-modal').style.display = 'flex';
-}
-function incrementCart(idx) {
-  cart[idx].qty += 1;
-  renderCart();
-}
-function decrementCart(idx) {
-  if (cart[idx].qty > 1) {
-    cart[idx].qty -= 1;
-  } else {
-    cart.splice(idx, 1);
-  }
-  renderCart();
-}
-function removeCart(idx) {
-  cart.splice(idx, 1);
-  renderCart();
-}
-document.getElementById('close-cart').onclick = function() {
-  document.getElementById('cart-modal').style.display = 'none';
-};
+        if (response.ok) {
+          // Show success notification
+          document.getElementById('checkout-notification').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('checkout-notification').style.display = 'none';
+          }, 3000);
+          
+          // Close the buy modal
+          closeBuyModal();
+          
+          // Refresh the inventory section
+          refreshInventory();
+        } else {
+          throw new Error('Purchase failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to complete purchase. Please try again.');
+      }
+    });
+
+    // Function to refresh user's inventory
+    async function refreshInventory() {
+      try {
+        const response = await fetch('/api/inventory');
+        const inventory = await response.json();
+        
+        const inventoryList = document.getElementById('inventory-list');
+        inventoryList.innerHTML = inventory.map(item => `
+          <div class="card">
+            <img src="${item.gambar}" alt="${item.nama}" width="250" height="350">
+            <h4>${item.nama}</h4>
+            <p>Quantity: ${item.quantity}</p>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error refreshing inventory:', error);
+      }
+    }
+
+    function showBuyModal(button) {
+      const modal = document.getElementById('buyModal');
+      const form = document.getElementById('buyForm');
+      const img = document.getElementById('buyModal-gambar');
+      const name = document.getElementById('buyModal-nama');
+      const price = document.getElementById('buyModal-harga');
+      
+      // Set data attributes for the form
+      form.setAttribute('data-id', button.getAttribute('data-id'));
+      
+      img.src = button.getAttribute('data-gambar');
+      name.textContent = button.getAttribute('data-nama');
+      price.textContent = 'Rp ' + button.getAttribute('data-harga');
+      
+      modal.style.display = 'flex';
+    }
+
+    function closeBuyModal() {
+      document.getElementById('buyModal').style.display = 'none';
+    }
     </script>
 
     <script src="../src/main.js"></script>

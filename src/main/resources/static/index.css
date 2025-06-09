@@ -1,5 +1,6 @@
 /* Import user.css first to inherit all base styles */
 @import url('user.css');
+@import url('admin.css');
 
 /* Only override specific component styles, inherit footer from user.css */
 

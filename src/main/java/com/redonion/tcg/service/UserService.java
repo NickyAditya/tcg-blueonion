@@ -17,8 +17,7 @@ import com.redonion.tcg.repository.UserInventoryRepository;
 import com.redonion.tcg.repository.UserRepository;
 
 @Service
-public class UserService {
-
+public class UserService {    
     @Autowired
     private UserRepository userRepository;
 
@@ -26,10 +25,10 @@ public class UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private EmailChangeRequestRepository emailChangeRequestRepository;
+    private UserInventoryRepository userInventoryRepository;
 
     @Autowired
-    private UserInventoryRepository userInventoryRepository;
+    private EmailChangeRequestRepository emailChangeRequestRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -68,7 +67,7 @@ public class UserService {
             emailChangeRequestRepository.deleteByUser(user);
             
             // Delete user's inventory records
-            userInventoryRepository.deleteByUserId(id);
+            userInventoryRepository.deleteByIdUser(id);
             
             // Delete user's avatars if they exist
             if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {

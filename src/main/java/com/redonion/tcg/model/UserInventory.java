@@ -1,6 +1,10 @@
 package com.redonion.tcg.model;
 
+import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,15 +19,19 @@ public class UserInventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Column(name = "id_user")
+    private Integer idUser;
 
-    @ManyToOne
-    @JoinColumn(name = "card_id")
-    private Card card;
+    @Column(name = "id_kartu")
+    private Long idKartu;
 
+    @Column(name = "quantity")
     private Integer quantity;
+
+    @Column(name = "acquired_date")
+    private LocalDateTime acquiredDate = LocalDateTime.now();    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_kartu", referencedColumnName = "id_kartu", insertable = false, updatable = false)
+    private Card card;
 
     // Getters and Setters
     public Long getId() {
@@ -34,20 +42,20 @@ public class UserInventory {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getIdUser() {
+        return idUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
     }
 
-    public Card getCard() {
-        return card;
+    public Long getIdKartu() {
+        return idKartu;
     }
 
-    public void setCard(Card card) {
-        this.card = card;
+    public void setIdKartu(Long idKartu) {
+        this.idKartu = idKartu;
     }
 
     public Integer getQuantity() {
@@ -56,5 +64,21 @@ public class UserInventory {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public LocalDateTime getAcquiredDate() {
+        return acquiredDate;
+    }
+
+    public void setAcquiredDate(LocalDateTime acquiredDate) {
+        this.acquiredDate = acquiredDate;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

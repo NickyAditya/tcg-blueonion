@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.redonion.tcg.model.User;
 import com.redonion.tcg.repository.CardRepository;
+import com.redonion.tcg.repository.UserInventoryRepository;
 import com.redonion.tcg.service.UserService;
 
 @Controller
@@ -21,14 +22,19 @@ public class ShopController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserInventoryRepository userInventoryRepository;
 
     @GetMapping
     public String showShop(Model model) {
         // Get current user if authenticated
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && !auth.getName().equals("anonymousUser")) {
-            User user = userService.findByUsername(auth.getName());
+        if (auth != null && !auth.getName().equals("anonymousUser")) {            User user = userService.findByUsername(auth.getName());
             model.addAttribute("user", user);
+            
+            // Add user's inventory to the model
+            model.addAttribute("inventory", userInventoryRepository.findByIdUser(user.getId_user()));
         }
 
         // Add cards to the model

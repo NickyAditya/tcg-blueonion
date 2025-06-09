@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 -- Dumping data for table redonion_tcg.users: ~1 rows (approximately)
 INSERT INTO `users` (`id_user`, `nama`, `email`, `password`, `role`) VALUES
-	(1, 'admin', 'admin@gmail.com', '$2a$12$2XiXMIjfH3U8r9Hu9mbrgu6UaPxdx/mXhFE0e4/DUCwuw3ithrL0y', 'ADMIN');
+	(1, 'admin', 'admin@gmail.com', '$2a$12$2XiXMIjfH3U8r9Hu9mbrgu6UaPxdx/mXhFE0e4/DUCwuw3ithrL0y', 'ADMIN'),
+	(2, 'user2', 'user2@gmail.com', '$2a$12$2XiXMIjfH3U8r9Hu9mbrgu6UaPxdx/mXhFE0e4/DUCwuw3ithrL0y', 'USER');
 
 -- Dumping structure for table redonion_tcg.email_change_requests
 DROP TABLE IF EXISTS `email_change_requests`;
@@ -98,6 +99,64 @@ CREATE TABLE IF NOT EXISTS `email_change_requests` (
   CONSTRAINT `FK_email_requests_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id_user`),
   CONSTRAINT `FK_email_requests_admin` FOREIGN KEY (`processed_by`) REFERENCES `users` (`id_user`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping structure for table redonion_tcg.user_inventory
+DROP TABLE IF EXISTS `user_inventory`;
+CREATE TABLE IF NOT EXISTS `user_inventory` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL,
+  `id_kartu` bigint NOT NULL,
+  `quantity` int NOT NULL DEFAULT 1,
+  `acquired_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `FK_inventory_user` (`id_user`),
+  KEY `FK_inventory_card` (`id_kartu`),
+  CONSTRAINT `FK_inventory_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `FK_inventory_card` FOREIGN KEY (`id_kartu`) REFERENCES `cards` (`id_kartu`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table redonion_tcg.user_inventory: ~5 rows (approximately)
+INSERT INTO `user_inventory` (`id_user`, `id_kartu`, `quantity`)
+SELECT 2, id_kartu, 1
+FROM `cards`
+WHERE stok > 0;
+
+-- Dumping structure for table redonion_tcg.store_card_sell
+DROP TABLE IF EXISTS `store_card_sell`;
+CREATE TABLE IF NOT EXISTS `store_card_sell` (
+  `id_sell` bigint NOT NULL AUTO_INCREMENT,
+  `id_kartu` bigint NOT NULL,
+  `quantity` int NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id_sell`),
+  KEY `FK_sell_card` (`id_kartu`),
+  CONSTRAINT `FK_sell_card` FOREIGN KEY (`id_kartu`) REFERENCES `cards` (`id_kartu`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table redonion_tcg.store_card_sell: ~5 rows (approximately)
+INSERT INTO `store_card_sell` (`id_kartu`, `quantity`) VALUES
+	(2, 1),  -- Rotom kipas
+	(3, 1),  -- espathra ex
+	(5, 1),  -- charizard (holo)
+	(6, 1),  -- alpha black lotus
+	(7, 1);  -- blue eyes white dragon
+
+-- Dumping structure for table redonion_tcg.transactions
+DROP TABLE IF EXISTS `transactions`;
+CREATE TABLE IF NOT EXISTS `transactions` (
+  `id_transaction` bigint NOT NULL AUTO_INCREMENT,
+  `id_user` int NOT NULL,
+  `id_kartu` bigint NOT NULL,
+  `quantity` int NOT NULL DEFAULT 1,
+  `total_price` decimal(38,2) NOT NULL,
+  `transaction_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `payment_method` enum('transfer','cash','ewallet') COLLATE utf8mb4_general_ci NOT NULL,
+  `status` enum('PENDING','COMPLETED','CANCELLED') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'PENDING',
+  PRIMARY KEY (`id_transaction`),
+  KEY `FK_transaction_user` (`id_user`),
+  KEY `FK_transaction_card` (`id_kartu`),
+  CONSTRAINT `FK_transaction_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id_user`),
+  CONSTRAINT `FK_transaction_card` FOREIGN KEY (`id_kartu`) REFERENCES `cards` (`id_kartu`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
