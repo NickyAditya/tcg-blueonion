@@ -85,6 +85,8 @@
                                     data-harga=${card.harga},
                                     data-gambar='/textures/' + ${card.gambar}"
                             onclick="showModal(this)">View Details</button>
+                    <button class="cta-button" style="margin-left:8px;background:#f7b731;color:#fff;" type="button"
+    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="addToCart(this)">Add to Cart</button>
                     <button class="cta-button" style="margin-left:8px;background:#3674B5;color:#fff;" type="button"
     th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="showBuyModal(this)">Beli</button>
                 </div>
@@ -332,6 +334,62 @@ function showBuyModal(btn) {
 function closeBuyModal() {
   document.getElementById('buyModal').style.display = 'none';
 }
+
+// Cart logic
+let cart = [];
+function addToCart(btn) {
+  const id = btn.getAttribute('data-id');
+  const nama = btn.getAttribute('data-nama');
+  const harga = btn.getAttribute('data-harga');
+  const gambar = btn.getAttribute('data-gambar');
+  // Cek jika sudah ada di cart, tambahkan qty
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.qty += 1;
+  } else {
+    cart.push({ id, nama, harga, gambar, qty: 1 });
+  }
+  renderCart();
+}
+function renderCart() {
+  const cartItems = document.getElementById('cart-items');
+  cartItems.innerHTML = '';
+  cart.forEach((item, idx) => {
+    const li = document.createElement('li');
+    li.style.display = 'flex';
+    li.style.alignItems = 'center';
+    li.style.marginBottom = '0.5rem';
+    li.innerHTML = `
+      <img src="${item.gambar}" alt="${item.nama}" style="width:40px;height:56px;border-radius:4px;margin-right:10px;">
+      <span style="flex:1;">${item.nama} x${item.qty}</span>
+      <button onclick="decrementCart(${idx})" style="background:#eee;border:none;border-radius:4px;padding:2px 8px;margin-right:4px;font-size:1.1rem;cursor:pointer;">-</button>
+      <button onclick="incrementCart(${idx})" style="background:#eee;border:none;border-radius:4px;padding:2px 8px;margin-right:8px;font-size:1.1rem;cursor:pointer;">+</button>
+      <span style="color:#3674B5;font-weight:bold;">Rp${item.harga}</span>
+      <button onclick="removeCart(${idx})" style="background:#e74c3c;color:#fff;border:none;border-radius:4px;padding:2px 8px;margin-left:8px;font-size:1.1rem;cursor:pointer;">🗑</button>
+    `;
+    cartItems.appendChild(li);
+  });
+  document.getElementById('cart-modal').style.display = 'flex';
+}
+function incrementCart(idx) {
+  cart[idx].qty += 1;
+  renderCart();
+}
+function decrementCart(idx) {
+  if (cart[idx].qty > 1) {
+    cart[idx].qty -= 1;
+  } else {
+    cart.splice(idx, 1);
+  }
+  renderCart();
+}
+function removeCart(idx) {
+  cart.splice(idx, 1);
+  renderCart();
+}
+document.getElementById('close-cart').onclick = function() {
+  document.getElementById('cart-modal').style.display = 'none';
+};
     </script>
 
     <script src="../src/main.js"></script>
