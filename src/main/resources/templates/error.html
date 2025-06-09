@@ -28,27 +28,30 @@
   </header>
 
   <div class="container error-page">
-    <div class="error-content">
-      <div class="error-card">
-        <img id="errorCardImage" src="" alt="Error Card" class="error-card-image">
+    <div class="error-content">      <div class="error-card">
+        <img id="errorCardImage" th:src="@{/textures/Pokemon-back.jpg}" alt="Error Card" class="error-card-image">
         <div class="card-stats">
           <div class="stat">
-            <span class="label">Error</span>
-            <span id="errorCode" class="value"></span>
+            <span class="label">Error Code</span>
+            <span class="value" th:text="${errorCode}">500</span>
           </div>
           <div class="stat">
-            <span class="label">Type</span>
-            <span id="errorType" class="value"></span>
+            <span class="label">Status</span>
+            <span class="value" th:text="${errorMessage}">Internal Server Error</span>
           </div>
           <div class="stat">
             <span class="label">Card Status</span>
-            <span id="cardStatus" class="value"></span>
+            <span class="value">Damaged</span>
           </div>
         </div>
       </div>
       <div class="error-message">
-        <h1 id="errorTitle"></h1>
-        <p id="errorDescription"></p>
+        <h1>Oops! Something went wrong</h1>
+        <p>We encountered an error while processing your request. Please try again or return to the homepage.</p>
+        <div class="error-actions">
+          <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
+          <a href="/" class="btn btn-primary">Return Home</a>
+        </div>
         <div class="action-buttons">          <a href="/index" class="button">Return to Homepage</a>
           <a href="javascript:history.back()" class="button secondary">Go Back</a>
         </div>

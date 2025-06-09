@@ -143,6 +143,45 @@
   border-color: var(--primary);
 }
 
+/* Error actions buttons */
+.error-actions {
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: #3674B5;
+  color: white;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-primary:hover {
+  background: #2a5d91;
+}
+
+.btn-secondary:hover {
+  background: #e4e4e4;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .error-content {
