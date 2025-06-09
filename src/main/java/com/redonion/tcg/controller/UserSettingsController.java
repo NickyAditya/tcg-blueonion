@@ -7,8 +7,10 @@ import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.redonion.tcg.model.User;
 import com.redonion.tcg.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/settings")
@@ -35,12 +40,18 @@ public class UserSettingsController {
 
     @PostMapping("/update")
     public ResponseEntity<User> updateSettings(
+            @RequestParam(required = false) String username,
             @RequestParam(required = false) String about,
             @RequestParam(required = false) String favoriteTags,
-            @RequestParam(required = false) MultipartFile avatar) {
+            @RequestParam(required = false) MultipartFile avatar,
+            HttpServletRequest request) {
         
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUsername(auth.getName());
+
+        if (username != null && !username.isEmpty()) {
+            user.setNama(username);
+        }
 
         if (about != null) {
             user.setAbout(about);
@@ -64,7 +75,23 @@ public class UserSettingsController {
             }
         }
 
+        // Update the user
         user = userService.update(user);
+        
+        // Update SecurityContext while preserving the session
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+            user.getNama(),
+            auth.getCredentials(),
+            auth.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+        
+        // Update session with new authentication
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+        }
+        
         return ResponseEntity.ok(user);
     }
 

@@ -1,12 +1,19 @@
 package com.redonion.tcg.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.redonion.tcg.model.User;
+import com.redonion.tcg.repository.EmailChangeRequestRepository;
+import com.redonion.tcg.repository.UserInventoryRepository;
 import com.redonion.tcg.repository.UserRepository;
 
 @Service
@@ -17,6 +24,12 @@ public class UserService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailChangeRequestRepository emailChangeRequestRepository;
+
+    @Autowired
+    private UserInventoryRepository userInventoryRepository;
 
     public List<User> findAll() {
         return userRepository.findAll();
@@ -47,8 +60,30 @@ public class UserService {
         existingUser.setRole(user.getRole());
 
         return userRepository.save(existingUser);
-    }    public void delete(Integer id) {
-        userRepository.deleteById(id);
+    }    @Transactional
+    public void delete(Integer id) {
+        User user = findById(id);
+        if (user != null) {
+            // Delete any email change requests
+            emailChangeRequestRepository.deleteByUser(user);
+            
+            // Delete user's inventory records
+            userInventoryRepository.deleteByUserId(id);
+            
+            // Delete user's avatars if they exist
+            if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+                try {
+                    Path avatarPath = Paths.get("src/main/resources/static" + user.getAvatar());
+                    Files.deleteIfExists(avatarPath);
+                } catch (IOException e) {
+                    // Log error but continue with deletion
+                    System.err.println("Failed to delete avatar file: " + e.getMessage());
+                }
+            }
+            
+            // Finally delete the user
+            userRepository.deleteById(id);
+        }
     }
 
     public User findByUsername(String username) {

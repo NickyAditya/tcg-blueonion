@@ -1,0 +1,128 @@
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 80px;  /* Moved down to not overlap with header */
+    right: -300px;
+    width: 300px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.notification.show {
+    right: 20px;
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+.notification.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.notification.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+.notification.info {
+    color: #004085;
+    background-color: #cce5ff;
+    border: 1px solid #b8daff;
+}
+
+/* Notification History */
+.notification-history {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 350px;
+    max-height: 500px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.notification-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.notification-history-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-time {
+    font-size: 0.8em;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.notification-item.success .notification-message {
+    color: #155724;
+}
+
+.notification-item.error .notification-message {
+    color: #721c24;
+}
+
+.notification-item.info .notification-message {
+    color: #004085;
+}
+
+/* Notification Badge */
+.notification-badge {
+    position: absolute;
+    top: -5px;  /* Adjusted position to touch bell icon */
+    right: -5px; /* Adjusted position to touch bell icon */
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 12px;
+    min-width: 20px;  /* Increased min-width for better visibility */
+    height: 20px;     /* Matched height to min-width for perfect circle */
+    line-height: 16px; /* Centered text vertically */
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Clear Notifications Button */
+.clear-notifications {
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #666;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.clear-notifications:hover {
+    background: #f5f5f5;
+}

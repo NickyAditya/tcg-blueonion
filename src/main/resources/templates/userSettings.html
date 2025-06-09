@@ -5,11 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Settings</title>
   <link rel="stylesheet" href="user.css">
+  <link rel="stylesheet" href="notifications.css">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <style>
+    .avatar-preview-container {
+      margin: 10px 0;
+    }
+    .avatar-preview {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 2px solid #ccc;
+    }
+    .avatar-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Add notification container -->
+  <!-- Add notification containers -->
   <div class="notification-container" id="notificationContainer"></div>
   <div class="notification-history" id="notificationHistory">
     <div class="notification-history-header">
@@ -26,13 +50,16 @@
         <input type="search" placeholder="Search cards..." class="search-input">
         <button class="search-button">🔍</button>
       </div>
-      <nav class="main-nav">        <a href="/index">Beranda</a>
+      <nav class="main-nav">
+        <a href="/index">Beranda</a>
         <a href="/shop">Toko</a>
         <a href="#popular">Populer</a>
         <a href="#contact">Kontak</a>
       </nav>
     </div>
-    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    <div>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
@@ -47,8 +74,12 @@
   <div class="content-wrapper">
     <div class="container settings-container">
       <h2 class="section-title"><i class="fa fa-cog"></i> User Settings</h2>
-      <div class="settings-form">        <label>Username</label>        
-        <input type="text" th:value="${username}" readonly>        
+      <form id="settingsForm" class="settings-form">
+        <input type="hidden" id="userId" th:value="${user.id_user}">
+        
+        <label>Username</label>
+        <input type="text" th:value="${username}" placeholder="Enter username" id="usernameInput">
+        
         <label>Email</label>
         <div class="email-container">
             <input type="email" th:value="${userEmail}" readonly>
@@ -86,7 +117,7 @@
             </div>
         </div>
 
-        <label>About</label>        
+        <label>About</label>
         <input type="text" th:value="${user.about}" placeholder="Tell us about yourself">
 
         <label>Favorite Tags</label>
@@ -94,429 +125,367 @@
 
         <p style="font-size: 0.9em;">If you want to change your password, enter your old password and the new password.</p>
 
-        <label>Old Password</label>        <input type="password" placeholder="old password" class="settings-input">
+        <label>Old Password</label>
+        <input type="password" placeholder="old password" class="settings-input">
 
         <label>New Password</label>
         <input type="password" placeholder="new password" class="settings-input">
 
-        <label>Confirm</label>        <input type="password" placeholder="confirm new password" class="settings-input">        <div class="button-group">
-            <button class="btn btn-cancel" onclick="resetForm()">Cancel</button>
-            <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
-            <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+        <label>Confirm</label>
+        <input type="password" placeholder="confirm new password" class="settings-input">
+        
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="resetForm()">Back</button>
+            <button type="submit" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
         </div>
+        
+        <div class="danger-zone">
+            <h3>Danger Zone</h3>
+            <button type="button" class="btn btn-danger" onclick="confirmDeleteAccount()">Delete Account</button>
+        </div>
+      </form>
 
-        <script>
-        function showNotification(message, type = 'success') {
-            const container = document.getElementById('notificationContainer');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            container.appendChild(notification);
-
-            // Add to notification history
-            const historyList = document.getElementById('notificationHistoryList');
-            const historyItem = document.createElement('li');
-            historyItem.className = type;
-            historyItem.textContent = message;
-            historyList.appendChild(historyItem);
-
-            // Update badge
-            const badge = document.getElementById('notificationBadge');
-            badge.textContent = parseInt(badge.textContent || '0') + 1;
-
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            loadUserSettings();
-            setupAvatarHandlers();
-            checkEmailRequestStatus();
-        });        function loadUserSettings() {
-            fetch('/api/settings/current')
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            window.location.href = '/sign?error=unauthorized';
-                            return;
-                        }
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(user => {
-                    if (!user) return;
-                    document.querySelector('input[type="text"][value="Vortexaint"]').value = user.nama;
-                    document.querySelector('input[type="email"]').value = user.email;
-                    document.querySelector('input[placeholder="Tell us about yourself"]').value = user.about || '';
-                    document.querySelector('input[value="Pokemon"]').value = user.favorite_tags || '';
-                    
-                    if (user.avatar) {
-                        document.getElementById('avatarPreview').src = user.avatar;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading user settings:', error);
-                    showNotification('Failed to load user settings. Please try logging in again.', 'error');
-                });
-        }
-
-        function setupAvatarHandlers() {
-            const avatarInput = document.getElementById('avatarInput');
-            const removeAvatarCheckbox = document.getElementById('removeAvatar');
-            const preview = document.getElementById('avatarPreview');
-
-            avatarInput.addEventListener('change', function(e) {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        removeAvatarCheckbox.checked = false;
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-
-            removeAvatarCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    preview.src = '';
-                    avatarInput.value = '';
-                }
-            });
-        }
-
-        function saveChanges() {
-            const formData = new FormData();
-            
-            const about = document.querySelector('input[placeholder="Tell us about yourself"]').value;
-            const favoriteTags = document.querySelector('input[value="Pokemon"]').value;
-            const avatarInput = document.getElementById('avatarInput');
-            const removeAvatar = document.getElementById('removeAvatar').checked;
-
-            formData.append('about', about);
-            formData.append('favoriteTags', favoriteTags);
-            
-            if (avatarInput.files.length > 0) {
-                formData.append('avatar', avatarInput.files[0]);
-            }            const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-            const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-            const fetchOptions = {
-                method: 'POST',
-                headers: {
-                    [header]: token
-                }
-            };
-
-            if (removeAvatar) {
-                fetch('/api/settings/remove-avatar', fetchOptions);
-            } else {
-                fetchOptions.body = formData;
-                fetch('/api/settings/update', fetchOptions)
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to update settings');
-                    showNotification('Settings updated successfully!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Failed to update settings', 'error');
-                });
-            }
-
-            // Handle password change if new password is provided
-            const oldPassword = document.querySelector('input[placeholder="old password"]').value;
-            const newPassword = document.querySelector('input[placeholder="new password"]').value;
-            const confirmPassword = document.querySelector('input[placeholder="confirm new password"]').value;            if (newPassword) {
-                if (newPassword !== confirmPassword) {
-                    showNotification('New passwords do not match!', 'error');
-                    return;
-                }
-
-                if (!oldPassword) {
-                    showNotification('Please enter your current password', 'error');
-                    return;
-                }
-
-                const passwordData = new FormData();
-                passwordData.append('oldPassword', oldPassword);
-                passwordData.append('newPassword', newPassword);
-
-                fetch('/api/settings/password', {
-                    method: 'POST',
-                    headers: {
-                        [header]: token
-                    },
-                    body: passwordData
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 401) {
-                            window.location.href = '/sign?error=unauthorized';
-                            return;
-                        }
-                        throw new Error('Failed to update password');
-                    }
-                    showNotification('Password updated successfully!');
-                    // Clear password fields
-                    document.querySelector('input[placeholder="old password"]').value = '';
-                    document.querySelector('input[placeholder="new password"]').value = '';
-                    document.querySelector('input[placeholder="confirm new password"]').value = '';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Failed to update password. Please check your current password and try again.', 'error');
-                });
-                passwordData.append('oldPassword', oldPassword);
-                passwordData.append('newPassword', newPassword);
-
-                fetch('/api/settings/password', {
-                    method: 'POST',
-                    body: passwordData
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to update password');
-                    showNotification('Password updated successfully!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Failed to update password', 'error');
-                });
-            }
-        }        function resetForm() {
-            if (confirm('Are you sure you want to cancel your changes?')) {
-                // Reset all form fields to original values
-                loadUserSettings();
-                
-                // Clear all password fields
-                document.querySelectorAll('input[type="password"]').forEach(input => input.value = '');
-                
-                // Reset avatar-related elements
-                document.getElementById('removeAvatar').checked = false;
-                document.getElementById('avatarInput').value = '';
-                
-                // Show confirmation message
-                showNotification('Changes have been cancelled', 'info');
-                
-                // Redirect back to user profile
-                setTimeout(() => {
-                    window.location.href = '/user';
-                }, 1500);
-            }
-        }
-
-        function deleteAccount() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                const userId = document.querySelector('input[type="hidden"]').value;
-                fetch(`/api/users/${userId}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to delete account');
-                    window.location.href = '/sign';
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showNotification('Failed to delete account', 'error');
-                });
-            }
-        }
-
-        function showNotification(message, type = 'success') {
-            const container = document.getElementById('notificationContainer');
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            container.appendChild(notification);
-
-            // Add to notification history
-            const historyList = document.getElementById('notificationHistoryList');
-            const historyItem = document.createElement('li');
-            historyItem.className = type;
-            historyItem.textContent = message;
-            historyList.appendChild(historyItem);
-
-            // Update badge
-            const badge = document.getElementById('notificationBadge');
-            badge.textContent = parseInt(badge.textContent || '0') + 1;
-
-            // Auto-remove after 5 seconds
-            setTimeout(() => {
-                notification.remove();
-            }, 5000);
-        }
-
-        function showEmailChangeModal() {
-            const currentEmail = document.querySelector('input[type="email"]').value;
-            document.getElementById('currentEmail').textContent = currentEmail;
-            document.getElementById('emailChangeModal').style.display = 'block';
-        }
-
-        function closeEmailModal() {
-            document.getElementById('emailChangeModal').style.display = 'none';
-            document.getElementById('newEmail').value = '';
-        }
-
-        function submitEmailChange() {
-            const newEmail = document.getElementById('newEmail').value;
-            
-            if (!newEmail) {
-                showNotification('Please enter a new email address', 'error');
-                return;
-            }
-
-            fetch('/api/email-change/request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ newEmail: newEmail })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error('Failed to submit request');
-                return response.json();
-            })
-            .then(() => {
-                showNotification('Email change request submitted successfully. Awaiting admin approval.', 'success');
-                closeEmailModal();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showNotification('Failed to submit email change request', 'error');
-            });
-        }
-
-        function checkEmailRequestStatus() {
-            fetch('/api/email-change/user/status')
-                .then(response => response.json())
-                .then(request => {
-                    if (request) {
-                        showNotification(`You have a pending email change request to ${request.requestedEmail}`, 'info');
-                    }
-                })
-                .catch(error => console.error('Error checking email request status:', error));
-        }
-        </script>
-      </div>
+      <!-- Delete Account Modal -->
+      <div id="deleteAccountModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="deleteAccount()">Delete</button>
+            </div>
+        </div>
+    </div>
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="footer-sections">
-      
-      <!-- Articles & Decks -->
-      <div class="footer-section">
-        <h4>Articles & Decks</h4>
-        <ul>
-          <li>TCGplayer Content</li>
-          <li>Magic: The Gathering</li>
-          <li>Yu-Gi-Oh!</li>
-          <li>Pokémon</li>
-          <li>Disney Lorcana</li>
-          <li>Flesh and Blood</li>
-          <li>More Articles & Decks</li>
-        </ul>
-      </div>
-
-      <!-- Help & Contact -->
-      <div class="footer-section">
-        <h4>Help & Contact</h4>
-        <ul>
-          <li>Contact Us</li>
-          <li>Help Center</li>
-          <li>Refund and Return Policy</li>
-          <li>Security Center</li>
-        </ul>
-      </div>
-
-      <!-- About -->
-      <div class="footer-section">
-        <h4>About</h4>
-        <ul>
-          <li>About Us</li>
-          <li>Job Openings</li>
-          <li>Press Room</li>
-          <li>Become an Affiliate</li>
-        </ul>
-      </div>
-
-      <!-- Social Icons -->
-      <div class="footer-section social">
-        <div class="social-icons">
-          <!-- Facebook -->
-          <a href="#" aria-label="Facebook">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
-              <path fill="currentColor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
-            </svg>
-          </a>
-
-          <!-- X (Twitter) -->
-          <a href="#" aria-label="Twitter / X">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
-              <path fill="currentColor" d="M512 32L320 288l192 192h-96L256 352l-96 128H64l192-256L64 32h96l96 128 96-128h96z"/>
-            </svg>
-          </a>
-
-          <!-- YouTube -->
-          <a href="#" aria-label="YouTube">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="24" height="24">
-              <path fill="currentColor" d="M549.7 124.1c-6.3-23.8-25-42.5-48.7-48.9C456.2 64 288 64 288 64s-168.2 0-213 11.2c-23.8 6.3-42.5 25-48.8 48.8C16 168.9 16 256 16 256s0 87.1 10.2 131.9c6.3 23.8 25 42.5 48.8 48.8C119.8 448 288 448 288 448s168.2 0 213-11.2c23.8-6.3 42.5-25 48.7-48.8C560 343.1 560 256 560 256s0-87.1-10.3-131.9zM232 336V176l142.8 80L232 336z"/>
-            </svg>
-          </a>
-
-          <!-- Instagram -->
-          <a href="#" aria-label="Instagram">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24">
-              <path fill="currentColor" d="M224 202.7c-36.9 0-66.7 29.8-66.7 66.7s29.8 66.7 66.7 66.7 66.7-29.8 66.7-66.7-29.8-66.7-66.7-66.7zm124.7-41c0 14.1-11.4 25.5-25.5 25.5s-25.5-11.4-25.5-25.5S309.1 136 323.2 136s25.5 11.4 25.5 25.5zM398.8 80c-23.3-23.3-54.3-36.2-87.4-36.2H136.6c-33.1 0-64.1 12.9-87.4 36.2S13 134.3 13 167.4v175.2c0 33.1 12.9 64.1 36.2 87.4s54.3 36.2 87.4 36.2h175.2c33.1 0 64.1-12.9 87.4-36.2s36.2-54.3 36.2-87.4V167.4c0-33.1-12.9-64.1-36.2-87.4zM224 338c-62.9 0-114-51.1-114-114s51.1-114 114-114 114 51.1 114 114-51.1 114-114 114zm146.4-162.9c0 14.5-11.7 26.2-26.2 26.2s-26.2-11.7-26.2-26.2 11.7-26.2 26.2-26.2 26.2 11.7 26.2 26.2z"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer Bottom -->
-    <div class="footer-bottom">
-      <p>&copy; 2025 Red Onion – Peel the Layers, Trade the Legends.<br>All Rights Reserved.</p>
-      <p class="copyright">
-        All card images and content related to Pokémon ©1995–2025 Nintendo, Creatures Inc., GAME FREAK inc.;
-        Yu-Gi-Oh! ©1996–2025 Kazuki Takahashi, Studio Dice, Shueisha, TV Tokyo, Konami;
-        and Magic: The Gathering ©1993–2025 Wizards of the Coast LLC.
-        All trademarks are property of their respective owners.
-      </p>
-      <p class="links">
-        <a href="#">Privacy Policy</a> |
-        <a href="#">Terms of Service</a> |
-        <a href="#">Accessibility</a> |
-        <a href="#">Do Not Sell or Share My Personal Information</a>
-      </p>    </div>
-  </footer>
-
+  <script src="notifications.js"></script>
   <script>
-    // Theme Toggle
+    // Get CSRF token
+    const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+    const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+    // Theme toggle functionality
     const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
     
     // Check for saved theme preference
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      body.setAttribute('data-theme', savedTheme);
-      themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark' : 'light');
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      themeToggle.textContent = '☀️';
     }
     
     // Theme toggle functionality
     themeToggle.addEventListener('click', () => {
-      const currentTheme = body.getAttribute('data-theme');
+      const currentTheme = document.documentElement.getAttribute('data-theme');
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
-      body.setAttribute('data-theme', newTheme);
+      document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
       themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
     });
 
+    // Handle avatar upload and preview
+    const avatarInput = document.getElementById('avatarInput');
+    const avatarPreview = document.getElementById('avatarPreview');
+    const removeAvatarCheckbox = document.getElementById('removeAvatar');
+    const saveChangesBtn = document.getElementById('saveChangesBtn');
+    const settingsForm = document.getElementById('settingsForm');
+    
+    // Track form changes
+    let formChanged = false;
+    const originalFormValues = {};
+
+    // Store original form values when page loads
+    window.addEventListener('DOMContentLoaded', () => {
+        originalFormValues.username = document.getElementById('usernameInput').value;
+        originalFormValues.about = document.querySelector('input[placeholder="Tell us about yourself"]').value;
+        originalFormValues.favoriteTags = document.querySelector('input[placeholder="Add your favorite card tags"]').value;
+        originalFormValues.avatar = document.getElementById('avatarInput').value;
+        originalFormValues.removeAvatar = document.getElementById('removeAvatar').checked;
+
+        // Add change listeners to form elements
+        document.getElementById('usernameInput').addEventListener('change', () => formChanged = true);
+        document.querySelector('input[placeholder="Tell us about yourself"]').addEventListener('change', () => formChanged = true);
+        document.querySelector('input[placeholder="Add your favorite card tags"]').addEventListener('change', () => formChanged = true);
+        avatarInput.addEventListener('change', () => formChanged = true);
+        removeAvatarCheckbox.addEventListener('change', () => formChanged = true);
+    });
+
+    // Listen for navigation events
+    window.addEventListener('beforeunload', (e) => {
+        if (formChanged) {
+            e.preventDefault();
+            e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        }
+    });
+
+    // Preview image before upload
+    avatarInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                avatarPreview.src = e.target.result;
+            };
+            
+            reader.readAsDataURL(this.files[0]);
+            removeAvatarCheckbox.checked = false;
+            formChanged = true;
+
+            // Resize image if needed
+            const img = new Image();
+            img.onload = function() {
+                if (this.width > 800 || this.height > 800) {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Calculate new dimensions
+                    let width = this.width;
+                    let height = this.height;
+                    
+                    if (width > height) {
+                        if (width > 800) {
+                            height *= 800 / width;
+                            width = 800;
+                        }
+                    } else {
+                        if (height > 800) {
+                            width *= 800 / height;
+                            height = 800;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Draw resized image
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Convert to file
+                    canvas.toBlob(function(blob) {
+                        const resizedFile = new File([blob], avatarInput.files[0].name, {
+                            type: 'image/jpeg',
+                            lastModified: Date.now()
+                        });
+                        avatarInput.file = resizedFile;
+                    }, 'image/jpeg', 0.8);
+                }
+            };
+            img.src = URL.createObjectURL(this.files[0]);
+        }
+    });
+
+    removeAvatarCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            avatarPreview.src = '/images/default-avatar.png';
+            avatarInput.value = ''; // Clear the file input
+            avatarInput.file = null; // Clear any resized file
+            formChanged = true;
+        }
+    });
+
+    // Form submission handlers
+    function resetForm() {
+        if (formChanged) {
+            const confirmLeave = confirm('You have unsaved changes. Do you want to discard these changes?');
+            if (confirmLeave) {
+                window.location.href = '/user';
+            }
+        } else {
+            window.location.href = '/user';
+        }
+    }
+
+    async function saveChanges(event) {
+        event.preventDefault();
+        const userId = document.getElementById('userId').value;
+        const username = document.getElementById('usernameInput').value;
+        const about = document.querySelector('input[placeholder="Tell us about yourself"]').value;
+        const favoriteTags = document.querySelector('input[placeholder="Add your favorite card tags"]').value;
+        const oldPassword = document.querySelector('input[placeholder="old password"]').value;
+        const newPassword = document.querySelector('input[placeholder="new password"]').value;
+        const confirmPassword = document.querySelector('input[placeholder="confirm new password"]').value;
+
+        // Validate username
+        if (!username) {
+            notifications.error('Error', 'Username cannot be empty');
+            return;
+        }
+
+        // Validation for password change
+        if (newPassword) {
+            if (newPassword !== confirmPassword) {
+                notifications.error('Error', 'New passwords do not match');
+                return;
+            }
+            if (!oldPassword) {
+                notifications.error('Error', 'Please enter your old password');
+                return;
+            }
+        }
+
+        const formData = new FormData();
+
+        formData.append('username', username);
+        formData.append('about', about);
+        formData.append('favoriteTags', favoriteTags);
+
+        // Handle avatar upload
+        if (avatarInput.files.length > 0 && !removeAvatarCheckbox.checked) {
+            // Use the resized file if available
+            formData.append('avatar', avatarInput.file || avatarInput.files[0]);
+        }
+
+        try {
+            // If remove avatar is checked, send remove request first
+            if (removeAvatarCheckbox.checked) {
+                const removeResponse = await fetch('/api/settings/remove-avatar', {
+                    method: 'POST',
+                    headers: {
+                        [header]: token
+                    },
+                    credentials: 'include'
+                });
+
+                if (!removeResponse.ok) {
+                    const error = await removeResponse.text();
+                    throw new Error(error || 'Failed to remove avatar');
+                }
+            }
+
+            // Update settings including username and possibly new avatar
+            const response = await fetch('/api/settings/update', {
+                method: 'POST',
+                headers: {
+                    [header]: token
+                },
+                body: formData,
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                const error = await response.text();
+                throw new Error(error || 'Failed to update settings');
+            }
+
+            // Update password if provided
+            if (newPassword) {
+                const passwordResponse = await fetch('/api/settings/password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        [header]: token
+                    },
+                    credentials: 'include',
+                    body: `oldPassword=${encodeURIComponent(oldPassword)}&newPassword=${encodeURIComponent(newPassword)}`
+                });
+
+                if (!passwordResponse.ok) {
+                    throw new Error('Failed to update password. Please verify your old password is correct.');
+                }
+            }
+
+            const updatedUser = await response.json();
+            
+            // Update the UI without reloading the page
+            document.querySelector('a[href="/user"]').textContent = '👤 ' + updatedUser.nama;
+            document.getElementById('usernameInput').value = updatedUser.nama;
+            
+            // Update avatar preview if needed
+            if (updatedUser.avatar) {
+                avatarPreview.src = updatedUser.avatar;
+            } else {
+                avatarPreview.src = '/images/default-avatar.png';
+            }
+            
+            // Show success message
+            notifications.success('Success', 'Your settings have been updated successfully.');
+            
+            // Reset form change tracker
+            formChanged = false;
+            
+            // Store the new values as original form values
+            originalFormValues.username = updatedUser.nama;
+            originalFormValues.about = updatedUser.about || '';
+            originalFormValues.favoriteTags = updatedUser.favorite_tags || '';
+            
+        } catch (error) {
+            notifications.error('Error', error.message || 'Failed to update settings');
+        }
+    }
+
+    function confirmDeleteAccount() {
+        document.getElementById('deleteAccountModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteAccountModal').style.display = 'none';
+    }
+
+    async function deleteAccount() {
+        const userId = document.getElementById('userId').value;
+        try {
+            const response = await fetch(`/api/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    [header]: token
+                }
+            });
+
+            if (response.ok) {
+                notifications.success('Success', 'Account deleted successfully');
+                window.location.href = '/logout';
+            } else {
+                const error = await response.text();
+                notifications.error('Error', 'Failed to delete account: ' + error);
+            }
+        } catch (error) {
+            notifications.error('Error', 'Error deleting account: ' + error.message);
+        }
+    }
+
+    function showEmailChangeModal() {
+        document.getElementById('emailChangeModal').style.display = 'block';
+    }
+
+    function closeEmailModal() {
+        document.getElementById('emailChangeModal').style.display = 'none';
+    }
+
+    async function submitEmailChange() {
+        const newEmail = document.getElementById('newEmail').value;
+        if (!newEmail) {
+            notifications.error('Error', 'Please enter a new email address');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/email-change/request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    [header]: token
+                },
+                body: JSON.stringify({ newEmail })
+            });
+
+            if (response.ok) {
+                notifications.success('Success', 'Email change request submitted successfully');
+                window.location.reload();
+            } else {
+                const error = await response.text();
+                notifications.error('Error', 'Failed to submit email change request: ' + error);
+            }
+        } catch (error) {
+            notifications.error('Error', 'Error submitting email change request: ' + error.message);
+        }
+    }
+
     // Optional: Show welcome notification
     setTimeout(() => {
-      notifications.info('Welcome back!', 'Check out your latest card activities.');
+      notifications.info('Welcome back', 'Check out your latest card activities.');
     }, 1000);
   </script>
 </body>

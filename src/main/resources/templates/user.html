@@ -2,16 +2,25 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="${user.nama} + ' - Profile'">User Profile</title>
-  <link rel="stylesheet" href="user.css">
+  <title th:text="${user.nama} + ' - Profile'">User Profile</title>  <link rel="stylesheet" href="user.css">
+  <link rel="stylesheet" href="notifications.css">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-<body>  <header>    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+<body>  <!-- Notification containers -->
+  <div class="notification-container" id="notificationContainer"></div>
+  <div class="notification-history" id="notificationHistory">
+    <div class="notification-history-header">
+      <h3>Notifications</h3>
+      <button class="clear-notifications" id="clearNotifications">Clear all</button>
+    </div>
+    <ul class="notification-history-list" id="notificationHistoryList"></ul>
+  </div>
+  <header>    <div>      <a href="/" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <input type="search" placeholder="Search cards..." class="search-input">
         <button class="search-button">🔍</button>
-      </div>      <nav class="main-nav">        <a href="/index">Beranda</a>
+      </div>      <nav class="main-nav">        <a href="/">Beranda</a>
         <a href="/shop">Toko</a>
         <a href="#popular">Populer</a>
         <a href="#contact">Kontak</a>
@@ -28,15 +37,7 @@
     </div>
   </header>
 
-  <!-- Notification containers -->
-  <div class="notification-container" id="notificationContainer"></div>
-  <div class="notification-history" id="notificationHistory">
-    <div class="notification-history-header">
-      <h3>Notifications</h3>
-      <button class="clear-notifications" id="clearNotifications">Clear all</button>
-    </div>
-    <ul class="notification-history-list" id="notificationHistoryList"></ul>
-  </div>    <div class="container">
+  <div class="container">
     <div class="profile">
       <img th:src="${user.avatar != null ? user.avatar : '/textures/Pokemon-back.jpg'}" alt="Profile Picture" />
       <div class="profile-info">        <h2 th:text="${user.nama}">Username</h2>
@@ -155,168 +156,8 @@
       </p>    </div>
   </footer>
 
+  <script src="notifications.js"></script>
   <script>
-    // Notification System
-    class NotificationSystem {
-      constructor() {
-        this.container = document.getElementById('notificationContainer');
-        this.history = document.getElementById('notificationHistory');
-        this.historyList = document.getElementById('notificationHistoryList');
-        this.badge = document.getElementById('notificationBadge');
-        this.clearButton = document.getElementById('clearNotifications');
-        this.bellIcon = document.getElementById('notificationLog');
-        this.notifications = [];
-        this.unreadCount = 0;
-
-        // Initialize event listeners
-        this.bellIcon.addEventListener('click', () => this.toggleHistory());
-        this.clearButton.addEventListener('click', () => this.clearHistory());
-
-        // Close history panel when clicking outside
-        document.addEventListener('click', (e) => {
-          if (!this.history.contains(e.target) && 
-              !this.bellIcon.contains(e.target) && 
-              this.history.classList.contains('show')) {
-            this.toggleHistory();
-          }
-        });
-
-        // Load notifications from localStorage if available
-        this.loadNotifications();
-      }
-
-      show(title, message, type = 'info', duration = 5000) {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        
-        notification.innerHTML = `
-          <div class="notification-content">
-            <div class="notification-title">${title}</div>
-            <div class="notification-message">${message}</div>
-          </div>
-          <button class="notification-close" aria-label="Close notification">&times;</button>
-        `;
-
-        // Add to container and history
-        this.container.appendChild(notification);
-        this.addToHistory(title, message, type);
-
-        // Add close button functionality
-        const closeBtn = notification.querySelector('.notification-close');
-        closeBtn.addEventListener('click', () => this.remove(notification));
-
-        // Auto remove after duration
-        if (duration > 0) {
-          setTimeout(() => this.remove(notification), duration);
-        }
-
-        // Save to localStorage
-        this.saveNotifications();
-
-        return notification;
-      }
-
-      remove(notification) {
-        notification.style.animation = 'slideOut 0.3s ease-out forwards';
-        setTimeout(() => {
-          if (notification.parentElement === this.container) {
-            this.container.removeChild(notification);
-          }
-        }, 300);
-      }
-
-      addToHistory(title, message, type) {
-        const timestamp = new Date().toLocaleString();
-        const item = document.createElement('li');
-        item.className = 'notification-history-item';
-        item.innerHTML = `
-          <div class="notification-content">
-            <div class="notification-title">${title}</div>
-            <div class="notification-message">${message}</div>
-            <small class="notification-timestamp">${timestamp}</small>
-          </div>
-        `;
-        
-        this.historyList.insertBefore(item, this.historyList.firstChild);
-        this.notifications.unshift({ title, message, type, timestamp });
-        this.updateBadge(++this.unreadCount);
-        this.saveNotifications();
-      }
-
-      toggleHistory() {
-        this.history.classList.toggle('show');
-        if (this.history.classList.contains('show')) {
-          this.unreadCount = 0;
-          this.updateBadge(0);
-          this.saveNotifications();
-        }
-      }
-
-      clearHistory() {
-        this.historyList.innerHTML = '';
-        this.notifications = [];
-        this.unreadCount = 0;
-        this.updateBadge(0);
-        this.saveNotifications();
-      }
-
-      updateBadge(count) {
-        this.badge.textContent = count || '';
-      }
-
-      saveNotifications() {
-        localStorage.setItem('notifications', JSON.stringify({
-          items: this.notifications,
-          unreadCount: this.unreadCount
-        }));
-      }
-
-      loadNotifications() {
-        const saved = localStorage.getItem('notifications');
-        if (saved) {
-          const data = JSON.parse(saved);
-          this.notifications = data.items || [];
-          this.unreadCount = data.unreadCount || 0;
-          
-          // Rebuild notification history
-          this.notifications.forEach(({ title, message, timestamp }) => {
-            const item = document.createElement('li');
-            item.className = 'notification-history-item';
-            item.innerHTML = `
-              <div class="notification-content">
-                <div class="notification-title">${title}</div>
-                <div class="notification-message">${message}</div>
-                <small class="notification-timestamp">${timestamp}</small>
-              </div>
-            `;
-            this.historyList.appendChild(item);
-          });
-          
-          this.updateBadge(this.unreadCount);
-        }
-      }
-
-      // Convenience methods for different notification types
-      success(title, message, duration) {
-        return this.show(title, message, 'success', duration);
-      }
-
-      error(title, message, duration) {
-        return this.show(title, message, 'error', duration);
-      }
-
-      info(title, message, duration) {
-        return this.show(title, message, 'info', duration);
-      }
-
-      warning(title, message, duration) {
-        return this.show(title, message, 'warning', duration);
-      }
-    }
-
-    // Initialize notification system
-    const notifications = new NotificationSystem();
-
     // Theme toggle functionality
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
@@ -340,7 +181,7 @@
 
     // Optional: Show welcome notification
     setTimeout(() => {
-      notifications.info('Welcome back!', 'Check out your latest card activities.');
+      notifications.info('Welcome back', 'Check out your latest card activities.');
     }, 1000);
   </script>
   <script th:inline="javascript">
@@ -368,5 +209,5 @@
         }
     });
   </script>
-  </body>
+</body>
 </html>

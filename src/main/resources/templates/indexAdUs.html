@@ -4,42 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TCG Marketplace</title>
-  <link rel="stylesheet" href="/index.css" />
+  <!-- Base styles -->
+  <link rel="stylesheet" href="user.css">
+  <!-- Include admin styles for admin users -->
+  <link rel="stylesheet" href="admin.css" sec:authorize="hasRole('ADMIN')">
+  <!-- Notification styles for authenticated users -->
+  <link rel="stylesheet" href="notifications.css" sec:authorize="isAuthenticated()">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- CSRF token for authenticated users -->
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>  <header>
-    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+    <div>      <a href="/" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
-        <input type="search" placeholder="Search cards..." class="search-input">
+        <!-- Show different search placeholder based on role -->
+        <input type="search" 
+               th:placeholder="${#authorization.expression('hasRole(''ADMIN'')')} ? 'Search users...' : 'Search cards...'" 
+               class="search-input">
         <button class="search-button">🔍</button>
-      </div>
-      <nav class="main-nav">
-        <a href="/index">Beranda</a>
+      </div>      <nav class="main-nav">
+        <a href="/">Beranda</a>
         <a href="/shop">Toko</a>
         <a href="#popular">Populer</a>
         <a href="#contact">Kontak</a>
       </nav>
     </div>
     <div>
-      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
-        🔔<span class="notification-badge" id="notificationBadge">0</span>
-      </button>
-      <a href="/userInventory">📦 Inventory</a>
-      <a href="/sign">👤 Login</a>
+      <!-- Theme toggle button for all users -->
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+
+      <!-- Admin-specific controls -->
+      <th:block sec:authorize="hasRole('ADMIN')">
+        <span class="admin-name" th:text="${'👑 Admin: ' + #authentication.name}">👑 Admin: </span>
+        <span id="serverTime" class="server-time">Loading time...</span>
+      </th:block>
+
+      <!-- User-specific controls -->
+      <th:block sec:authorize="hasRole('USER')">
+        <button id="notificationLog" class="notification-log" aria-label="Notification history">
+          🔔<span class="notification-badge" id="notificationBadge">0</span>
+        </button>
+        <a href="/userInventory">📦 Inventory</a>
+        <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
+      </th:block>
+
+      <!-- Unauthenticated user controls -->
+      <th:block sec:authorize="!isAuthenticated()">
+        <a href="/userInventory">📦 Inventory</a>
+        <a href="/sign">👤 Login</a>
+      </th:block>
+
+      <!-- Authenticated user logout form -->
+      <th:block sec:authorize="isAuthenticated()">
+        <form action="/logout" method="post" style="display: inline;">
+          <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+          <button type="submit" class="logout-link" style="border: none; background: none; cursor: pointer; padding: 0; color: var(--text);">🔒 Log out</button>
+        </form>
+      </th:block>
     </div>
   </header>
 
-  <!-- Add notification containers -->
-  <div class="notification-container" id="notificationContainer"></div>
-  <div class="notification-history" id="notificationHistory">
-    <div class="notification-history-header">
-      <h3>Notifications</h3>
-      <button class="clear-notifications" id="clearNotifications">Clear all</button>
+  <!-- Add notification containers for authenticated users -->
+  <th:block sec:authorize="isAuthenticated()">
+    <div class="notification-container" id="notificationContainer"></div>
+    <div class="notification-history" id="notificationHistory">
+      <div class="notification-history-header">
+        <h3>Notifications</h3>
+        <button class="clear-notifications" id="clearNotifications">Clear all</button>
+      </div>
+      <ul class="notification-history-list" id="notificationHistoryList"></ul>
     </div>
-    <ul class="notification-history-list" id="notificationHistoryList"></ul>
-  </div>
+  </th:block>
 
 <!-- ========== BANNER SLIDER ========== -->
 <div class="carousel" id="carousel">

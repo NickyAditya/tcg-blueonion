@@ -35,18 +35,18 @@ public class SecurityConfig {    @Autowired
         http.csrf(csrf -> 
                 csrf.ignoringRequestMatchers("/api/**")
             )
-            .userDetailsService(userDetailsService)
-            .authorizeHttpRequests(auth -> 
+            .userDetailsService(userDetailsService)            .authorizeHttpRequests(auth -> 
                 auth.requestMatchers(
                         "/static/**", "/css/**", "/*.css", "/*.js", "/*.png",
                         "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
                         "/texture/**", "/images/**", "/logo*", "/*.ico",
-                        "/webjars/**", "/fonts/**", "/uploads/**","/error")
+                        "/webjars/**", "/fonts/**", "/uploads/**", "/error")
                     .permitAll()
                     .requestMatchers(
-                            "/", "/index", "/sign", "/login", "/register", "/error",
+                            "/sign", "/login", "/register", "/error",
                             "/pokemon", "/yugioh", "/mtg", "/register", "/logout")
                         .permitAll()
+                    .requestMatchers("/", "/index").permitAll()
                     .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/settings/**").authenticated()
                     .requestMatchers("/user/**", "/userInventory", "/booster", "/settings", "/userSettings").authenticated()
@@ -80,13 +80,12 @@ public class SecurityConfig {    @Autowired
                 Authentication authentication) throws IOException, ServletException {
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
             System.out.println("DEBUG: Login success for user: " + authentication.getName());
-            System.out.println("DEBUG: Roles: " + roles);
-            if (roles.contains("ROLE_ADMIN")) {
+            System.out.println("DEBUG: Roles: " + roles);            if (roles.contains("ROLE_ADMIN")) {
                 System.out.println("DEBUG: Redirecting to /admin");
                 response.sendRedirect("/admin");
             } else {
-                System.out.println("DEBUG: Redirecting to /user");
-                response.sendRedirect("/user");
+                System.out.println("DEBUG: Redirecting to /");
+                response.sendRedirect("/");
             }
         }
     }
