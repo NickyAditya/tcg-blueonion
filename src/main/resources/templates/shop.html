@@ -85,7 +85,8 @@
                                     data-harga=${card.harga},
                                     data-gambar='/textures/' + ${card.gambar}"
                             onclick="showModal(this)">View Details</button>
-                    <button class="cta-button" style="margin-left:8px;background:#3674B5;color:#fff;" type="button" th:onclick="'showBuyModal(' + ${card.id} + ')'">Beli</button>
+                    <button class="cta-button" style="margin-left:8px;background:#3674B5;color:#fff;" type="button"
+    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="showBuyModal(this)">Beli</button>
                 </div>
             </th:block>
         </div>
@@ -134,17 +135,21 @@
 
     <!-- Modal Pembelian -->
     <div id="buyModal" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:2100;">
-      <div style="background:#fff;padding:2rem;border-radius:16px;max-width:350px;margin:auto;box-shadow:0 8px 32px rgba(30,58,92,0.18);position:relative;">
+      <div style="background:#fff;padding:2rem 1.5rem 2rem 1.5rem;border-radius:16px;max-width:370px;margin:auto;box-shadow:0 8px 32px rgba(30,58,92,0.18);position:relative;display:flex;flex-direction:column;align-items:center;">
         <button onclick="closeBuyModal()" style="position:absolute;top:10px;right:10px;font-size:1.5rem;background:none;border:none;cursor:pointer;">&times;</button>
-        <h2 style="text-align:center;margin-bottom:1rem;">Pembayaran</h2>
-        <form id="buyForm" method="post">
-          <input type="hidden" name="quantity" value="1" />
-          <label for="paymentMethod">Pilih Metode Pembayaran:</label>
-          <select name="paymentMethod" id="paymentMethod" required style="width:100%;margin-bottom:1rem;">
-            <option value="transfer">Transfer Bank</option>
-            <option value="cash">Cash</option>
-          </select>
-          <button type="submit" class="cta-button" style="width:100%;margin-bottom:0.5rem;">Bayar</button>
+        <img id="buyModal-gambar" src="" alt="Gambar Kartu" style="width:140px;height:auto;display:block;margin:0 auto 1rem auto;border-radius:10px;box-shadow:0 2px 8px rgba(30,58,92,0.08);background:#f4f4f4;">
+        <h2 id="buyModal-nama" style="text-align:center;margin-bottom:0.5rem;font-size:1.2rem;color:#3674B5;"></h2>
+        <p id="buyModal-harga" style="font-weight:bold;color:#3674B5;margin-bottom:1.2rem;"></p>
+        <form id="buyForm" method="post" style="width:100%;">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+            <label for="paymentMethod" style="margin-bottom:0;white-space:nowrap;font-weight:500;">Metode:</label>
+            <select name="paymentMethod" id="paymentMethod" required style="flex:1;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid #c3c3c3;">
+              <option value="transfer">Transfer Bank</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+          <button type="submit" class="cta-button" style="width:100%;margin-bottom:0.5rem;background:#3674B5;color:#fff;font-size:1.1rem;box-shadow:0 2px 8px rgba(30,58,92,0.08);border-radius:8px;">🛒 Bayar</button>
+          <button type="button" onclick="closeBuyModal()" class="cta-button" style="width:100%;background:#bbb;color:#333;font-size:1.1rem;border-radius:8px;">Tutup</button>
         </form>
       </div>
     </div>
@@ -317,9 +322,12 @@ if (modalCard3d && modalCard3dWrapper) {
   });
 }
 
-function showBuyModal(cardId) {
+function showBuyModal(btn) {
+  document.getElementById('buyModal-gambar').src = btn.getAttribute('data-gambar');
+  document.getElementById('buyModal-nama').textContent = btn.getAttribute('data-nama');
+  document.getElementById('buyModal-harga').textContent = 'Rp' + btn.getAttribute('data-harga');
   document.getElementById('buyModal').style.display = 'flex';
-  document.getElementById('buyForm').action = '/shop/buy/' + cardId;
+  document.getElementById('buyForm').action = '/shop/buy/' + btn.getAttribute('data-id');
 }
 function closeBuyModal() {
   document.getElementById('buyModal').style.display = 'none';
