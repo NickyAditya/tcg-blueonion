@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WebController {
 
     @GetMapping({"/", "/index"})
-    public String index() {
+    public String index(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && !auth.getName().equals("anonymousUser")) {
+            model.addAttribute("isLoggedIn", true);
+            model.addAttribute("username", auth.getName());
+        }
         return "index";
     }
 
