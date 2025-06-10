@@ -14,7 +14,12 @@ import com.redonion.tcg.service.UserService;
 public class WebController {
 
     @Autowired
-    private UserService userService;    @GetMapping({"/", "/index"})
+    private UserService userService;
+    
+    @Autowired
+    private com.redonion.tcg.repository.UserInventoryRepository userInventoryRepository;
+
+    @GetMapping({"/", "/index"})
     public String index(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && !auth.getName().equals("anonymousUser")) {
@@ -60,7 +65,13 @@ public class WebController {
     }
 
     @GetMapping("/userInventory")
-    public String userInventory() {
+    public String userInventory(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && !"anonymousUser".equals(auth.getName())) {
+            User user = userService.findByUsername(auth.getName());
+            model.addAttribute("user", user);
+            model.addAttribute("inventory", userInventoryRepository.findByIdUser(user.getId_user()));
+        }
         return "userInventory";
     }
 

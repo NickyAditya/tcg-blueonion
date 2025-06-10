@@ -42,18 +42,31 @@ public class PurchaseController {
 
     @PostMapping("/purchase")
     public ResponseEntity<?> purchaseCard(@RequestBody Map<String, Object> request) {
-        try {            // Get current user
+        try {
+            // Get current user
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null || "anonymousUser".equals(auth.getName())) {
                 return ResponseEntity.badRequest().body("User not authenticated");
-            }            User user = userService.findByUsername(auth.getName());
-            Long cardId = ((Number) request.get("cardId")).longValue();
+            }
+            // Validasi field wajib
+            if (!request.containsKey("cardId") || !request.containsKey("paymentMethod") || !request.containsKey("quantity")) {
+                return ResponseEntity.badRequest().body("Missing required fields");
+            }
+            User user = userService.findByUsername(auth.getName());
+            Long cardId = Long.valueOf(request.get("cardId").toString());
             String paymentMethod = request.get("paymentMethod").toString();
             int quantity = Integer.parseInt(request.get("quantity").toString());
 
             // Get card details
             Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new NoSuchElementException("Card not found"));
+
+            // Validasi stok
+            if (card.getStok() < quantity) {
+                return ResponseEntity.badRequest().body("Stok kartu tidak cukup");
+            }
+            card.setStok(card.getStok() - quantity);
+            cardRepository.save(card);
 
             // Calculate total price (card.getHarga() returns BigDecimal)
             BigDecimal totalPrice = card.getHarga().multiply(BigDecimal.valueOf(quantity));
@@ -80,15 +93,19 @@ public class PurchaseController {
             }
             userInventoryRepository.save(inventory);            // Success response
             Map<String, Object> response = new HashMap<>();
-            response.put("message", "Purchase successful");            response.put("transactionId", transaction.getId());
-            return ResponseEntity.ok(response);        } catch (NumberFormatException e) {
+            response.put("message", "Purchase successful");
+            response.put("transactionId", transaction.getId());
+            return ResponseEntity.ok(response);
+        } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body("Invalid number format: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body("Invalid argument: " + e.getMessage());
         } catch (NoSuchElementException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(404).body("Card not found");
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("An unexpected error occurred");
+            // Log error detail ke server
+            org.slf4j.LoggerFactory.getLogger(PurchaseController.class).error("Unexpected error occurred", e);
+            return ResponseEntity.internalServerError().body("An unexpected error occurred: " + e.getMessage());
         }
     }
 

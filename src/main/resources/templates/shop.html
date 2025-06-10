@@ -79,24 +79,27 @@
         <h2 style="text-align:center; margin:2rem 0 1rem 0; color:#3674B5;">Kartu TCG Dijual</h2>
         <div class="feature-grid" id="card-list">
             <th:block th:each="card : ${cards}">
-                <div class="card">
-                    <img th:src="@{'/textures/' + ${card.gambar}}" th:alt="${card.nama}" width="250" height="350"
-                         onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Available';">
+                <div class="card" th:classappend="${card.stok == 0} ? ' sold-out'">
+                    <div class="card-image-wrapper" style="position:relative;">
+                        <img th:src="@{'/textures/' + ${card.gambar}}" th:alt="${card.nama}" width="250" height="350"
+                             th:style="${card.stok == 0} ? 'filter: grayscale(100%) brightness(0.7);' : ''"
+                             onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Available';">
+                        <span th:if="${card.stok == 0}" class="sold-out-label" style="position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);background:rgba(60,60,60,0.8);color:#fff;padding:0.5em 1.2em;border-radius:8px;font-size:2rem;font-weight:bold;z-index:2;">SOLD OUT</span>
+                    </div>
                     <h4 th:text="${card.nama}">Card Name</h4>
                     <p th:text="'Rp' + ${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}">Price</p>
                     <button class="cta-button"
-                            th:attr="data-nama=${card.nama}, 
-                                    data-deskripsi=${card.deskripsi}, 
-                                    data-kondisi=${card.kondisi},
-                                    data-rarity=${card.rarity},
-                                    data-stok=${card.stok},
-                                    data-harga=${card.harga},
-                                    data-gambar='/textures/' + ${card.gambar}"
-                            onclick="showModal(this)">View Details</button>
+                            th:attr="data-gambar='/textures/' + ${card.gambar},
+                                     data-nama=${card.nama},
+                                     data-deskripsi=${card.deskripsi},
+                                     data-kondisi=${card.kondisi},
+                                     data-rarity=${card.rarity},
+                                     data-stok=${card.stok},
+                                     data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="showModal(this)" th:disabled="${card.stok == 0}">View Details</button>
                     <button class="cta-button" style="margin-left:8px;background:#f7b731;color:#fff;" type="button"
-    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="addToCart(this)">Add to Cart</button>
+    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="addToCart(this)" th:disabled="${card.stok == 0}">Add to Cart</button>
                     <button class="cta-button" style="margin-left:8px;background:#3674B5;color:#fff;" type="button"
-    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="showBuyModal(this)">Beli</button>
+    th:attr="data-id=${card.id},data-gambar='/textures/' + ${card.gambar},data-nama=${card.nama},data-harga=${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}"    onclick="showBuyModal(this)" th:disabled="${card.stok == 0}">Beli</button>
                 </div>
             </th:block>
         </div>
@@ -408,10 +411,10 @@ if (modalCard3d && modalCard3dWrapper) {
           setTimeout(() => {
             document.getElementById('checkout-notification').style.display = 'none';
           }, 3000);
-          
+          // Tambahkan popup alert sukses
+          alert('Pembelian berhasil! Kartu sudah masuk ke inventory Anda.');
           // Close the buy modal
           closeBuyModal();
-          
           // Refresh the inventory section
           refreshInventory();
         } else {
