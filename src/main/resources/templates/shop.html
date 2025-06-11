@@ -84,7 +84,8 @@
                              th:style="${card.stok == 0} ? 'filter: grayscale(100%) brightness(0.7);' : ''"
                              onerror="this.onerror=null;this.src='https://via.placeholder.com/250x350?text=Image+Not+Available';">
                         <span th:if="${card.stok == 0}" class="sold-out-label" style="position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);background:rgba(60,60,60,0.8);color:#fff;padding:0.5em 1.2em;border-radius:8px;font-size:2rem;font-weight:bold;z-index:2;">SOLD OUT</span>
-                    </div>                    <h4 th:text="${card.nama}">Card Name</h4>
+                    </div>                   
+                     <h4 th:text="${card.nama}">Card Name</h4>
                     <p th:text="'Rp' + ${#numbers.formatDecimal(card.harga, 0, 'COMMA', 2, 'POINT')}" style="margin-bottom: 15px;">Price</p>
                     <div class="button-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
                         <button class="cta-button" style="flex: 1; min-width: 100px;"

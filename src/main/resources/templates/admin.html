@@ -80,7 +80,7 @@
         <table>
           <thead>
             <tr>
-              <th>User</th>
+              <th>ID</th>
               <th>Current Email</th>
               <th>Requested Email</th>
               <th>Request Date</th>
@@ -324,7 +324,6 @@
               <td>${user.password ? '********' : ''}</td>
               <td>${user.role}</td>
               <td>
-                <button class="inventory-btn" onclick="window.location.href='/userInventory?id=${user.id_user}'">📦 Inventory</button>
                 <button class="edit-btn" onclick="editUser(${user.id_user})">✏️ Edit</button>
                 <button class="delete-btn" onclick="deleteUser(${user.id_user})">🗑️ Delete</button>
               </td>
