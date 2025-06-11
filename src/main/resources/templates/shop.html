@@ -59,7 +59,6 @@
                 🔔<span class="notification-badge" id="notificationBadge">0</span>
             </button>
             <th:block sec:authorize="isAuthenticated()">
-                <a href="/userInventory">📦 Inventory</a>
                 <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
                 <form action="/logout" method="post" style="display: inline;">
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -67,7 +66,6 @@
                 </form>
             </th:block>
             <th:block sec:authorize="!isAuthenticated()">
-                <a href="/userInventory">📦 Inventory</a>
                 <a href="/sign">👤 Login</a>
             </th:block>
         </div>
@@ -100,7 +98,7 @@
                                 th:disabled="${card.stok == 0}">
                             View Details
                         </button>
-                        <button class="cta-button" style="flex: 1; min-width: 100px; background:#f7b731; color:#fff;" 
+                        <!-- <button class="cta-button" style="flex: 1; min-width: 100px; background:#f7b731; color:#fff;" 
                                 type="button" 
                                 th:attr="data-id=${card.id},
                                          data-gambar='/textures/' + ${card.gambar},
@@ -109,7 +107,7 @@
                                 onclick="addToCart(this)" 
                                 th:disabled="${card.stok == 0}">
                             Add to Cart
-                        </button>
+                        </button> -->
                         <button class="cta-button" style="flex: 1; min-width: 100px; background:#3674B5; color:#fff;" 
                                 type="button" 
                                 th:attr="data-id=${card.id},
@@ -127,7 +125,7 @@
     </main>
 
     <!-- Cart Modal -->
-    <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
+    <!-- <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1000; align-items:center; justify-content:center;">
         <div style="background:#fff; border-radius:10px; max-width:400px; width:90%; padding:2rem; margin:auto; position:relative;">
             <h3>Keranjang</h3>
             <ul id="cart-items" style="list-style:none; padding:0; margin-bottom:1rem;"></ul>
@@ -140,7 +138,7 @@
             <button class="cta-button" id="checkout-btn">Checkout</button>
             <button class="cta-button" style="background:#bbb; color:#333; margin-left:1rem;" id="close-cart">Tutup</button>
         </div>
-    </div>
+    </div> -->
 
     <!-- Success Modal -->
     <div id="success-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:1001; align-items:center; justify-content:center;">
@@ -169,13 +167,14 @@
         <img id="buyModal-gambar" src="" alt="Gambar Kartu" style="width:180px;height:auto;display:block;margin:0 auto 1.5rem auto;border-radius:10px;box-shadow:0 2px 8px rgba(30,58,92,0.08);background:#f4f4f4;">
         <h2 id="buyModal-nama" style="text-align:center;margin-bottom:0.75rem;font-size:1.3rem;color:#3674B5;"></h2>
         <p id="buyModal-harga" style="font-weight:bold;color:#3674B5;margin-bottom:1.5rem;font-size:1.1rem;"></p>
-        <form id="buyForm" method="post" style="width:100%;">          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+        <form id="buyForm" method="post" style="width:100%;">          
+          <!-- <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
             <label for="paymentMethod" style="margin-bottom:0;white-space:nowrap;font-weight:500;">Metode:</label>
             <select name="paymentMethod" id="paymentMethod" required style="flex:1;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid #c3c3c3;">
               <option value="transfer">Transfer Bank</option>
               <option value="cash">Cash</option>
             </select>
-          </div>
+          </div> -->
           <div style="display:flex;gap:12px;width:100%;margin-top:1.5rem;">
             <button type="submit" class="cta-button" style="flex:1;background:#3674B5;color:#fff;font-size:1.1rem;padding:0.1rem 1.5rem;font-weight:500;box-shadow:0 2px 8px rgba(54,116,181,0.15);border-radius:8px;">🛒 Bayar</button>
             <button type="button" onclick="closeBuyModal()" class="cta-button" style="flex:0;background:#f0f0f0;color:#666;font-size:1.1rem;padding:0.875rem 1.5rem;font-weight:500;border-radius:8px;">Tutup</button>
