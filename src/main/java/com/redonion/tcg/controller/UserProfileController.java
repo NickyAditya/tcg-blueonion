@@ -1,5 +1,7 @@
 package com.redonion.tcg.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.redonion.tcg.model.User;
+import com.redonion.tcg.model.UserInventory;
+import com.redonion.tcg.service.UserInventoryService;
 import com.redonion.tcg.service.UserService;
 
 @Controller
@@ -15,6 +19,9 @@ public class UserProfileController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserInventoryService userInventoryService;
 
     @GetMapping("/user")
     public String showUserProfile(Model model) {
@@ -41,6 +48,10 @@ public class UserProfileController {
         }
         
         model.addAttribute("joinedTime", joinedTime);
+
+        // Get user's inventory
+        List<UserInventory> userInventory = userInventoryService.getUserInventory(user.getId_user());
+        model.addAttribute("userInventory", userInventory);
         
         return "user";
     }

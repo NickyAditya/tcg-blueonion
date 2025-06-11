@@ -55,16 +55,22 @@
           <button onclick="window.location.href='/booster'">🎲 Gacha</button>
         </div>
       </div>
+    </div>    <h3 class="section-title">Your Inventory</h3>    <div th:if="${not #lists.isEmpty(userInventory)}" class="card-grid">
+        <div th:each="item : ${userInventory}" class="card-item">            <img th:src="@{'/textures/' + ${item.card.gambar}}" 
+                 th:alt="${item.card.nama}"
+                 class="card-image" />
+            <div class="card-details">
+                <h4 th:text="${item.card.nama}" class="card-name">Card Name</h4>
+                <p class="card-info">
+                    <span th:text="${item.card.rarity}" class="card-rarity">Rarity</span>
+                    <span class="card-quantity">Qty: <span th:text="${item.quantity}">1</span></span>
+                </p>
+            </div>
+        </div>
     </div>
-
-    <h3 class="section-title">Recent Cards</h3>
-    <div class="favorites">
-      <img src="https://via.placeholder.com/150x220?text=1" alt="Card 1" />
-      <img src="https://via.placeholder.com/150x220?text=2" alt="Card 2" />
-      <img src="https://via.placeholder.com/150x220?text=3" alt="Card 3" />
-      <img src="https://via.placeholder.com/150x220?text=4" alt="Card 4" />
-      <img src="https://via.placeholder.com/150x220?text=5" alt="Card 5" />
-      <img src="https://via.placeholder.com/150x220?text=5" alt="Card 6" />
+    <div th:if="${#lists.isEmpty(userInventory)}" class="no-cards">
+        <p>No cards in your inventory yet.</p>
+        <a href="/shop" class="shop-link">Visit Shop</a>
     </div>
   </div>
 
