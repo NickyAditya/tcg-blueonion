@@ -8,17 +8,21 @@
   <script src="admin.js" defer></script>
 </head>
 <body>
-  <header>    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+  <header>    
+    <div>      
+      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <input type="search" placeholder="Search users..." class="search-input">
         <button class="search-button">🔍</button>
       </div>
-      <nav class="main-nav">        <a href="/index">Beranda</a>
+      <nav class="main-nav">        
+        <a href="/index">Beranda</a>
         <a href="/shop">Toko</a>
-        <a href="#popular">Populer</a>
-        <a href="#contact">Kontak</a>
       </nav>
-    </div>    <div class="admin-controls">      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <span class="admin-name" th:text="${'👑 Admin: ' + adminName}">👑 Admin: </span>
+    </div>    
+    <div class="admin-controls">      
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      
+      <span class="admin-name" th:text="${'👑 Admin: ' + adminName}">👑 Admin: </span>
       <span id="serverTime" class="server-time">Loading time...</span>
       <form th:action="@{/logout}" method="post" style="display: inline;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -34,7 +38,9 @@
     <div class="admin-header">
       <h1>Admin Dashboard</h1>
       <p class="last-login">Last login: May 25, 2025 14:30 WIB</p>
-    </div>    <div class="user-management">      <h2 class="section-title">User Management</h2>
+    </div>    
+    <div class="user-management">     
+       <h2 class="section-title">User Management</h2>
       <button class="add-user-btn">➕ Tambah User</button>
       <div class="user-table">
         <table>
@@ -46,7 +52,8 @@
               <th>Password</th>
               <th>Role</th>
               <th>Actions</th>
-            </tr>          </thead>
+            </tr>          
+          </thead>
           <tbody id="userTableBody">
             <!-- Data will be populated dynamically -->
           </tbody>
@@ -54,15 +61,9 @@
       </div>
     </div>
 
-    <div class="popular-cards">
-      <h2 class="section-title">Popular Cards Analytics</h2>
-      <div class="chart-container">
-        <canvas id="popularCardsChart"></canvas>
-      </div>
-    </div>
-
     <!-- Email Change Requests Section -->
-    <div class="email-requests">      <h2 class="section-title">
+    <div class="email-requests">      
+      <h2 class="section-title">
         Email Change Requests
         <span id="pendingRequestCount" class="badge"></span>
       </h2>
@@ -246,10 +247,9 @@
         }      }
     });
   </script>
-
   <!-- Modal for Add/Edit User -->
-  <div id="userModal" class="modal" style="display: none;">
-    <div class="modal-content">
+  <div id="userModal" class="user-modal">
+    <div class="user-modal-content">
       <h2 id="modalTitle">Add New User</h2>
       <form id="userForm">
         <input type="hidden" id="userId">
@@ -280,88 +280,6 @@
       </form>
     </div>
   </div>
-
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-      z-index: 1000;
-    }    .modal-content {
-      position: relative;
-      background-color: var(--card-bg);
-      margin: 50vh auto;
-      transform: translateY(-50%);
-      padding: 30px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--text);
-    }    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--muted);
-      border-radius: 4px;
-      background-color: var(--input-bg);
-      color: var(--text);
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    .form-group small {
-      color: var(--muted);
-      font-size: 0.8em;
-    }
-
-    .modal-buttons {
-      margin-top: 20px;
-      text-align: right;
-    }    .save-btn,
-    .cancel-btn {
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }    .save-btn {
-      background-color: var(--accent);
-      color: var(--white);
-      border: none;
-      margin-left: 10px;
-      opacity: 1;
-      transition: opacity 0.3s ease;
-    }
-
-    .save-btn:hover {
-      opacity: 0.85;
-    }
-
-    .cancel-btn {
-      background-color: #e0e0e0;
-      color: #333;
-      border: none;
-      margin-left: 10px;
-    }
-    
-    .cancel-btn:hover {
-      background-color: #d0d0d0;
-    }
-  </style>
 
   <script>
     // User Management
@@ -415,22 +333,34 @@
           });
         })
         .catch(error => console.error('Error loading users:', error));
-    }
-
-    function openModal(user = null) {
+    }    function openModal(user = null) {
+      const modal = document.getElementById('userModal');
+      modal.classList.add('show');
       document.getElementById('modalTitle').textContent = user ? 'Edit User' : 'Add New User';
       document.getElementById('userId').value = user ? user.id_user : '';
       document.getElementById('username').value = user ? user.nama : '';
       document.getElementById('email').value = user ? user.email : '';
       document.getElementById('password').value = '';
       document.getElementById('role').value = user ? user.role : 'USER';
-      document.getElementById('userModal').style.display = 'block';
     }
 
     function closeModal() {
-      document.getElementById('userModal').style.display = 'none';
+      const modal = document.getElementById('userModal');
+      modal.classList.remove('show');
       document.getElementById('userForm').reset();
     }
+
+    // Close modal when clicking outside
+    document.getElementById('userModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Prevent modal close when clicking modal content
+    document.querySelector('.user-modal-content').addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
 
     function editUser(userId) {
       fetch(`/api/users/${userId}`)

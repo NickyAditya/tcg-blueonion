@@ -51,8 +51,6 @@
             <nav class="main-nav">
                 <a href="/index">Beranda</a>
                 <a href="/shop">Toko</a>
-                <a href="#popular">Populer</a>
-                <a href="#contact">Kontak</a>
             </nav>
         </div>
         <div>
@@ -76,7 +74,8 @@
     </header>
 
     <main class="container">
-        <h2 style="text-align:center; margin:2rem 0 1rem 0; color:#3674B5;">Kartu TCG Dijual</h2>
+        <h1 style="text-align:center; margin:2rem 0 1rem 0; color:#3674B5;">Kartu TCG Dijual</h1>
+        <br><br>
         <div class="feature-grid" id="card-list">
             <th:block th:each="card : ${cards}">
                 <div class="card" th:classappend="${card.stok == 0} ? ' sold-out'">
@@ -183,15 +182,8 @@
         </form>
       </div>
     </div>
-
-    <section class="features" id="user-inventory">
-        <div class="container">
-            <h3>Inventory Anda</h3>
-            <div class="feature-grid" id="inventory-list">
-                <!-- Inventory user -->
-            </div>
-        </div>
-    </section>    <!-- Checkout notification -->
+    <br><br><br><br>
+    <!-- Checkout notification -->
   <div class="notification-success" id="checkout-notification" style="display: none;">
     Purchase successful! 🎉 Your cards will be delivered to your account.
   </div>

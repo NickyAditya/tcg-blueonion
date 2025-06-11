@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  <meta charset="UTF-8">
+<head>  
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>User Inventory</title>  <link rel="stylesheet" href="user.css">
+  <title>User Inventory</title>  
+  <link rel="stylesheet" href="user.css">
   <link rel="stylesheet" href="userInventory.css">
   <link rel="stylesheet" href="notifications.css">
   <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -12,28 +14,34 @@
   <!-- Add notification container -->
   <div class="notification-container" id="notificationContainer"></div>
 
-  <header>    <div>      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+  <header>    
+    <div>      
+      <a href="/index" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <input type="search" placeholder="Search cards..." class="search-input">
         <button class="search-button">🔍</button>
       </div>
-      <nav class="main-nav">        <a href="/index">Beranda</a>
+      <nav class="main-nav">        
+        <a href="/index">Beranda</a>
         <a href="/shop">Toko</a>
-        <a href="#popular">Populer</a>
-        <a href="#contact">Kontak</a>
       </nav>
-    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    </div>    
+    <div>      
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      
+      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
-      <a href="/user" style="margin: 0 10px;">👤 Vortexaint</a>
+      <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
       <form action="/logout" method="post" style="display: inline;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
         <button type="submit" class="logout-link" style="border: none; background: none; cursor: pointer; padding: 0; color: var(--text);">🔒 Log out</button>
       </form>
     </div>
   </header>  <div class="back-nav">
-    <a href="javascript:history.back()" class="back-button">← Back to Previous Page</a>
+    <button>
+      <a href="javascript:history.back()" class="back-button">← Back to Previous Page</a>
+    </button>
   </div>
   <div class="container">
     <h2 class="section-title">My Inventory</h2>
@@ -72,7 +80,7 @@
     <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana1" alt="Lorcana Card"></div>
     <div class="card" data-set="fab"><img src="https://via.placeholder.com/80x110?text=FaB1" alt="Flesh and Blood Card"></div>
     <div class="card" data-set="pokemon"><img src="https://via.placeholder.com/80x110?text=Pokemon2" alt="Pokemon Card"></div>
-    <div class="card" data-set="yugioh"><img src="https://via.placeholder.com/80x110?text=YuGiOh2" alt="Yu-Gi-Oh Card"></div>
+    <!-- <div class="card" data-set="yugioh"><img src="https://via.placeholder.com/80x110?text=YuGiOh2" alt="Yu-Gi-Oh Card"></div>
     <div class="card" data-set="mtg"><img src="https://via.placeholder.com/80x110?text=MTG2" alt="Magic Card"></div>
     <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana2" alt="Lorcana Card"></div>
     <div class="card" data-set="fab"><img src="https://via.placeholder.com/80x110?text=FaB2" alt="Flesh and Blood Card"></div>
@@ -89,7 +97,7 @@
     <div class="card" data-set="pokemon"><img src="https://via.placeholder.com/80x110?text=Pokemon5" alt="Pokemon Card"></div>
     <div class="card" data-set="yugioh"><img src="https://via.placeholder.com/80x110?text=YuGiOh5" alt="Yu-Gi-Oh Card"></div>
     <div class="card" data-set="mtg"><img src="https://via.placeholder.com/80x110?text=MTG5" alt="Magic Card"></div>
-    <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana5" alt="Lorcana Card"></div>
+    <div class="card" data-set="lorcana"><img src="https://via.placeholder.com/80x110?text=Lorcana5" alt="Lorcana Card"></div> -->
   </div>
 
   <!-- Right: Details -->

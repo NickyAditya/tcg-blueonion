@@ -17,19 +17,21 @@
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
-<body>  <header>
-    <div>      <a href="/" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+<body>  
+  <header>
+    <div>      
+      <a href="/" aria-label="Go to homepage">
+        <img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <!-- Show different search placeholder based on role -->
         <input type="search" 
                th:placeholder="${#authorization.expression('hasRole(''ADMIN'')')} ? 'Search users...' : 'Search cards...'" 
                class="search-input">
         <button class="search-button">🔍</button>
-      </div>      <nav class="main-nav">
+      </div>      
+      <nav class="main-nav">
         <a href="/">Beranda</a>
         <a href="/shop">Toko</a>
-        <a href="#popular">Populer</a>
-        <a href="#contact">Kontak</a>
       </nav>
     </div>
     <div>
@@ -146,34 +148,6 @@
           <h4>Magic: The Gathering</h4>
         </a>
       </div>
-    </div>
-  </section>
-
-  <!-- ========== POPULARITY CHART ========== -->
-  <section class="popularity-chart" id="popular">
-    <h3>Peringkat Kartu Terpopuler</h3>
-    <select>
-      <option value="daily">Harian</option>
-      <option value="weekly">Mingguan</option>
-      <option value="monthly">Bulanan</option>
-      <option value="allTime">Sejarah</option>
-    </select>
-    <div class="chart">
-      <!-- Placeholder for chart -->
-      <img src="https://via.placeholder.com/600x300/4D96FF/fff?text=Chart+Placeholder" alt="Chart Placeholder" />
-    </div>
-  </section>
-
-  <!-- Kontak (Contact) - moved to just before footer -->
-  <section class="contact" id="contact">
-    <div class="container">
-      <h3>Hubungi Kami</h3>
-      <form class="contact-form">
-        <input type="text" name="name" placeholder="Nama Anda" required />
-        <input type="email" name="email" placeholder="Email Anda" required />
-        <textarea name="message" rows="5" placeholder="Pesan Anda" required></textarea>
-        <button type="submit" class="cta-button">Kirim Pesan</button>
-      </form>
     </div>
   </section>
 

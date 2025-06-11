@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>  <meta charset="UTF-8" />
+<head>  
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title th:text="${user.nama} + ' - Profile'">User Profile</title>  <link rel="stylesheet" href="user.css">
   <link rel="stylesheet" href="notifications.css">
@@ -16,16 +17,21 @@
     </div>
     <ul class="notification-history-list" id="notificationHistoryList"></ul>
   </div>
-  <header>    <div>      <a href="/" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+  <header>    
+    <div>      
+      <a href="/" aria-label="Go to homepage"><img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
       <div class="search-container">
         <input type="search" placeholder="Search cards..." class="search-input">
         <button class="search-button">🔍</button>
-      </div>      <nav class="main-nav">        <a href="/">Beranda</a>
+      </div>      
+      <nav class="main-nav">        
+        <a href="/">Beranda</a>
         <a href="/shop">Toko</a>
-        <a href="#popular">Populer</a>
-        <a href="#contact">Kontak</a>
       </nav>
-    </div>    <div>      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      <button id="notificationLog" class="notification-log" aria-label="Notification history">
+    </div>    
+    <div>      
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">🌙</button>      
+      <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
       <a href="/userInventory">📦 Inventory</a>
@@ -40,7 +46,8 @@
   <div class="container">
     <div class="profile">
       <img th:src="${user.avatar != null ? user.avatar : '/textures/Pokemon-back.jpg'}" alt="Profile Picture" />
-      <div class="profile-info">        <h2 th:text="${user.nama}">Username</h2>
+      <div class="profile-info">        
+        <h2 th:text="${user.nama}">Username</h2>
         <p><strong>Joined:</strong> <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy')}"></span></p>
         <p><strong>Favorite tags:</strong> <span th:text="${user.favorite_tags != null ? user.favorite_tags : 'None set'}"></span></p>
         <p><strong>About:</strong> <span th:text="${user.about != null ? user.about : 'No description yet'}"></span></p><div class="profile-buttons">
@@ -61,9 +68,6 @@
       <img src="https://via.placeholder.com/150x220?text=5" alt="Card 5" />
       <img src="https://via.placeholder.com/150x220?text=5" alt="Card 6" />
     </div>
-
-    <h3 class="section-title">💬 Recent Comments</h3>
-    <p style="color: #ccc;">Vortexaint - 1 month, 1 week ago</p>
   </div>
 
   <footer class="footer">
