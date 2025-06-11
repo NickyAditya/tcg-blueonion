@@ -49,13 +49,12 @@
         <button id="notificationLog" class="notification-log" aria-label="Notification history">
           🔔<span class="notification-badge" id="notificationBadge">0</span>
         </button>
-        <a href="/userInventory">📦 Inventory</a>
+
         <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
       </th:block>
 
       <!-- Unauthenticated user controls -->
       <th:block sec:authorize="!isAuthenticated()">
-        <a href="/userInventory">📦 Inventory</a>
         <a href="/sign">👤 Login</a>
       </th:block>
 

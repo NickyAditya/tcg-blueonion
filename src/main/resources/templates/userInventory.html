@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>User Inventory</title>  
   <link rel="stylesheet" href="user.css">
-  <link rel="stylesheet" href="userInventory.css">
   <link rel="stylesheet" href="notifications.css">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -31,7 +30,6 @@
       <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
-      <a href="/userInventory">📦 Inventory</a>
       <a href="/user" style="margin: 0 10px;" th:text="${'👤 ' + #authentication.name}">👤 User</a>
       <form action="/logout" method="post" style="display: inline;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />

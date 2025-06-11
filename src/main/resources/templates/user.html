@@ -34,7 +34,6 @@
       <button id="notificationLog" class="notification-log" aria-label="Notification history">
         🔔<span class="notification-badge" id="notificationBadge">0</span>
       </button>
-      <a href="/userInventory">📦 Inventory</a>
       <a href="/user" style="margin: 0 10px;">👤 <span th:text="${user.nama}">Username</span></a>
       <form action="/logout" method="post" style="display: inline;">
         <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
@@ -52,7 +51,6 @@
         <p><strong>Favorite tags:</strong> <span th:text="${user.favorite_tags != null ? user.favorite_tags : 'None set'}"></span></p>
         <p><strong>About:</strong> <span th:text="${user.about != null ? user.about : 'No description yet'}"></span></p><div class="profile-buttons">
           <button onclick="window.location.href='/userSettings'">⚙️ Settings</button>
-          <button onclick="window.location.href='/userInventory'">📦 Inventory</button>
           <button onclick="window.location.href='javascript:void(0)'">👁️ Watchlist</button>
           <button onclick="window.location.href='/booster'">🎲 Gacha</button>
         </div>
