@@ -133,10 +133,9 @@
 
         <label>Confirm</label>
         <input type="password" placeholder="confirm new password" class="settings-input">
-        
-        <div class="form-actions">
+          <div class="form-actions">
             <button type="button" class="btn btn-secondary" onclick="resetForm()">Back</button>
-            <button type="submit" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+            <button type="button" class="btn btn-primary" id="saveChangesBtn" onclick="saveChanges()">Save Changes</button>
         </div>
         
         <div class="danger-zone">
@@ -284,9 +283,7 @@
             avatarInput.file = null; // Clear any resized file
             formChanged = true;
         }
-    });
-
-    // Form submission handlers
+    });    // Form submission handlers
     function resetForm() {
         if (formChanged) {
             const confirmLeave = confirm('You have unsaved changes. Do you want to discard these changes?');
@@ -296,10 +293,7 @@
         } else {
             window.location.href = '/user';
         }
-    }
-
-    async function saveChanges(event) {
-        event.preventDefault();
+    }    async function saveChanges() {
         const userId = document.getElementById('userId').value;
         const username = document.getElementById('usernameInput').value;
         const about = document.querySelector('input[placeholder="Tell us about yourself"]').value;
@@ -481,7 +475,17 @@
         } catch (error) {
             notifications.error('Error', 'Error submitting email change request: ' + error.message);
         }
-    }
+    }    // Add window click handler for modals
+    window.addEventListener('click', (event) => {
+        const emailModal = document.getElementById('emailChangeModal');
+        const deleteModal = document.getElementById('deleteAccountModal');
+        if (event.target === emailModal) {
+            closeEmailModal();
+        }
+        if (event.target === deleteModal) {
+            closeDeleteModal();
+        }
+    });
 
     // Optional: Show welcome notification
     setTimeout(() => {
