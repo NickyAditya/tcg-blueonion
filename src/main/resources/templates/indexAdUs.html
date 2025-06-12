@@ -19,9 +19,8 @@
 </head>
 <body>  
   <header>
-    <div>      
-      <a href="/" aria-label="Go to homepage">
-        <img src="https://via.placeholder.com/32" alt="logo" style="vertical-align: middle;" /></a>
+    <div>        <a href="/" aria-label="Go to homepage">
+        <img src="/textures/logo-RedOnion.png" alt="RedOnion logo" style="vertical-align: middle; height: 32px;" /></a>
       <div class="search-container">
         <!-- Show different search placeholder based on role -->
         <input type="search" 
@@ -157,25 +156,27 @@
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
 
-  const slideCount = 4; // Number of actual slides (not counting clones)
-  let currentIndex = 2; // Start at first real slide (after clones)
+  const slideCount = 4; // Number of actual slides
+  let currentIndex = 2; // Start at first real slide
   let isDragging = false, startX = 0, dx = 0;
   let slideWidth = carousel.clientWidth;
+  let autoSlideInterval;
+  let lastDragTime = 0;
+  const dragCooldown = 50; // Milliseconds to wait before allowing another drag
 
-  // Create dots
+  // Create indicator dots
   for (let i = 0; i < slideCount; i++) {
     const dot = document.createElement("span");
     dot.classList.add("dot");
     if (i === 0) dot.classList.add("active");
     dot.addEventListener("click", () => {
-      moveTo(i + 2); // +2 because of cloned slides at start
+      moveTo(i + 2);
       resetInterval();
     });
     indicators.appendChild(dot);
   }
   const dots = document.querySelectorAll(".dot");
 
-  // Update dots and handle infinite loop
   function updateDots(index) {
     const realIndex = getRealIndex(index);
     dots.forEach(dot => dot.classList.remove("active"));
@@ -183,9 +184,9 @@
   }
 
   function getRealIndex(index) {
-    if (index < 2) return slideCount + index - 2; // Handle start clones
-    if (index > slideCount + 1) return index - slideCount - 2; // Handle end clones
-    return index - 2; // Normal slides
+    if (index < 2) return slideCount + index - 2;
+    if (index > slideCount + 1) return index - slideCount - 2;
+    return index - 2;
   }
 
   function moveTo(index, animate = true) {
@@ -199,7 +200,6 @@
     updateDots(index);
   }
 
-  // Handle infinite loop transition
   track.addEventListener("transitionend", () => {
     if (currentIndex <= 1) {
       moveTo(slideCount + 1, false);
@@ -210,55 +210,66 @@
 
   // Navigation buttons
   prevBtn.addEventListener("click", () => {
+    if (isDragging) return;
     moveTo(currentIndex - 1);
     resetInterval();
   });
 
   nextBtn.addEventListener("click", () => {
+    if (isDragging) return;
     moveTo(currentIndex + 1);
     resetInterval();
   });
 
-  // Auto slide
-  let interval;
+  // Auto slide functionality
   function startInterval() {
-    interval = setInterval(() => {
-      moveTo(currentIndex + 1);
+    autoSlideInterval = setInterval(() => {
+      if (!isDragging) {
+        moveTo(currentIndex + 1);
+      }
     }, 5000);
   }
 
   function resetInterval() {
-    clearInterval(interval);
+    clearInterval(autoSlideInterval);
     startInterval();
   }
-
-  // Pause on hover
-  carousel.addEventListener("mouseenter", () => clearInterval(interval));
-  carousel.addEventListener("mouseleave", startInterval);
-
-  // Handle drag
+  // Mouse/Touch event handlers
   function startDrag(e) {
+    e.preventDefault(); // Prevent default dragging
+    const currentTime = Date.now();
+    if (currentTime - lastDragTime < dragCooldown) return;
+    
     isDragging = true;
-    startX = e.pageX || e.touches[0].pageX;
+    startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
     dx = 0;
     track.style.transition = "none";
+    clearInterval(autoSlideInterval);
+    track.style.cursor = 'grabbing';
   }
 
   function onDrag(e) {
     if (!isDragging) return;
     e.preventDefault();
-    const x = e.pageX || e.touches[0].pageX;
+    
+    const x = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
     dx = x - startX;
-    const transform = -currentIndex * 100 + (dx / carousel.clientWidth) * 100;
-    track.style.transform = `translateX(${transform}%)`;
+    const transform = -currentIndex * 100 + (dx / slideWidth * 100);
+    
+    // Limit the drag distance
+    if (Math.abs(dx) < slideWidth) {
+      track.style.transform = `translateX(${transform}%)`;
+    }
   }
-
-  function endDrag() {
+  function endDrag(e) {
     if (!isDragging) return;
+    
     isDragging = false;
-
-    const threshold = carousel.clientWidth * 0.2; // 20% threshold
-    if (Math.abs(dx) > threshold) {
+    lastDragTime = Date.now();
+    track.style.cursor = 'grab';
+    
+    const moveThreshold = slideWidth * 0.2; // 20% threshold
+    if (Math.abs(dx) > moveThreshold) {
       if (dx > 0) {
         moveTo(currentIndex - 1);
       } else {
@@ -267,30 +278,38 @@
     } else {
       moveTo(currentIndex);
     }
-
-    resetInterval();
+    
+    startInterval();
   }
-
-  // Touch and mouse events
-  track.addEventListener("mousedown", startDrag);
-  track.addEventListener("touchstart", startDrag, { passive: true });
+  // Event Listeners
+  track.addEventListener("mousedown", startDrag, { passive: false });
+  track.addEventListener("touchstart", startDrag, { passive: false });
   
-  window.addEventListener("mousemove", onDrag);
+  window.addEventListener("mousemove", onDrag, { passive: false });
   window.addEventListener("touchmove", onDrag, { passive: false });
   
   window.addEventListener("mouseup", endDrag);
+  window.addEventListener("mouseleave", endDrag);
   window.addEventListener("touchend", endDrag);
+  window.addEventListener("touchcancel", endDrag);
 
   // Handle window resize
+  let resizeTimeout;
   window.addEventListener("resize", () => {
-    slideWidth = carousel.clientWidth;
-    moveTo(currentIndex, false);
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      slideWidth = carousel.clientWidth;
+      moveTo(currentIndex, false);
+    }, 100);
   });
+
+  // Pause on hover
+  carousel.addEventListener("mouseenter", () => clearInterval(autoSlideInterval));
+  carousel.addEventListener("mouseleave", startInterval);
 
   // Initialize
   moveTo(currentIndex, false);
   startInterval();
-</script>
 </script>
 
   <footer class="footer">

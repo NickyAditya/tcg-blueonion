@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <title>Trading Card Game Store</title>    <link rel="stylesheet" href="user.css">
     <link rel="stylesheet" href="notifications.css">
     <link rel="stylesheet" href="shop.css">
@@ -43,7 +45,7 @@
 
     <header>
         <div>
-            <a href="/index" aria-label="Go to homepage"><img src="logo.png" alt="TCG Store" style="vertical-align: middle; width: 32px;" /></a>
+            <a href="/index" aria-label="Go to homepage"><img src="/textures/logo-RedOnion.png" alt="RedOnion logo" style="vertical-align: middle; height: 32px;" /></a>
             <div class="search-container">
                 <input type="search" placeholder="Search cards..." class="search-input">
                 <button class="search-button">🔍</button>
@@ -166,15 +168,15 @@
         <button onclick="closeBuyModal()" style="position:absolute;top:15px;right:15px;font-size:1.5rem;background:none;border:none;cursor:pointer;">&times;</button>
         <img id="buyModal-gambar" src="" alt="Gambar Kartu" style="width:180px;height:auto;display:block;margin:0 auto 1.5rem auto;border-radius:10px;box-shadow:0 2px 8px rgba(30,58,92,0.08);background:#f4f4f4;">
         <h2 id="buyModal-nama" style="text-align:center;margin-bottom:0.75rem;font-size:1.3rem;color:#3674B5;"></h2>
-        <p id="buyModal-harga" style="font-weight:bold;color:#3674B5;margin-bottom:1.5rem;font-size:1.1rem;"></p>
-        <form id="buyForm" method="post" style="width:100%;">          
-          <!-- <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+        <p id="buyModal-harga" style="font-weight:bold;color:#3674B5;margin-bottom:1.5rem;font-size:1.1rem;"></p>        <form id="buyForm" method="post" style="width:100%;">          
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
             <label for="paymentMethod" style="margin-bottom:0;white-space:nowrap;font-weight:500;">Metode:</label>
             <select name="paymentMethod" id="paymentMethod" required style="flex:1;padding:0.4rem 0.6rem;border-radius:6px;border:1px solid #c3c3c3;">
               <option value="transfer">Transfer Bank</option>
               <option value="cash">Cash</option>
+              <option value="ewallet">E-Wallet</option>
             </select>
-          </div> -->
+          </div>
           <div style="display:flex;gap:12px;width:100%;margin-top:1.5rem;">
             <button type="submit" class="cta-button" style="flex:1;background:#3674B5;color:#fff;font-size:1.1rem;padding:0.1rem 1.5rem;font-weight:500;box-shadow:0 2px 8px rgba(54,116,181,0.15);border-radius:8px;">🛒 Bayar</button>
             <button type="button" onclick="closeBuyModal()" class="cta-button" style="flex:0;background:#f0f0f0;color:#666;font-size:1.1rem;padding:0.875rem 1.5rem;font-weight:500;border-radius:8px;">Tutup</button>
@@ -392,68 +394,7 @@ if (modalCard3d && modalCard3dWrapper) {
     modalCard3d.style.transform = '';
     modalCard3d.style.boxShadow = '';
   });
-}
-
-    // Purchase form handling
-    document.getElementById('buyForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const cardId = this.getAttribute('data-id');
-      const paymentMethod = document.getElementById('paymentMethod').value;
-      
-      try {
-        const response = await fetch('/api/purchase', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            cardId: cardId,
-            paymentMethod: paymentMethod,
-            quantity: 1 // For now hardcoded to 1
-          })
-        });
-
-        if (response.ok) {
-          // Show success notification
-          document.getElementById('checkout-notification').style.display = 'block';
-          setTimeout(() => {
-            document.getElementById('checkout-notification').style.display = 'none';
-          }, 3000);
-          // Tambahkan popup alert sukses
-          alert('Pembelian berhasil! Kartu sudah masuk ke inventory Anda.');
-          // Close the buy modal
-          closeBuyModal();
-          // Refresh the inventory section
-          refreshInventory();
-        } else {
-          throw new Error('Purchase failed');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Failed to complete purchase. Please try again.');
-      }
-    });
-
-    // Function to refresh user's inventory
-    async function refreshInventory() {
-      try {
-        const response = await fetch('/api/inventory');
-        const inventory = await response.json();
-        
-        const inventoryList = document.getElementById('inventory-list');
-        inventoryList.innerHTML = inventory.map(item => `
-          <div class="card">
-            <img src="${item.gambar}" alt="${item.nama}" width="250" height="350">
-            <h4>${item.nama}</h4>
-            <p>Quantity: ${item.quantity}</p>
-          </div>
-        `).join('');
-      } catch (error) {
-        console.error('Error refreshing inventory:', error);
-      }
-    }
-
+}    // Show/close buy modal
     function showBuyModal(button) {
       const modal = document.getElementById('buyModal');
       const form = document.getElementById('buyForm');
@@ -474,6 +415,46 @@ if (modalCard3d && modalCard3dWrapper) {
     function closeBuyModal() {
       document.getElementById('buyModal').style.display = 'none';
     }
+
+    // Purchase form handling
+    document.getElementById('buyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const cardId = this.getAttribute('data-id');
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      
+      try {
+        const response = await fetch('/api/purchase', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').getAttribute('content')
+          },
+          body: JSON.stringify({
+            cardId: cardId,
+            paymentMethod: paymentMethod,
+            quantity: 1
+          })
+        });
+
+        if (response.ok) {
+          // Show success notification
+          document.getElementById('checkout-notification').style.display = 'block';
+          setTimeout(() => {
+            document.getElementById('checkout-notification').style.display = 'none';
+          }, 3000);
+          alert('Pembelian berhasil! Kartu sudah masuk ke inventory Anda.');
+          closeBuyModal();
+          window.location.reload(); // Refresh to update stock
+        } else {
+          const errorData = await response.text();
+          throw new Error(errorData || 'Purchase failed');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Gagal melakukan pembelian. ' + error.message);
+      }
+    });
     </script>
 
     <script src="../src/main.js"></script>
