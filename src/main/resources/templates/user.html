@@ -3,7 +3,8 @@
 <head>  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:text="${user.nama} + ' - Profile'">User Profile</title>  <link rel="stylesheet" href="user.css">
+  <title th:text="${user.nama} + ' - Profile'">User Profile</title>  
+  <link rel="stylesheet" href="user.css">
   <link rel="stylesheet" href="notifications.css">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -55,8 +56,11 @@
           <button onclick="window.location.href='/booster'">🎲 Gacha</button>
         </div>
       </div>
-    </div>    <h3 class="section-title">Your Inventory</h3>    <div th:if="${not #lists.isEmpty(userInventory)}" class="card-grid">
-        <div th:each="item : ${userInventory}" class="card-item">            <img th:src="@{'/textures/' + ${item.card.gambar}}" 
+    </div>    
+    <h3 class="section-title">Your Inventory</h3>   
+     <div th:if="${not #lists.isEmpty(userInventory)}" class="card-grid">
+        <div th:each="item : ${userInventory}" class="card-item">            
+          <img th:src="@{'/textures/' + ${item.card.gambar}}" 
                  th:alt="${item.card.nama}"
                  class="card-image" />
             <div class="card-details">
