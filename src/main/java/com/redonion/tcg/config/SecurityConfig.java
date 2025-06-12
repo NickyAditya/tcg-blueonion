@@ -22,54 +22,48 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfig {    @Autowired
+public class SecurityConfig {
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }    @Bean
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         System.out.println("DEBUG: SecurityFilterChain initialized");
-        
-        http.csrf(csrf -> 
-                csrf.ignoringRequestMatchers("/api/**")
-            )
-            .userDetailsService(userDetailsService)            .authorizeHttpRequests(auth -> 
-                auth.requestMatchers(
+
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
+                .userDetailsService(userDetailsService).authorizeHttpRequests(auth -> auth.requestMatchers(
                         "/static/**", "/css/**", "/*.css", "/*.js", "/*.png",
                         "/*.jpg", "/*.jpeg", "/*.webp", "/textures/**",
                         "/texture/**", "/images/**", "/logo*", "/*.ico",
                         "/webjars/**", "/fonts/**", "/uploads/**", "/error")
-                    .permitAll()
-                    .requestMatchers(
-                            "/sign", "/login", "/register", "/error",
-                            "/pokemon", "/yugioh", "/mtg", "/register", "/logout")
                         .permitAll()
-                    .requestMatchers("/", "/index").permitAll()
-                    .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/api/settings/**").authenticated()
-                    .requestMatchers("/user/**", "/userInventory", "/booster", "/settings", "/userSettings").authenticated()
-                    .anyRequest().authenticated()
-            )
-            .formLogin(form -> 
-                form.loginPage("/sign")
-                    .loginProcessingUrl("/login")
-                    .successHandler(new CustomLoginSuccessHandler())
-                    .failureUrl("/sign?error=true")
-                    .permitAll()
-            )
-            .logout(logout -> 
-                logout.logoutUrl("/logout")
-                    .logoutSuccessUrl("/sign?logout=true")
-                    .invalidateHttpSession(true)
-                    .clearAuthentication(true)
-                    .deleteCookies("JSESSIONID")
-                    .permitAll()
-            )
-            .exceptionHandling(ex ->
-                ex.accessDeniedPage("/error")
-            );
+                        .requestMatchers(
+                                "/sign", "/login", "/register", "/error",
+                                "/pokemon", "/yugioh", "/mtg", "/register", "/logout")
+                        .permitAll()
+                        .requestMatchers("/", "/index").permitAll()
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/settings/**").authenticated()
+                        .requestMatchers("/user/**", "/userInventory", "/booster", "/settings", "/userSettings")
+                        .authenticated()
+                        .anyRequest().authenticated())
+                .formLogin(form -> form.loginPage("/sign")
+                        .loginProcessingUrl("/login")
+                        .successHandler(new CustomLoginSuccessHandler())
+                        .failureUrl("/sign?error=true")
+                        .permitAll())
+                .logout(logout -> logout.logoutUrl("/logout")
+                        .logoutSuccessUrl("/sign?logout=true")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll())
+                .exceptionHandling(ex -> ex.accessDeniedPage("/error"));
 
         return http.build();
     }
@@ -80,7 +74,8 @@ public class SecurityConfig {    @Autowired
                 Authentication authentication) throws IOException, ServletException {
             Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
             System.out.println("DEBUG: Login success for user: " + authentication.getName());
-            System.out.println("DEBUG: Roles: " + roles);            if (roles.contains("ROLE_ADMIN")) {
+            System.out.println("DEBUG: Roles: " + roles);
+            if (roles.contains("ROLE_ADMIN")) {
                 System.out.println("DEBUG: Redirecting to /admin");
                 response.sendRedirect("/admin");
             } else {
